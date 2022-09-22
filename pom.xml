@@ -41,6 +41,15 @@
  				<role>participant</role>
 			</roles>
  		</developer>
+ 		<developer>
+ 			<id>marizqlav</id>
+ 			<name>Mario</name>
+ 			<email>marizqlav@alum.us.esm</email>
+ 			<roles>
+ 				<role>participant</role>
+			</roles>
+ 		</developer>
+
  <!-- More developers ...-->
 </developers>
 	
