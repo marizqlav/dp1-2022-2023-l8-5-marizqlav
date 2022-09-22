@@ -14,6 +14,7 @@
     </parent>
     <name>Lab DP1 L8-5</name>
 
+
     <properties>
 
         <!-- Generic properties -->
@@ -31,7 +32,18 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-
+	<developers>
+		 <developer>
+ 			<id>albdomrui</id>
+ 			<name>Alberto</name>
+ 			<email>albdomrui@alum.us.esm</email>
+ 			<roles>
+ 				<role>participant</role>
+			</roles>
+ 		</developer>
+ <!-- More developers ...-->
+</developers>
+	
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
