@@ -32,7 +32,7 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-<<<<<<< HEAD
+
     <developers>
         <developer>
             <id>alemerpal</id>
@@ -41,13 +41,8 @@
             <roles>
                 <role>developer</role>
             </roles>
-            <properties>
-            </properties>
         </developer>
-    </developers>
-=======
-	<developers>
-		 <developer>
+		<developer>
  			<id>albdomrui</id>
  			<name>Alberto</name>
  			<email>albdomrui@alum.us.esm</email>
@@ -64,10 +59,9 @@
 			</roles>
  		</developer>
 
- <!-- More developers ...-->
-</developers>
+    <!-- More developers ...-->
+    </developers>
 	
->>>>>>> origin/master
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
