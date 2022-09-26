@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
-    <artifactId>spring-petclinic</artifactId>
+    <artifactId>L8-5</artifactId>
     <version>2.2.0.BUILD-SNAPSHOT</version>
 
     <parent>
@@ -12,7 +12,8 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.4.RELEASE</version>
     </parent>
-    <name>petclinic</name>
+    <name>Lab DP1 L8-5</name>
+
 
     <properties>
 
@@ -32,6 +33,44 @@
 
     </properties>
 
+    <developers>
+        <developer>
+            <id>alemerpal</id>
+            <name>Ale Merino Palma</name>
+            <email>alemerpal@alum.us.es</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+		<developer>
+ 			<id>albdomrui</id>
+ 			<name>Alberto</name>
+ 			<email>albdomrui@alum.us.esm</email>
+ 			<roles>
+ 				<role>participant</role>
+			</roles>
+ 		</developer>
+ 		<developer>
+ 			<id>marizqlav</id>
+ 			<name>Mario</name>
+ 			<email>marizqlav@alum.us.esm</email>
+ 			<roles>
+ 				<role>participant</role>
+			</roles>
+ 		</developer>
+ 		
+ 		<developer>
+            <id>marolmmar</id>
+            <name>Marcos Olmedo Marín</name>
+            <email>marolmmar1@alum.us.es</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+
+    <!-- More developers ...-->
+    </developers>
+	
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
