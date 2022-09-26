@@ -58,6 +58,15 @@
  				<role>participant</role>
 			</roles>
  		</developer>
+ 		
+ 		<developer>
+            <id>marolmmar</id>
+            <name>Marcos Olmedo Marín</name>
+            <email>marolmmar1@alum.us.es</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
 
     <!-- More developers ...-->
     </developers>
