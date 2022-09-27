@@ -32,8 +32,30 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-	<developers>
-		 <developer>
+    <developers>
+	    <developer>
+	 		<id>IsmaelHerrera2000</id>
+	 		<name>Ismael</name>
+	 		<email>ismherram@alum.us.es</email>
+	 		<url>https://github.com/IsmaelHerrera2000</url>
+	 		<roles>
+	 			<role>developer</role>
+	 		</roles>
+	 		<properties>
+	 			<picUrl>
+				
+				</picUrl>
+	 		</properties>
+	 	</developer>
+        <developer>
+            <id>alemerpal</id>
+            <name>Ale Merino Palma</name>
+            <email>alemerpal@alum.us.es</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+		<developer>
  			<id>albdomrui</id>
  			<name>Alberto</name>
  			<email>albdomrui@alum.us.esm</email>
@@ -49,9 +71,18 @@
  				<role>participant</role>
 			</roles>
  		</developer>
+ 		
+ 		<developer>
+            <id>marolmmar</id>
+            <name>Marcos Olmedo Marín</name>
+            <email>marolmmar1@alum.us.es</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
 
- <!-- More developers ...-->
-</developers>
+    <!-- More developers ...-->
+    </developers>
 	
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->

@@ -6,20 +6,20 @@
 <!-- %@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %-->  
 
 <petclinic:layout pageName="home">
-   	<h2><fmt:message key="welcome"/></h2>
+    <h2><fmt:message key="welcome"/></h2>
    	<div class="row">
     <h2>Project ${title}</h2>
     <p><h2>Group ${group}</h2></p>
     <p><ul>
     <c:forEach items="${persons}" var="person">
-    	<li>${person.firstName} ${person.lastName}</li>
+    	<li>${person.firstName}<h></h> ${person.lastName}</li>
     </c:forEach>    
     </ul></p>    
     </div>
     <div class="row">
     	<div class="col-md-12">
-            <spring:url value="/resources/images/pets.png" htmlEscape="true" var="petsImage"/>
-            <img class="img-responsive" src="${petsImage}"/>
+            <spring:url value="/resources/images/us.png" htmlEscape="true" var="usImage"/>
+            <img class="img-responsive" src="${usImage}"/>
         </div>
     </div>
 </petclinic:layout>
