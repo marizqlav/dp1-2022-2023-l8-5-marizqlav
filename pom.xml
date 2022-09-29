@@ -80,8 +80,15 @@
                 <role>developer</role>
             </roles>
         </developer>
-
-    <!-- More developers ...-->
+        
+        <developer>
+            <id>pabparmen</id>
+            <name>Pablo Parra Méndez</name>
+            <email>pabparmen@alum.us.es</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
 	
     <dependencies>
