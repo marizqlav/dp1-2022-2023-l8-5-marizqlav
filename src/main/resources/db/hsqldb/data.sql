@@ -22,6 +22,9 @@ INSERT INTO authorities(id,username,authority) VALUES (7,'marolmmar1','owner');
 -- One owner user, albdomrui, with password pass
 INSERT INTO users(username,password,enabled) VALUES ('albdomrui','word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (8,'albdomrui','owner');
+-- One owner user, pabparmen, with password pass
+INSERT INTO users(username,password,enabled) VALUES ('pabparmen','word',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (9,'pabparmen','owner');
 
 INSERT INTO vets(id, first_name,last_name) VALUES (1, 'James', 'Carter');
 INSERT INTO vets(id, first_name,last_name) VALUES (2, 'Helen', 'Leary');
