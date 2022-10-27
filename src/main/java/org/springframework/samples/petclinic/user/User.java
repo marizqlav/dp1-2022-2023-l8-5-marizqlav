@@ -18,6 +18,14 @@ import lombok.Setter;
 public class User{
 	@Id
 	String username;
+	 
+	String name;
+	
+	String surname;
+	
+	String photo;
+	
+	String email;
 	
 	String password;
 	
