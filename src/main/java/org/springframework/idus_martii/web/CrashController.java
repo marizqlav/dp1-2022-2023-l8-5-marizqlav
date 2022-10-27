@@ -13,37 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.idus_martii.model;
+package org.springframework.idus_martii.web;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * Simple JavaBean domain object with an id property. Used as a base class for objects
- * needing this property.
+ * Controller used to showcase what happens when an exception is thrown
  *
- * @author Ken Krebs
- * @author Juergen Hoeller
+ * @author Michael Isvy
+ * <p/>
+ * Also see how the bean of type 'SimpleMappingExceptionResolver' has been declared inside
+ * /WEB-INF/mvc-core-config.xml
  */
-@MappedSuperclass
-public class BaseEntity {
+@Controller
+public class CrashController {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public boolean isNew() {
-		return this.id == null;
+	@GetMapping(value = "/oups")
+	public String triggerException() {
+		throw new RuntimeException(
+				"Expected: controller used to showcase what " + "happens when an exception is thrown");
 	}
 
 }

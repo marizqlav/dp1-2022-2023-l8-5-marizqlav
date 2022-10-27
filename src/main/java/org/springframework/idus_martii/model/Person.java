@@ -17,33 +17,38 @@ package org.springframework.idus_martii.model;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotEmpty;
 
 /**
- * Simple JavaBean domain object adds a name property to <code>BaseEntity</code>. Used as
- * a base class for objects needing these properties.
+ * Simple JavaBean domain object representing an person.
  *
  * @author Ken Krebs
- * @author Juergen Hoeller
  */
 @MappedSuperclass
-public class NamedEntity extends BaseEntity {
+public class Person extends BaseEntity {
 
-    @Size(min = 3, max = 50)
-	@Column(name = "name")
-	private String name;
+	@Column(name = "first_name")
+	@NotEmpty
+	protected String firstName;
 
-	public String getName() {
-		return this.name;
+	@Column(name = "last_name")
+	@NotEmpty
+	protected String lastName;
+
+	public String getFirstName() {
+		return this.firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	@Override
-	public String toString() {
-		return this.getName();
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 }
