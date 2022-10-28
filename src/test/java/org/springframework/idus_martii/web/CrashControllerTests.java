@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web;
+package org.springframework.idus_martii.web;
 
 /**
  * Test class for {@link CrashController}
