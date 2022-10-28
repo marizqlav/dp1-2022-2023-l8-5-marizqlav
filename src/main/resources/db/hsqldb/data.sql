@@ -100,3 +100,7 @@ INSERT INTO turno(id,consul,predor,edil1,edil2,votos_Traidores,votos_Leales,voto
 INSERT INTO mensaje(id,hora,nombre_Jugador,texto) 
                 VALUES (1,'08:45:00','Jugador2','Mensaje de prueba 1'),
                         (2,'10:23:09','Jugador3','Mensaje de prueba 2');
+                        
+INSERT INTO achievement(id,name,description,threshold,badge_image) 
+                VALUES (1,'Viciado','Si juegas <THRESHOLD> partidas o más, consideramos que ya estás enganchado.',10.0,'https://bit.ly/certifiedGamer'),
+                        (2,'Triunfador','Si ganas <THRESHOLD> o  más partidas es que eres todo un triunfador.',20.0,'https://bit.ly/proGamer');
