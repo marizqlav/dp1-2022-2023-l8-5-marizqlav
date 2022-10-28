@@ -95,3 +95,8 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 15, '2022-03-07'
 INSERT INTO turno(id,consul,predor,edil1,edil2,votos_Traidores,votos_Leales,votos_Neutrales) 
                 VALUES (1,'Jugador1','Jugador2','Jugador3','Jugador4',1,1,0),
                         (2,'Jugador2','Jugador3','Jugador4','Jugador5',2,0,0);
+						
+						
+INSERT INTO mensaje(id,hora,nombre_Jugador,texto) 
+                VALUES (1,'08:45:00','Jugador2','Mensaje de prueba 1'),
+                        (2,'10:23:09','Jugador3','Mensaje de prueba 2');

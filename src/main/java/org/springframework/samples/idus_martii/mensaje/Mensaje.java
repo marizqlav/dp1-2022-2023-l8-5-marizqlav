@@ -17,11 +17,10 @@ import lombok.Setter;
 @Setter
 public class Mensaje extends BaseEntity{
 	
+	LocalTime hora;
 	@NotEmpty
 	@NotNull
 	String texto;
-	
-	LocalTime hora;
 
 	//@ManyToOne
 	String nombreJugador;
