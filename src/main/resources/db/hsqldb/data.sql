@@ -92,3 +92,6 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 15, '2022-03-07', 'clean');
 
+INSERT INTO turno(id,consul,predor,edil1,edil2,votos_Traidores,votos_Leales,votos_Neutrales) 
+                VALUES (1,'Jugador1','Jugador2','Jugador3','Jugador4',1,1,0),
+                        (2,'Jugador2','Jugador3','Jugador4','Jugador5',2,0,0);
