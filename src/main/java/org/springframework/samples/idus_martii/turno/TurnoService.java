@@ -1,4 +1,4 @@
-package org.springframework.samples.idus_martii.turnos;
+package org.springframework.samples.idus_martii.turno;
 
 import java.util.List;
 
