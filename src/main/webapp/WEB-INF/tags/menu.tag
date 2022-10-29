@@ -1,14 +1,15 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="idus_martii" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	
 <!--  >%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%-->
 <%@ attribute name="name" required="true" rtexprvalue="true"
 	description="Name of the active menu: home, owners, vets or error"%>
 
 <nav class="navbar navbar-default" role="navigation">
-	<div class="container">
+	<div class="container" >
 		<div class="navbar-header">
 			<a class="navbar-brand"
 				href="<spring:url value="/" htmlEscape="true" />"><span></span></a>
@@ -22,26 +23,26 @@
 		<div class="navbar-collapse collapse" id="main-navbar">
 			<ul class="nav navbar-nav">
 
-				<petclinic:menuItem active="${name eq 'home'}" url="/"
-					title="home page">
+				<idus_martii:menuItem active="${name eq 'home'}" url="/"
+					title="Pagina de inicio">
 					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 					<span>Home</span>
-				</petclinic:menuItem>
+				</idus_martii:menuItem>
 
-				<petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"
+				<idus_martii:menuItem active="${name eq 'owners'}" url="/owners/find"
 					title="find owners">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Find owners</span>
-				</petclinic:menuItem>
+				</idus_martii:menuItem>
 
-				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"
+				<idus_martii:menuItem active="${name eq 'vets'}" url="/vets"
 					title="veterinarians">
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 					<span>Veterinarians</span>
-				</petclinic:menuItem>
+				</idus_martii:menuItem>
 
 		
-				<petclinic:menuItem active="${name eq 'achievements'}" url="/statistics/achievements"
+				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements"
 					title="Achievements" dropdown="${true}">										
 						<ul class="dropdown-menu">
 							<li>
@@ -53,8 +54,20 @@
 
 							</li>
 						</ul>					
-				</petclinic:menuItem>	
-
+				</idus_martii:menuItem>	
+				<idus_martii:menuItem active="${name eq 'turnos'}" url="/turnos/"
+					title="Turnos" dropdown="${true}">										
+						<ul class="dropdown-menu">
+							<li>
+								<a href="<c:url value="/turnos/" />">Turnos listing</a>		
+									
+							</li>
+							<li class="divider"></li>
+							<li>								
+								<a href="<c:url value="/turnos/" />">My Turnos <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>		
+							</li>
+						</ul>					
+				</idus_martii:menuItem>	
 			</ul>
 
 
@@ -67,7 +80,7 @@
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span> 
+						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span>
 							<strong><sec:authentication property="name" /></strong> <span
 							class="glyphicon glyphicon-chevron-down"></span>
 					</a>

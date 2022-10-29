@@ -18,4 +18,16 @@ public class TurnoService {
     List<Turno> getTurnos(){
         return repo.findAll();
     }
+    
+    public Turno getById(int id){
+        return repo.findById(id).get();
+    }
+
+    public void deleteTurnoById(int id){
+        repo.deleteById(id);
+    }
+
+    public void save(Turno turno){
+        repo.save(turno);
+    }
 }
