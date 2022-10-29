@@ -38,8 +38,10 @@ public class AchievementController {
 	    @Transactional()
 	    @GetMapping("/{id}/delete")
 	    public ModelAndView deleteAchievement(@PathVariable int id){
-	        service.deleteAchievementById(id);        
-	        return showAchievements();
+	        service.deleteAchievementById(id);  
+	        ModelAndView result=showAchievements();
+	        result.addObject("message", "The achievement was delete successfully");
+	        return result;
 	    }
 
 	    @Transactional(readOnly = true)
