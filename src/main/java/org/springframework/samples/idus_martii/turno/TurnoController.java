@@ -36,7 +36,7 @@ public class TurnoController {
     public ModelAndView deleteTurno(@PathVariable int id){
         service.deleteTurnoById(id);        
         ModelAndView result=showTurnos();
-        result.addObject("message", "The turno was deleted successfully");
+        result.addObject("message", "El turno se ha eliminado correctamente");
         return result;
     }
     @Transactional(readOnly = true)
@@ -55,7 +55,7 @@ public class TurnoController {
         BeanUtils.copyProperties(turno,turnoToBeUpdated,"id");
         service.save(turnoToBeUpdated);
         ModelAndView result=showTurnos();
-        result.addObject("message", "The turno was updated successfully");
+        result.addObject("message", "El turno se ha actualizado correctamente");
         return result;   
     }
     
@@ -73,7 +73,7 @@ public class TurnoController {
     public ModelAndView saveNewTurno(Turno turno, BindingResult br){
         service.save(turno);
         ModelAndView result=showTurnos();
-        result.addObject("message", "The turno was created successfully");
+        result.addObject("message", "El turno se ha creado correctamente");
         return result;
     }
 }

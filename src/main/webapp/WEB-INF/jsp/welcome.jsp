@@ -7,16 +7,19 @@
 
 <div style="background-image: url(/resources/images/portada.jpg); background-size: 100% 100%; height:120%">
 <idus_martii:layout pageName="home" >
+<!--
     <h2><fmt:message key="welcome"/></h2>
    	<div class="row">
+   	
     <h2>Project ${title}</h2>
     <p><h2>Group ${group}</h2></p>
     <p><ul>
     <c:forEach items="${persons}" var="person">
     	<li>${person.firstName}<h></h> ${person.lastName}</li>
     </c:forEach>    
-    </ul></p>    
+    </ul></p>  
     </div>
+    -->  
     <div class="row">
     	<div class="col-md-12">
 <!-- 

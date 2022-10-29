@@ -18,6 +18,7 @@
             <th>Votos Traidores</th>
             <th>Votos Leales</th>
             <th>Votos Neutrales</th>
+            <th>Id de ronda</th>
             <th></th>
             <th></th>
         </tr>
@@ -46,6 +47,9 @@
                    <td>       
                     <c:out value="${turno.votosNeutrales} "/>
                 </td>
+                   <td>       
+                    <c:out value="${turno.ronda.id} "/>
+                </td>
                 <td> 
                     <a href="/turnos/${turno.id}/edit"> 
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>                            
@@ -60,5 +64,5 @@
         </c:forEach>
         </tbody>
     </table>
-	<a class="btn btn-default" href="/turnos/new">Create new turno</a>
+	<a class="btn btn-default" href="/turnos/new">Crear nuevo turno</a>
 </idus_martii:layout>

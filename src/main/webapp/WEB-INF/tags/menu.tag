@@ -6,13 +6,15 @@
 	
 <!--  >%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%-->
 <%@ attribute name="name" required="true" rtexprvalue="true"
-	description="Name of the active menu: home, owners, vets or error"%>
+	description="Pagina de inicio del juego Idus Martii"%>
 
 <nav class="navbar navbar-default" role="navigation">
 	<div class="container" >
 		<div class="navbar-header">
+		
 			<a class="navbar-brand"
 				href="<spring:url value="/" htmlEscape="true" />"><span></span></a>
+				
 			<button type="button" class="navbar-toggle" data-toggle="collapse"
 				data-target="#main-navbar">
 				<span class="sr-only"><os-p>Toggle navigation</os-p></span> <span
@@ -20,54 +22,67 @@
 					class="icon-bar"></span>
 			</button>
 		</div>
+		
 		<div class="navbar-collapse collapse" id="main-navbar">
 			<ul class="nav navbar-nav">
 
 				<idus_martii:menuItem active="${name eq 'home'}" url="/"
 					title="Pagina de inicio">
 					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-					<span>Home</span>
+					<span>Pagina principal</span>
 				</idus_martii:menuItem>
 
 				<idus_martii:menuItem active="${name eq 'owners'}" url="/owners/find"
 					title="find owners">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-					<span>Find owners</span>
+					<span>Buscar usuarios</span>
 				</idus_martii:menuItem>
 
-				<idus_martii:menuItem active="${name eq 'vets'}" url="/vets"
-					title="veterinarians">
-					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-					<span>Veterinarians</span>
-				</idus_martii:menuItem>
+				<idus_martii:menuItem active="${name eq 'Objetos creados'}" url="/turnos/"
+					title="Objetos creados" dropdown="${true}">										
+						<ul class="dropdown-menu">
+							<li>
+								<a href="<c:url value="/usuarios/" />">Lista de usuarios</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/turnos/" />">Lista de turnos</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/rondas/" />">Lista de rondas</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/rondas/" />">Lista de partidas</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/facciones/" />">Lista de facciones</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/mensajes/" />">Lista de mensajes</a>		
+							</li>
+							
+						</ul>					
+				</idus_martii:menuItem>	
 
 		
 				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements"
-					title="Achievements" dropdown="${true}">										
+					title="Logros" dropdown="${true}">										
 						<ul class="dropdown-menu">
 							<li>
-								<a href="<c:url value="/statistics/achievements/" />">Achievements listing</a>		
+								<a href="<c:url value="/statistics/achievements/" />">Lista de logros</a>		
 							</li>
 							<li class="divider"></li>
 							<li>								
-								<a href="<c:url value="/statistics/achievements/" />">My Achievements <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>		
+								<a href="<c:url value="/statistics/achievements/" />">Mis logros <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>		
 
 							</li>
 						</ul>					
 				</idus_martii:menuItem>	
-				<idus_martii:menuItem active="${name eq 'turnos'}" url="/turnos/"
-					title="Turnos" dropdown="${true}">										
-						<ul class="dropdown-menu">
-							<li>
-								<a href="<c:url value="/turnos/" />">Turnos listing</a>		
-									
-							</li>
-							<li class="divider"></li>
-							<li>								
-								<a href="<c:url value="/turnos/" />">My Turnos <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>		
-							</li>
-						</ul>					
-				</idus_martii:menuItem>	
+				
 			</ul>
 
 
