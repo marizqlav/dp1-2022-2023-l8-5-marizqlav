@@ -1,4 +1,4 @@
-package org.springframework.idus_martii.pet;
+package org.springframework.samples.petclinic.pet;
 
 /*
  * Copyright 2012-2019 the original author or authors.

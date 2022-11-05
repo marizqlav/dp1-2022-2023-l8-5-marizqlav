@@ -1,4 +1,4 @@
-package org.springframework.idus_martii.model;
+package org.springframework.samples.petclinic.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

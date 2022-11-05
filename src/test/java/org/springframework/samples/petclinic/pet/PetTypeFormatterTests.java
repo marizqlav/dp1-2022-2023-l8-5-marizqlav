@@ -1,4 +1,4 @@
-package org.springframework.idus_martii.pet;
+package org.springframework.samples.petclinic.pet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

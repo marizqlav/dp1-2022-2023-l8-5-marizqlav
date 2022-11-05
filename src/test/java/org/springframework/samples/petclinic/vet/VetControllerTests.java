@@ -1,4 +1,4 @@
-package org.springframework.idus_martii.vet;
+package org.springframework.samples.petclinic.vet;
 
 import static org.hamcrest.xml.HasXPath.hasXPath;
 import static org.mockito.BDDMockito.given;
