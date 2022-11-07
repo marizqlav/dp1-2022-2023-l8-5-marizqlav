@@ -1,7 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.springframework.samples.idus_martii.jugador.Jugador;
 //import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "partidas")
+@Table(name = "partida")
 public class Partida extends BaseEntity {
 
     TipoFaccion faccionGanadora;
@@ -33,19 +34,17 @@ public class Partida extends BaseEntity {
     @Size(min = 5, max = 8)
     Integer nJugadores;
 
-    LocalDate fechaCreacion;
+    LocalDateTime fechaCreacion;
 
-    LocalDate fechaInicio;
+    LocalDateTime fechaInicio;
 
-    LocalDate fechaFin;
+    LocalDateTime fechaFin;
 
     Duration getDuration() {
         return Duration.between(fechaInicio, fechaFin);
     }
 
-    /*List<Jugador> jugadores() {
-
-    }*/
+    //TODO relacion con Jugador
 
     //TODO Esta requiere de faccion
     /*@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
@@ -54,7 +53,7 @@ public class Partida extends BaseEntity {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     List<Ronda> rondas;
     
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST) //TODO mappedBy
     List<Mensaje> mensajes;
 
     //TODO Requiere entidad jugador
