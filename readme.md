@@ -1,3 +1,2 @@
 Welcome to Idus Martii Project
-
-<img width="1042" alt="idus_martii" src="https://2tomatoesgames.com/wp-content/uploads/2020/05/idus-martii.jpg">
+![portada](https://user-images.githubusercontent.com/72987930/199238494-447d3821-49fe-4154-8f0d-2e1b8d1646fe.jpg)
