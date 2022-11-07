@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MensajeRepository extends CrudRepository<Mensaje, Integer>{
     List<Mensaje> findAll();
+    Mensaje save(Mensaje mensaje);
 }
