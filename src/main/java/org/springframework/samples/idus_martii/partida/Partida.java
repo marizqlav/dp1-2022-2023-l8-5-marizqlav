@@ -43,11 +43,15 @@ public class Partida extends BaseEntity {
         return Duration.between(fechaInicio, fechaFin);
     }
 
+    /*List<Jugador> jugadores() {
+
+    }*/
+
     //TODO Esta requiere de faccion
     /*@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     Set<Faccion> faccionesJugadoras; //TODO aplicar restriccion de tres facciones en service*/
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     List<Ronda> rondas;
     
     @OneToMany(cascade = CascadeType.PERSIST)
