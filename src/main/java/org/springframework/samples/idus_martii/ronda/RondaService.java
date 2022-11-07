@@ -1,4 +1,4 @@
-package org.springframework.samples.idus_martii.turno;
+package org.springframework.samples.idus_martii.ronda;
 
 import java.util.List;
 
@@ -6,28 +6,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TurnoService {
+public class RondaService {
 
-    TurnoRepository repo;
+    RondaRepository repo;
 
     @Autowired
-    public TurnoService(TurnoRepository repo){
+    public RondaService(RondaRepository repo){
         this.repo=repo;
     }
 
-    List<Turno> getTurnos(){
+    List<Ronda> getRondas(){
         return repo.findAll();
     }
     
-    public Turno getById(int id){
+    public Ronda getById(int id){
         return repo.findById(id).get();
     }
 
-    public void deleteTurnoById(int id){
+    public void deleteRondaById(int id){
         repo.deleteById(id);
     }
 
-    public void save(Turno turno){
-        repo.save(turno);
+    public void save(Ronda ronda){
+        repo.save(ronda);
     }
 }
