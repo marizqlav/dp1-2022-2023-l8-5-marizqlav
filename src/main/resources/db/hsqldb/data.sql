@@ -92,7 +92,10 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 15, '2022-03-07', 'clean');
 
-INSERT INTO ronda(id,partida_Id) 
+INSERT INTO partida(id, faccion_ganadora, n_jugadores, fecha_creacion, fecha_inicio, fecha_fin)
+        VALUES (1, 3, 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31');
+
+INSERT INTO ronda(id, partida)
                 VALUES (1,1),
                         (2,1);
 
