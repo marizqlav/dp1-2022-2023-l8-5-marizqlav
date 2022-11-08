@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.time.Duration;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.player.Player;
 //import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
@@ -57,10 +58,10 @@ public class Partida extends BaseEntity {
     List<Mensaje> mensajes;
 
     //TODO Requiere entidad jugador
-    /*@ManyToMany
+    @ManyToMany
     @JoinTable(
         name = "partida_jugador", 
         joinColumns = @JoinColumn(name = "partida_id"), 
         inverseJoinColumns = @JoinColumn(name = "jugador_id"))
-    Set<Jugador> espectadores;*/
+    Set<Player> espectadores;
 }

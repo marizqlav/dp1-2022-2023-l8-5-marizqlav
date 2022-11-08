@@ -4,7 +4,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,11 +25,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name ="player")
+@Table(name ="players")
 public class Player extends BaseEntity{
 	
 	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "username", referencedColumnName = "username")
+    @JoinColumn(name = "user", referencedColumnName = "username")
 	private User user;
 	
 	
@@ -41,14 +43,15 @@ public class Player extends BaseEntity{
 	@JoinColumn(name = "faccion", referencedColumnName = "achievement")
 	Faccion faccion;*/
 	
-	/*
-	@ManyToMany(mappedBy = "turno")
-	@JoinColumn(name = "turno", referencedColumnName = "turno")
-	Turno turno;*/
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "turn_player", joinColumns = @JoinColumn(name="player_id"),
+	inverseJoinColumns = @JoinColumn(name = "turno_id"))
+	private Set<Turno> turno;
 	
 	
-	/*
+	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-	private Set<Mensaje> mensajesS;*/
+	private Set<Mensaje> mensajes;
 	
 }
