@@ -44,12 +44,18 @@ public class Player extends BaseEntity{
 	Faccion faccion;*/
 	
 	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+	private Set<Faccion> faccion;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "turn_player", joinColumns = @JoinColumn(name="player_id"),
 	inverseJoinColumns = @JoinColumn(name = "turno_id"))
 	private Set<Turno> turno;
 	
-	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "player_achievement", joinColumns = @JoinColumn(name="player_id"),
+	inverseJoinColumns = @JoinColumn(name = "achievement"))
+	private Set<Achievement> achievement;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
 	private Set<Mensaje> mensajes;

@@ -117,3 +117,6 @@ INSERT INTO turn_player VALUES (1, 2);
 INSERT INTO achievement(id,name,description,threshold,badge_image) 
                 VALUES (1,'Viciado','Si juegas <THRESHOLD> partidas o más, consideramos que ya estás enganchado.',10.0,'https://bit.ly/certifiedGamer'),
                         (2,'Triunfador','Si ganas <THRESHOLD> o  más partidas es que eres todo un triunfador.',20.0,'https://bit.ly/proGamer');
+                        
+                        
+INSERT INTO player_achievement VALUES(1,1)
