@@ -1,9 +1,16 @@
 package org.springframework.samples.idus_martii.faccion;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.player.Player;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +27,8 @@ public class Faccion extends BaseEntity{
 	private FaccionesEnumerado faccionselecionada;
 	
 	
-	//@OnetoMany					//Esperando clase jugador 
-	//private String jugador;
+	//Esperando clase jugador
+	@ManyToOne(optional=false)
+	@JoinColumn(name = "player_id")
+	private Player player;
 }
