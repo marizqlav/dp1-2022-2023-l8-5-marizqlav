@@ -57,4 +57,9 @@ public class Jugador extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
+	inverseJoinColumns = @JoinColumn(name = "jugador"))
+	private Set<Jugador> jugador;
+	
 }

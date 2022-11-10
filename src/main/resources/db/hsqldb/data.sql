@@ -116,9 +116,9 @@ INSERT INTO turno(id, consul_id, predor_id, edil1_id, edil2_id, votos_traidores,
 
 INSERT INTO turno_jugador VALUES (1, 2);
 
--- INSERT INTO faccion(id, faccionposible1, faccionposible2, faccionselecionada, jugador_id) 
--- VALUES (1, 'Leal', 'Mercader', 'Leal', 1), 
--- (2, 'Traidor', 'Mercader', 'Mercader', 2);
+INSERT INTO faccion(id, faccionposible1, faccionposible2, faccionselecionada, jugador_id) 
+VALUES (1, 'Leal', 'Mercader', 'Leal', 1), 
+(2, 'Traidor', 'Mercader', 'Mercader', 2);
 						
  INSERT INTO mensaje(id,hora,jugador_id,texto) 
                  VALUES (1,'08:45:00',1,'Mensaje de prueba 1'),
@@ -129,4 +129,8 @@ INSERT INTO achievement(id,name,description,threshold,badge_image)
                         (2,'Triunfador','Si ganas <THRESHOLD> o  más partidas es que eres todo un triunfador.',20.0,'https://bit.ly/proGamer');
                         
                         
-INSERT INTO jugador_achievement VALUES(1,1)
+INSERT INTO jugador_achievement VALUES(1,1);
+
+
+INSERT INTO amigos VALUES(2,1), (1,2);
+
