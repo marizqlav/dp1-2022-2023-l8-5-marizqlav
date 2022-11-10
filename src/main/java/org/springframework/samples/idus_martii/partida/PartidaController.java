@@ -2,6 +2,7 @@ package org.springframework.samples.idus_martii.partida;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,14 +10,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/partida/{userId}")
+@RequestMapping("/partidas")
 public class PartidaController {
-    
+	 private final String  PARTIDAS_LISTING_VIEW="/partidas/partidasList";
     PartidaService partidaService;
 
     @Autowired
     public PartidaController(PartidaService partidaService) {
         this.partidaService = partidaService;
+    }
+    
+    @Transactional(readOnly = true)
+    @GetMapping("/")
+    public ModelAndView showRondas(){
+        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW);
+        result.addObject("partidas", partidaService.getPartidas());
+        return result;
     }
 
     @GetMapping(value = "/create")
@@ -37,6 +46,8 @@ public class PartidaController {
 
     @GetMapping(value = "/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId) {
-        return null;
+    	ModelAndView result=new ModelAndView("/partidas/tablero");
+        result.addObject("rondas", partidaService.findPartida(partidaId));
+        return result;
     }
 }

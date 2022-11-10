@@ -1,5 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.turno.Turno;
@@ -15,10 +17,14 @@ public class PartidaService {
         this.partidaRepo = partidaRepo;
     }
 
+    
     public Partida findPartida(Integer id) {
         return partidaRepo.findById(id).get();
     }
     
+    List<Partida> getPartidas(){
+        return partidaRepo.findAll();
+    }
     public void IniciarPartida(Integer id) {
         Partida partida = findPartida(id);
 

@@ -11,30 +11,26 @@
     <table id="rondasTable" class="table table-striped">
         <thead>
         <tr>
-            <th>Id</th>
             <th>Id de partida</th>
-            <th></th>
-            <th></th>
+            <th>Id de ronda</th>
+            <th>Id de turno</th>
+            <th>Consul</th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${rondas}" var="ronda">
+        <c:forEach items="${partida}" var="ronda">
             <tr>
                 <td>
-                    <c:out value="${ronda.id}"/>
+                    <c:out value="${partida.id}"/>
                 </td>
                 <td>                    
-                      <c:out value="${ronda.partida} "/>                                        
+                      <c:out value="${partida.ronda.id} "/>                                        
                 </td>
-                <td> 
-                    <a href="/rondas/${ronda.id}/edit"> 
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>                            
-                    </a>       
+                <td>                    
+                      <c:out value="${partida.ronda.turno.id} "/>                                        
                 </td>
-                <td> 
-                    <a href="/rondas/${ronda.id}/delete"> 
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </a>      
+                <td>                    
+                      <c:out value="${partida.ronda.turno.consul.user.username} "/>                                        
                 </td>
             </tr>
         </c:forEach>
