@@ -66,6 +66,7 @@ INSERT INTO owners VALUES (12, 'Ismael', 'Herrera', 'Marchena, 2', 'Sevilla', '6
 INSERT INTO owners VALUES (13, 'Mario', 'Izquierdo', 'Extremadura, Merida', 'Badajoz', '6666666661', 'marizqlav');
 INSERT INTO owners VALUES (14, 'Marcos', 'Olmedo', 'Castilla la mancha, Ciudad-Real', 'Puertollano', '657253380', 'marolmmar1');
 INSERT INTO owners VALUES (15, 'Alberto', 'Dominguez-Adame', 'Andalucia, Sevilla', 'Sevilla', '6666666662', 'albdomrui');
+INSERT INTO owners VALUES (16, 'Pablo', 'Parra', 'Andalucia, Sevilla', 'Mairena', '6666666662', 'pabparmen');
 
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
@@ -92,19 +93,35 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (5, 15, '2022-03-07', 'clean');
 
-INSERT INTO ronda(id,partida_Id) 
+INSERT INTO partida(id, faccion_ganadora, n_jugadores, fecha_creacion, fecha_inicio, fecha_fin)
+        VALUES (1, 3, 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31');
+
+INSERT INTO ronda(id, partida)
                 VALUES (1,1),
                         (2,1);
 
 INSERT INTO turno(id,consul,predor,edil1,edil2,votos_Traidores,votos_Leales,votos_Neutrales,ronda_Id) 
                 VALUES (1,'Jugador1','Jugador2','Jugador3','Jugador4',1,1,0,1),
-                        (2,'Jugador2','Jugador3','Jugador4','Jugador5',2,0,0,1);
+                        (2,'Jugador2','Jugador3','Jugador4','Jugador5',2,0,0,1);			
+
+				
+INSERT INTO jugadores
+				VALUES (1, 'admin1'),
+				(2, 'owner1');	
+
+INSERT INTO turno_jugador VALUES (1, 2);
+
+-- INSERT INTO faccion(id, faccionposible1, faccionposible2, faccionselecionada, jugador_id) 
+-- VALUES (1, 'Leal', 'Mercader', 'Leal', 1), 
+-- (2, 'Traidor', 'Mercader', 'Mercader', 2);
 						
-						
-INSERT INTO mensaje(id,hora,nombre_Jugador,texto) 
-                VALUES (1,'08:45:00','Jugador2','Mensaje de prueba 1'),
-                        (2,'10:23:09','Jugador3','Mensaje de prueba 2');
+ INSERT INTO mensaje(id,hora,jugador_id,texto) 
+                 VALUES (1,'08:45:00',1,'Mensaje de prueba 1'),
+                         (2,'10:23:09',2,'Mensaje de prueba 2');
                         
 INSERT INTO achievement(id,name,description,threshold,badge_image) 
                 VALUES (1,'Viciado','Si juegas <THRESHOLD> partidas o más, consideramos que ya estás enganchado.',10.0,'https://bit.ly/certifiedGamer'),
                         (2,'Triunfador','Si ganas <THRESHOLD> o  más partidas es que eres todo un triunfador.',20.0,'https://bit.ly/proGamer');
+                        
+                        
+INSERT INTO jugador_achievement VALUES(1,1)
