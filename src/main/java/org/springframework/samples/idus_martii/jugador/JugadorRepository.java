@@ -1,14 +1,15 @@
-package org.springframework.samples.idus_martii.player;
+package org.springframework.samples.idus_martii.jugador;
 
 import java.util.List;
+
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlayerRepository extends CrudRepository<Player, Integer>{
+public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
 	
-	@Query("SELECT p FROM Player p")
-	List<Player> findAllPlayers();
+	@Query("SELECT j FROM Jugador j")
+	List<Jugador> findAllJugadores();
 }
