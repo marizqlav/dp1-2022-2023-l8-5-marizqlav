@@ -30,5 +30,6 @@ public class PartidaService {
 
         Integer randomNumberPlayer =  (int) (Math.random() * (partida.getNJugadores()));
         
+
     }
 }
