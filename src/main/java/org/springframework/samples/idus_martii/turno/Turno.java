@@ -3,7 +3,6 @@ package org.springframework.samples.idus_martii.turno;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -22,19 +21,19 @@ import lombok.Setter;
 @Table(name = "turno")
 public class Turno extends BaseEntity {
 	@NotNull
-	@OneToOne
+	@ManyToOne
     private Jugador consul;
 
 	@NotNull
-	@OneToOne
+	@ManyToOne
     private Jugador predor;
 
 	@NotNull
-	@OneToOne
+	@ManyToOne
 	private Jugador edil1;
 
 	@NotNull
-	@OneToOne
+	@ManyToOne
     private Jugador edil2;
 
 	@Min(0)
