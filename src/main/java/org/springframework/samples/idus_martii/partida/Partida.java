@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 //import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -45,11 +46,9 @@ public class Partida extends BaseEntity {
         return Duration.between(fechaInicio, fechaFin);
     }
 
-    //TODO relacion con Jugador
-
-    //TODO Esta requiere de faccion
-    /*@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
-    Set<Faccion> faccionesJugadoras; //TODO aplicar restriccion de tres facciones en service*/
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
+    Set<Faccion> faccionesJugadoras;
+    //TODO aplicar restriccion de tres facciones en service
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     List<Ronda> rondas;
@@ -57,7 +56,6 @@ public class Partida extends BaseEntity {
     @OneToMany(cascade = CascadeType.PERSIST) //TODO mappedBy
     List<Mensaje> mensajes;
 
-    //TODO Requiere entidad jugador
     @ManyToMany
     @JoinTable(
         name = "partida_jugador", 

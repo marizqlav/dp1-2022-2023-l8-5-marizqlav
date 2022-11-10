@@ -116,7 +116,7 @@ INSERT INTO turno(id, consul_id, predor_id, edil1_id, edil2_id, votos_traidores,
 
 INSERT INTO turno_jugador VALUES (1, 2);
 
-INSERT INTO faccion(id, faccionposible1, faccionposible2, faccionselecionada, jugador_id) 
+INSERT INTO faccion(id, faccion_posible1, faccion_posible2, faccion_selecionada, jugador_id) 
 VALUES (1, 'Leal', 'Mercader', 'Leal', 1), 
 (2, 'Traidor', 'Mercader', 'Mercader', 2);
 						

@@ -21,18 +21,20 @@ public class PartidaController {
 
     @GetMapping(value = "/create")
     public ModelAndView CrearPartidaForm() {
-        return null; //TODO Mario y Pablo
+        //TODO Mario y Pablo
+        return new ModelAndView("redirect:/partida/{userId}/{partidaId}/iniciar");
     }
 
     @PostMapping(value = "/create")
-    public void CrearPartida() {
+    public ModelAndView CrearPartida() {
         //TODO Mario y Pablo
-        //Redirect a /partida/{userId}/{partidaId}
+        return new ModelAndView("redirect:/partida/{userId}/{partidaId}/iniciar");
     }
     
     @PostMapping(value = "/{partidaId}/iniciar")
-    public void IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
         partidaService.IniciarPartida(partidaId);
+        return new ModelAndView("redirect:/partida/{userId}/{partidaId}");
     }
 
     @GetMapping(value = "/{partidaId}")
