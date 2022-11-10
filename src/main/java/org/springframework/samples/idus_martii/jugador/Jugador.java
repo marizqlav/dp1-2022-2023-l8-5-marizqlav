@@ -29,6 +29,7 @@ import lombok.Setter;
 public class Jugador extends BaseEntity{
 	
 	@OneToOne(cascade = CascadeType.ALL)
+	
     @JoinColumn(name = "user", referencedColumnName = "username")
 	private User user;
 	
