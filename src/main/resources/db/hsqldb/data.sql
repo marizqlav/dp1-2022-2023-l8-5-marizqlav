@@ -124,4 +124,8 @@ INSERT INTO achievement(id,name,description,threshold,badge_image)
                         (2,'Triunfador','Si ganas <THRESHOLD> o  más partidas es que eres todo un triunfador.',20.0,'https://bit.ly/proGamer');
                         
                         
-INSERT INTO jugador_achievement VALUES(1,1)
+INSERT INTO jugador_achievement VALUES(1,1);
+
+
+INSERT INTO amigos VALUES(2,1), (1,2);
+
