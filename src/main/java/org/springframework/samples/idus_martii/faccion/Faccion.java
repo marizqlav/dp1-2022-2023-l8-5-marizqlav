@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,11 +23,13 @@ import lombok.Setter;
 @Setter
 @Table(name = "faccion")
 public class Faccion extends BaseEntity{
-	
+	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionposible1;
+	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionposible2;//Facciones a elegir solo 2
 	
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionselecionada;
 
 	

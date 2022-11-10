@@ -111,9 +111,9 @@ INSERT INTO jugadores
 
 INSERT INTO turno_jugador VALUES (1, 2);
 
--- INSERT INTO faccion(id, faccionposible1, faccionposible2, faccionselecionada, jugador_id) 
--- VALUES (1, 'Leal', 'Mercader', 'Leal', 1), 
--- (2, 'Traidor', 'Mercader', 'Mercader', 2);
+INSERT INTO faccion(id, faccionposible1, faccionposible2, faccionselecionada, jugador_id) 
+VALUES (1, 'Leal', 'Mercader', 'Leal', 1), 
+(2, 'Traidor', 'Mercader', 'Mercader', 2);
 						
  INSERT INTO mensaje(id,hora,jugador_id,texto) 
                  VALUES (1,'08:45:00',1,'Mensaje de prueba 1'),
