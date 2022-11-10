@@ -1,4 +1,4 @@
-package org.springframework.samples.idus_martii.player;
+package org.springframework.samples.idus_martii.jugador;
 
 import java.util.Set;
 
@@ -25,18 +25,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name ="players")
-public class Player extends BaseEntity{
+@Table(name ="jugadores")
+public class Jugador extends BaseEntity{
 	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user", referencedColumnName = "username")
 	private User user;
 	
 	
-	/*
-	@ManyToMany
-	@JoinColumn(name = "achievement", referencedColumnName = "achievement")
-	Achievement achievement;*/
+	
 	
 	/*
 	@ManyToMany(mappedBy = "faccion")
@@ -44,20 +41,20 @@ public class Player extends BaseEntity{
 	Faccion faccion;*/
 	
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Faccion> faccion;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "turn_player", joinColumns = @JoinColumn(name="player_id"),
+	@JoinTable(name = "turno_jugador", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "turno_id"))
 	private Set<Turno> turno;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "player_achievement", joinColumns = @JoinColumn(name="player_id"),
+	@JoinTable(name = "jugador_achievement", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "achievement"))
 	private Set<Achievement> achievement;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
 	
 }

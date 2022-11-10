@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import org.springframework.samples.idus_martii.player.Player;
+import org.springframework.samples.idus_martii.jugador.Jugador;
 //import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
@@ -63,5 +63,5 @@ public class Partida extends BaseEntity {
         name = "partida_jugador", 
         joinColumns = @JoinColumn(name = "partida_id"), 
         inverseJoinColumns = @JoinColumn(name = "jugador_id"))
-    Set<Player> espectadores;
+    Set<Jugador> espectadores;
 }
