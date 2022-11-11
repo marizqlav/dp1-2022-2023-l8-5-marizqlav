@@ -25,6 +25,7 @@ public class PartidaService {
     List<Partida> getPartidas(){
         return partidaRepo.findAll();
     }
+    
     public void IniciarPartida(Integer id) {
         Partida partida = findPartida(id);
 
@@ -34,7 +35,7 @@ public class PartidaService {
         Turno turnoInicial = new Turno();
         rondaInicial.getTurnos().add(turnoInicial);
 
-        Integer randomNumberPlayer =  (int) (Math.random() * (partida.getNJugadores()));
+        Integer randomNumberPlayer =  (int) (Math.random() * (partida.getNumeroJugadores()));
         
 
     }

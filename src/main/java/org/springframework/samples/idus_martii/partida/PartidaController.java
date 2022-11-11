@@ -1,5 +1,10 @@
 package org.springframework.samples.idus_martii.partida;
 
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +27,8 @@ public class PartidaController {
     
     @Transactional(readOnly = true)
     @GetMapping("/")
-    public ModelAndView showRondas(){
+    public ModelAndView showPartidas(HttpServletResponse response){
+    	response.addHeader("Refresh", "5");
         ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW);
         result.addObject("partidas", partidaService.getPartidas());
         return result;
@@ -44,10 +50,12 @@ public class PartidaController {
         partidaService.IniciarPartida(partidaId);
     }
 
-    @GetMapping(value = "/{partidaId}")
+    @GetMapping(value = "/create/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId) {
     	ModelAndView result=new ModelAndView("/partidas/tablero");
-        result.addObject("rondas", partidaService.findPartida(partidaId));
+        result.addObject("partida", partidaService.findPartida(partidaId));
         return result;
     }
+    
+    
 }
