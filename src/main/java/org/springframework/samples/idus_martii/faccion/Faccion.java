@@ -24,16 +24,19 @@ import lombok.Setter;
 @Setter
 @Table(name = "faccion")
 public class Faccion extends BaseEntity{
+	
 	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionPosible1;
+
 	@Enumerated(EnumType.STRING)
-	private FaccionesEnumerado faccionPosible2;//Facciones a elegir solo 2
+	private FaccionesEnumerado faccionPosible2; //Facciones a elegir solo 2
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionSelecionada;
 
 	
+	@JoinColumn(name = "partida_id")
     @ManyToOne(cascade = CascadeType.REMOVE)
     Partida partida;
 

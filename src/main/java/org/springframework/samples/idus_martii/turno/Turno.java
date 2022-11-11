@@ -20,6 +20,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "turno")
 public class Turno extends BaseEntity {
+	
 	@NotNull
 	@ManyToOne
     private Jugador consul;

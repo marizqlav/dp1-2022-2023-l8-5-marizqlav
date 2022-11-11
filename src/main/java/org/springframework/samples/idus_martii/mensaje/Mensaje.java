@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.partida.Partida;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,8 +32,12 @@ public class Mensaje extends BaseEntity{
 	private String texto;
 	
 	
-	// Bidireccionalidad con Jugador
+	//TODO Bidireccionalidad con Jugador
 	@ManyToOne(optional=false)
 	@JoinColumn(name = "jugador_id")
 	private Jugador jugador;
+
+	@ManyToOne
+	@JoinColumn(name = "partida_id")
+	Partida partida;
 }

@@ -29,28 +29,23 @@ import lombok.Setter;
 public class Jugador extends BaseEntity{
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	
     @JoinColumn(name = "user", referencedColumnName = "username")
 	private User user;
-	
-	
-	
 	
 	/*
 	@ManyToMany(mappedBy = "faccion")
 	@JoinColumn(name = "faccion", referencedColumnName = "achievement")
 	Faccion faccion;*/
 	
-	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Faccion> faccion;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "turno_jugador", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "turno_id"))
 	private Set<Turno> turno;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "jugador_achievement", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "achievement"))
 	private Set<Achievement> achievement;
@@ -58,7 +53,7 @@ public class Jugador extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "jugador"))
 	private Set<Jugador> jugador;
