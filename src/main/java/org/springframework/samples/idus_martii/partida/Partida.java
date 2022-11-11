@@ -8,6 +8,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -15,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.springframework.samples.idus_martii.faccion.Faccion;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 //import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -29,8 +34,9 @@ import lombok.Setter;
 @Setter
 @Table(name = "partida")
 public class Partida extends BaseEntity {
-
-    TipoFaccion faccionGanadora;
+    
+	@Enumerated(EnumType.STRING)
+    FaccionesEnumerado faccionGanadora;
 
     @Size(min = 5, max = 8)
     Integer nJugadores;
@@ -45,19 +51,16 @@ public class Partida extends BaseEntity {
         return Duration.between(fechaInicio, fechaFin);
     }
 
-    //TODO relacion con Jugador
-
-    //TODO Esta requiere de faccion
-    /*@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
-    Set<Faccion> faccionesJugadoras; //TODO aplicar restriccion de tres facciones en service*/
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
+    Set<Faccion> faccionesJugadoras;
+    //TODO aplicar restriccion de tres facciones en service
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     List<Ronda> rondas;
     
-    @OneToMany(cascade = CascadeType.PERSIST) //TODO mappedBy
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida") //TODO mappedBy
     List<Mensaje> mensajes;
 
-    //TODO Requiere entidad jugador
     @ManyToMany
     @JoinTable(
         name = "partida_jugador", 
