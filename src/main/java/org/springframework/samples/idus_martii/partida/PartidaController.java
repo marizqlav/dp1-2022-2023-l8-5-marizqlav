@@ -1,7 +1,12 @@
 package org.springframework.samples.idus_martii.partida;
 
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,12 +17,33 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/partida/{userId}")
 public class PartidaController {
     
-    PartidaService partidaService;
+    private static final String VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM = "partidas/createOrUpdatePartidaForm";;
+	PartidaService partidaService;
 
     @Autowired
     public PartidaController(PartidaService partidaService) {
         this.partidaService = partidaService;
     }
+    
+	@GetMapping(value = "/new")
+	public String initCreationForm(Map<String, Object> model) {
+		Partida partida = new Partida();
+		model.put("partida", partida);
+		return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+	}
+
+	@PostMapping(value = "/new")
+	public String processCreationForm(@Valid Partida partida, BindingResult result) {
+		if (result.hasErrors()) {
+			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+		}
+		else {
+			this.partidaService.save(partida);
+			
+			return "redirect:/partida/{userId}/" + partida.getId();
+		}
+	}
+
     /*
     @Transactional(readOnly = true)
     @GetMapping("/finalizadas")
