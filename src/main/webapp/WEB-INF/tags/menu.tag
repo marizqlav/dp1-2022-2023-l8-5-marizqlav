@@ -68,6 +68,10 @@
 							<li>
 								<a href="<c:url value="/mensajes/" />">Lista de mensajes</a>		
 							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/jugadores/" />">Lista de Jugadores</a>		
+							</li>
 							
 						</ul>					
 				</idus_martii:menuItem>	

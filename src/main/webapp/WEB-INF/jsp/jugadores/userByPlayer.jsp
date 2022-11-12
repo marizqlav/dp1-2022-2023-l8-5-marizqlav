@@ -15,6 +15,7 @@
             <th>Username</th>
             <th>Name</th>
             <th>Surname</th>
+            <th>Photo</th>
         </tr>
         </thead>
         <tbody>
@@ -27,6 +28,12 @@
                 </td>
                 <td> 
                 	<c:out value="${users.surname}"></c:out>
+                </td>
+                <td> 
+                	 <c:if test="${users.photo == ''}">none</c:if>
+                     <c:if test="${users.photo != ''}">
+                        <img src="${users.photo}" width="100px"  />
+                     </c:if>
                 </td>
             </tr>
         </tbody>
