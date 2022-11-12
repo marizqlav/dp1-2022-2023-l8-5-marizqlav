@@ -32,18 +32,15 @@
 					<span>Pagina principal</span>
 				</idus_martii:menuItem>
 
-				<idus_martii:menuItem active="${name eq 'owners'}" url="/owners/find"
-					title="find owners">
+				<idus_martii:menuItem active="${name eq 'jugadores'}" url="/jugadores/find"
+					title="Buscar jugadores">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-					<span>Buscar usuarios</span>
+					<span>Buscar jugadores</span>
 				</idus_martii:menuItem>
 
 				<idus_martii:menuItem active="${name eq 'Objetos creados'}" url="/turnos"
 					title="Objetos creados" dropdown="${true}">										
 						<ul class="dropdown-menu">
-							<li>
-								<a href="<c:url value="/usuarios/" />">Lista de usuarios</a>		
-							</li>
 							<li class="divider"></li>
 							<li>
 								<a href="<c:url value="/turnos/" />">Lista de turnos</a>		

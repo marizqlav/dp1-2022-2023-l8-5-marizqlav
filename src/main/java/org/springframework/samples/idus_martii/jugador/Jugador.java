@@ -44,8 +44,12 @@ public class Jugador extends BaseEntity{
 	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	//private Set<Peticion> peticionesEnviadas;
 
-	
-
+	public String getUsername() {
+		return this.getUser().getUsername();
+	}
+	public void setUsername(String username) {
+		 this.user.setUsername(username) ;
+	}
 	@ManyToMany
 	@JoinTable(name = "turno_jugador", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "turno_id"))

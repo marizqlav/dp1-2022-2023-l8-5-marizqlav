@@ -2,13 +2,13 @@
 INSERT INTO users(username,password,enabled) VALUES ('Ale','patata',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (1,'Ale','player');
 
-INSERT INTO users(username,password,enabled) VALUES ('ismherram','pass',TRUE);
+INSERT INTO users(username, name, surname, photo, password, enabled) VALUES ('ismherram','Ismael','Herrera Ramírez','https://i.imgur.com/wpbcwAh.jpeg','pass',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (2,'ismherram','player');
 
 INSERT INTO users(username,password,enabled) VALUES ('marizqlav','word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (3,'marizqlav','player');
 
-INSERT INTO users(username,name, surname,password,enabled) VALUES ('marolmmar1', 'Marcos', 'Olmedo', 'word',TRUE);
+INSERT INTO users(username,name,surname,password,enabled) VALUES ('marolmmar1', 'Marcos', 'Olmedo', 'word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (4,'marolmmar1','player');
 
 INSERT INTO users(username, name, surname, photo,password,enabled) VALUES ('albdomrui','Alberto','Domínguez-Adame','https://bit.ly/3WR8YkV','word',TRUE);

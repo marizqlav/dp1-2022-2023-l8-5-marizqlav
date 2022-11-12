@@ -30,6 +30,9 @@ public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
 	Jugador findJugadorById(int id);*/
 	
 	@Query("SELECT u FROM User u WHERE u.username = :username")
-	User findUserByJugador(String username);
+	User findUserByJugador(@Param("username") String username);
+	@Query("SELECT j FROM Jugador j, User u WHERE u.username LIKE :username% AND j.user=u.id")
+	List<Jugador> findJugadorByUsername(@Param("username") String username);
+	
 
 }

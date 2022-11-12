@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.jugador;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/jugadores")
 public class JugadorController {
 	
 	private final String  JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
@@ -54,23 +54,9 @@ public class JugadorController {
 	        return VIEWS_USUARIO_LISTING;
 	    }*/
 	
-	@GetMapping(value = "/jugadores/find")
-	public String initFindForm(Map<String, Object> model) {
-		model.put("jugador", new Jugador());
-		return "jugador/findJugadores";
-	}
-	
-	 @Transactional(readOnly = true)
-	    @GetMapping("/")
-	    public ModelAndView showJugadores(){
-	        ModelAndView result=new ModelAndView(JUGADORES_LISTING_VIEW);
-	        result.addObject("jugadores", jugadorService.getAll());
-	        return result;
-	    }
-	 
 	 
 	 @Transactional(readOnly = true)
-	    @GetMapping("/profile/{id}")
+	    @GetMapping("/jugadores/profile/{id}")
 	    public ModelAndView showPerfilJugador(@PathVariable int id){
 		 	Jugador jugador=jugadorService.getJugadorById(id);
 		 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -90,7 +76,7 @@ public class JugadorController {
 	    }
 	 
 	 	@Transactional()
-	 	@GetMapping("/amigos/{idjugador}/{idamigo}")
+	 	@GetMapping("/jugadores/amigos/{idjugador}/{idamigo}")
 	    public ModelAndView peticionamistad(@PathVariable int idjugador, @PathVariable int idamigo){
 		 	Jugador jugador=jugadorService.getJugadorById(idjugador);
 		 	Jugador amigo=jugadorService.getJugadorById(idamigo);
@@ -115,4 +101,39 @@ public class JugadorController {
 	        	}
 	        return result;
 	    }
+	 	
+	 	@GetMapping(value = "/jugadores/find")
+		public String initFindForm(Map<String, Object> model) {
+			model.put("jugador", new Jugador());
+			return "jugadores/findJugadores";
+		}
+
+		@GetMapping(value = "/jugadores")
+		public String processFindForm(Jugador jugador, BindingResult result, Map<String, Object> model) {
+
+			// allow parameterless GET request for /jugadores to return all records
+			if (jugador.getUsername() == null) {
+				jugador.setUsername(""); // empty string signifies broadest possible search
+			}
+
+			// find jugadors by last name
+			Collection<Jugador> results = this.jugadorService.getJugadorByUsername(jugador.getUsername());
+			//Collection<Jugador> results = this.jugadorService.getAll();
+			if (results.isEmpty()) {
+				// no jugadores found
+				result.rejectValue("username", "notFound", "not found");
+				return "/jugadores/findJugadores";
+			}
+			else if (results.size() == 1) {
+				// 1 jugador found
+				jugador = results.iterator().next();
+				return "redirect:/jugadores/profile/" + jugador.getId();
+			}
+			else {
+				// multiple jugadores found
+				System.out.println("Hola");
+				model.put("selections", results);
+				return "jugadores/jugadoresList";
+			}
+		}
 }

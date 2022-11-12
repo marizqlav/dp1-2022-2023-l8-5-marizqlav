@@ -6,28 +6,34 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <idus_martii:layout pageName="jugadores">
-    <h2>Jugadores</h2>
+    <h2>Perfil de usuario</h2>
 
     <table id="jugadoresTable" class="table table-striped">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Yo</th>
             <th></th>
+            <th>Nombre de usuario</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
         </tr>
         </thead>
         <tbody>
   
             <tr>
-                <td>
-                    ${jugador.id}
+                <td>                    
+                  <c:if test="${jugador.user.photo == ''}">none</c:if>
+                  <c:if test="${jugador.user.photo != ''}">
+                  	<img src="${jugador.user.photo}" width="100px"  />
+                  </c:if>
                 </td>
                 <td>                    
                     ${jugador.user.username}                                       
                 </td>
                 <td>                    
-                    ${currentPlayer.id}                                      
+                    ${jugador.user.name}                                      
+                </td>
+                <td>                    
+                    ${jugador.user.surname}                                      
                 </td>
             </tr>
    

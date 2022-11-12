@@ -11,34 +11,26 @@
     <table id="jugadoresTable" class="table table-striped">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Nombre</th>
+            <th>Nombre de usuario</th>
             <th></th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${jugadores}" var="jugador">
+        <c:forEach items="${selections}" var="jugador">
             <tr>
-                <td>
-                    <a href="/jugadores/profile/${jugador.id}"><c:out value="${jugador.id}"/></a>
+             	<td>                    
+                  <c:if test="${jugador.user.photo == ''}">Sin foto de perfil</c:if>
+                  <c:if test="${jugador.user.photo != ''}">
+                  	<img src="${jugador.user.photo}" width="100px" height="100px"  />
+                  </c:if>
                 </td>
                 <td>                    
-                      <c:out value="${jugador.user.username} "/>                                        
-                </td>
-                <td> 
-                    <a href="/jugadores/profile/${jugador.id}"> 
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>                            
-                    </a>       
-                </td>
-                <td> 
-                    <a href="/rondas/${jugador.id}/delete"> 
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </a>      
+                      <a href="/jugadores/profile/${jugador.id}"><c:out value="${jugador.user.username} "/> </a>                                       
                 </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-	<a class="btn btn-default" href="/rondas/new">Crear nueva ronda</a>
+	<a class="btn btn-default" href="/rondas/new">Crear nuevo jugador</a>
 </idus_martii:layout>

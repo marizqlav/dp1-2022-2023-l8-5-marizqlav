@@ -38,4 +38,8 @@ public class JugadorService {
 		return this.jugadorRepo.findUserByJugador(j.getUser().getUsername());
 	}
 	
+	public List<Jugador> getJugadorByUsername(String username) {
+		return this.jugadorRepo.findJugadorByUsername(username);
+	}
+	
 }
