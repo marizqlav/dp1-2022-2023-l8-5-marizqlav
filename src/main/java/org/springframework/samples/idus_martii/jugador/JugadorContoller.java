@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class JugadorContoller {
 	
 	private static final String VIEWS_JUGADORES_LISTING = "jugadores/jugadoresListing";
-//	private static final String VIEWS_USUARIO_LISTING = "jugadores/usuario";
+	private static final String VIEWS_USUARIO_LISTING = "jugadores/userByPlayer";
 	
 	private final JugadorService jugadorService;
 	@Autowired
@@ -36,13 +36,13 @@ public class JugadorContoller {
 	        return result;
 	    }
 	   
-/*	   @Transactional(readOnly = true)
+	   @Transactional(readOnly = true)
 	    @GetMapping("/{username}")
 	    public ModelAndView show(){
-	        ModelAndView result=new ModelAndView(VIEWS_JUGADORES_LISTING);
+	        ModelAndView result=new ModelAndView(VIEWS_USUARIO_LISTING);
 	        result.addObject("jugadores", jugadorService.getUserByJugador(jugadorService.getJugadorById(1)));
 	        return result;
-	    }*/
+	    }
 	
 	@GetMapping(value = "/jugadores/find")
 	public String initFindForm(Map<String, Object> model) {
