@@ -33,7 +33,7 @@ public class PartidaController {
     public ModelAndView showPartidasEnJuego(HttpServletResponse response){
         //response.addHeader("Refresh", "5");
         ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_ACTUALES);
-        result.addObject("partidas", partidaService.getPartidas());
+        result.addObject("partidas", partidaService.getPartidasEnJuego());
         return result;
     }
 */

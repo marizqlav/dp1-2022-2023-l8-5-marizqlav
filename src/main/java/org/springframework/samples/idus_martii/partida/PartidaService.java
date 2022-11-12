@@ -85,4 +85,8 @@ public class PartidaService {
 		return partidaRepo.findAll();
 	}
     
+    List<Partida> getPartidasEnJuego() {
+		return partidaRepo.findAllEnJuego();
+	}
+    
 }
