@@ -38,7 +38,7 @@
 					<span>Buscar usuarios</span>
 				</idus_martii:menuItem>
 
-				<idus_martii:menuItem active="${name eq 'Objetos creados'}" url="/turnos/"
+				<idus_martii:menuItem active="${name eq 'Objetos creados'}" url="/turnos"
 					title="Objetos creados" dropdown="${true}">										
 						<ul class="dropdown-menu">
 							<li>
@@ -54,7 +54,11 @@
 							</li>
 							<li class="divider"></li>
 							<li>
-								<a href="<c:url value="/rondas/" />">Lista de partidas</a>		
+								<a href="<c:url value="/partida/finalizadas" />">Lista de partidas jugadas</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/partida/enJuego" />">Lista de partidas en juego</a>		
 							</li>
 							<li class="divider"></li>
 							<li>
@@ -63,6 +67,10 @@
 							<li class="divider"></li>
 							<li>
 								<a href="<c:url value="/mensajes/" />">Lista de mensajes</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/jugadores/" />">Lista de Jugadores</a>		
 							</li>
 							
 						</ul>					

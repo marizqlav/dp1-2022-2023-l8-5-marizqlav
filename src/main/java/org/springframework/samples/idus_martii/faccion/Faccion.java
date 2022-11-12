@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.partida.Partida;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,17 +24,22 @@ import lombok.Setter;
 @Setter
 @Table(name = "faccion")
 public class Faccion extends BaseEntity{
+	
 	@Enumerated(EnumType.STRING)
-	private FaccionesEnumerado faccionposible1;
+	private FaccionesEnumerado faccionPosible1;
+
 	@Enumerated(EnumType.STRING)
-	private FaccionesEnumerado faccionposible2;//Facciones a elegir solo 2
+	private FaccionesEnumerado faccionPosible2; //Facciones a elegir solo 2
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private FaccionesEnumerado faccionselecionada;
+	private FaccionesEnumerado faccionSelecionada;
 
 	
-	//Esperando clase jugador
+	@JoinColumn(name = "partida_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    Partida partida;
+
 	@ManyToOne(optional=false)
 	@JoinColumn(name = "jugador_id")
 	private Jugador jugador;

@@ -2,9 +2,9 @@ package org.springframework.samples.idus_martii.jugador;
 
 import java.util.Set;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -32,27 +32,24 @@ public class Jugador extends BaseEntity{
     @JoinColumn(name = "user", referencedColumnName = "username")
 	private User user;
 	
-	
-	
-	
 	/*
 	@ManyToMany(mappedBy = "faccion")
 	@JoinColumn(name = "faccion", referencedColumnName = "achievement")
 	Faccion faccion;*/
 	
-	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Faccion> faccion;
-	
+
 	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	//private Set<Peticion> peticionesEnviadas;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+
+	@ManyToMany
 	@JoinTable(name = "turno_jugador", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "turno_id"))
 	private Set<Turno> turno;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "jugador_achievement", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "achievement"))
 	private Set<Achievement> achievement;
@@ -60,7 +57,7 @@ public class Jugador extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "jugador"))
 	private Set<Jugador> jugador;
