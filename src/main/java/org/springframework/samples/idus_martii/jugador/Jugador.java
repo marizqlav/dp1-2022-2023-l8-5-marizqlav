@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.statistics.Achievement;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.user.User;
@@ -42,6 +43,7 @@ public class Jugador extends BaseEntity{
 
 	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	//private Set<Peticion> peticionesEnviadas;
+
 	
 
 	@ManyToMany
@@ -56,6 +58,10 @@ public class Jugador extends BaseEntity{
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
+	
+    //@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "jugador")
+    //private Set<Partida> partidasCreadas;
+
 	
 	@ManyToMany
 	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
