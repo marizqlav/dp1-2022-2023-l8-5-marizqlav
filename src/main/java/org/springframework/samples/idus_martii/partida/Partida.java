@@ -10,14 +10,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
@@ -35,22 +36,27 @@ import lombok.Setter;
 @Setter
 @Table(name = "partida")
 public class Partida extends BaseEntity {
+
+
+    @Min(5)
+    @Max(8)
+    private Integer numeroJugadores;
+
     
 	@Enumerated(EnumType.STRING)
     FaccionesEnumerado faccionGanadora;
 
-    @Size(min = 5, max = 8)
-    Integer nJugadores;
 
-    LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
-    LocalDateTime fechaInicio;
+    private LocalDateTime fechaInicio;
 
-    LocalDateTime fechaFin;
+    private LocalDateTime fechaFin;
 
-    Duration getDuration() {
-        return Duration.between(fechaInicio, fechaFin);
+    public String getDuration() {
+        return Duration.between(fechaInicio, fechaFin).toString().substring(2).replace("M", " minutos ").replace("S", " segundos ");
     }
+    
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     Set<Faccion> faccionesJugadoras;

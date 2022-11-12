@@ -27,16 +27,16 @@
         <c:forEach items="${turnos}" var="turno">
             <tr>
                 <td>
-                    <c:out value="${turno.consul}"/>
+                    <c:out value="${turno.consul.user.username}"/>
                 </td>
                 <td>                    
-                      <c:out value="${turno.predor} "/>                                        
+                      <c:out value="${turno.predor.user.username} "/>                                        
                 </td>
                 <td>       
-                    <c:out value="${turno.edil1} "/>
+                    <c:out value="${turno.edil1.user.username} "/>
                 </td>
  				<td>       
-                    <c:out value="${turno.edil2} "/>
+                    <c:out value="${turno.edil2.user.username} "/>
                 </td>
                 <td>       
                     <c:out value="${turno.votosTraidores} "/>

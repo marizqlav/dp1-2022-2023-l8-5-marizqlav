@@ -2,9 +2,9 @@ package org.springframework.samples.idus_martii.jugador;
 
 import java.util.Set;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -40,8 +40,16 @@ public class Jugador extends BaseEntity{
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Faccion> faccion;
-    
-	
+
+	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
+	//private Set<Peticion> peticionesEnviadas;
+
+	public String getUsername() {
+		return this.getUser().getUsername();
+	}
+	public void setUsername(String username) {
+		 this.user.setUsername(username) ;
+	}
 	@ManyToMany
 	@JoinTable(name = "turno_jugador", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "turno_id"))
