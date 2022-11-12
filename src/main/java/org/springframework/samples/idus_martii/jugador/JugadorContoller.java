@@ -1,13 +1,16 @@
 package org.springframework.samples.idus_martii.jugador;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,13 +39,22 @@ public class JugadorContoller {
 	        return result;
 	    }
 	   
+	   
 	   @Transactional(readOnly = true)
-	    @GetMapping("/{username}")
-	    public ModelAndView show(){
+	   @GetMapping("/{jugadorId}/user")
+	    public ModelAndView showJugador(@PathVariable("jugadorId") int jugadorId){
 	        ModelAndView result=new ModelAndView(VIEWS_USUARIO_LISTING);
-	        result.addObject("jugadores", jugadorService.getUserByJugador(jugadorService.getJugadorById(1)));
+	        Jugador j = jugadorService.getJugadorById(jugadorId);
+	        result.addObject("users", jugadorService.getUserByJugador(j));
 	        return result;
 	    }
+	   /*
+	    @GetMapping("/{jugadorId}/user")
+	    public String show(@PathVariable("jugadorId") int jugadorId, ModelMap model){
+	       Jugador j = jugadorService.getJugadorById(jugadorId); 
+	        model.addAttribute("User", jugadorService.getUserByJugador(j));
+	        return VIEWS_USUARIO_LISTING;
+	    }*/
 	
 	@GetMapping(value = "/jugadores/find")
 	public String initFindForm(Map<String, Object> model) {

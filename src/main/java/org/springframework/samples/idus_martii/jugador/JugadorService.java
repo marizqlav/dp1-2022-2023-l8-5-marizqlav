@@ -23,12 +23,11 @@ public class JugadorService {
 		return this.jugadorRepo.findAllJugadores();
 	}
 	public Jugador getJugadorById(int id) {
-		return this.getJugadorById(id);
+		return this.jugadorRepo.findById(id).get();
 	}
 	
 	public User getUserByJugador(Jugador j) {
-		User u = j.getUser();
-		return this.jugadorRepo.findUserByJugador(u);
+		return this.jugadorRepo.findUserByJugador(j.getUser().getUsername());
 	}
 	
 }

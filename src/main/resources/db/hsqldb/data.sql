@@ -8,7 +8,7 @@ INSERT INTO authorities(id,username,authority) VALUES (2,'ismherram','player');
 INSERT INTO users(username,password,enabled) VALUES ('marizqlav','word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (3,'marizqlav','player');
 
-INSERT INTO users(username,password,enabled) VALUES ('marolmmar1','word',TRUE);
+INSERT INTO users(username,name, surname,password,enabled) VALUES ('marolmmar1', 'Marcos', 'Olmedo', 'word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (4,'marolmmar1','player');
 
 INSERT INTO users(username,password,enabled) VALUES ('albdomrui','word',TRUE);
