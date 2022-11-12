@@ -18,7 +18,25 @@ public class PartidaController {
     public PartidaController(PartidaService partidaService) {
         this.partidaService = partidaService;
     }
+    /*
+    @Transactional(readOnly = true)
+    @GetMapping("/finalizadas")
+    public ModelAndView showPartidas(HttpServletResponse response){
+        //response.addHeader("Refresh", "5");
+        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_ACTUALES);
+        result.addObject("partidas", partidaService.getPartidas());
+        return result;
+    }
 
+    @Transactional(readOnly = true)
+    @GetMapping("/enJuego")
+    public ModelAndView showPartidasEnJuego(HttpServletResponse response){
+        //response.addHeader("Refresh", "5");
+        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_ACTUALES);
+        result.addObject("partidas", partidaService.getPartidas());
+        return result;
+    }
+*/
     @GetMapping(value = "/create")
     public ModelAndView CrearPartidaForm() {
         //TODO Mario y Pablo

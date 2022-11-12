@@ -81,6 +81,8 @@ public class PartidaService {
         turnoService.save(turnoInicial);
         save(partida);
     }
-
+    List<Partida> getPartidas() {
+		return partidaRepo.findAll();
+	}
     
 }
