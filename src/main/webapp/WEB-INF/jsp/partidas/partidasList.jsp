@@ -49,5 +49,4 @@
         </c:forEach>
         </tbody>
     </table>
-	<a class="btn btn-default" href="/turnos/new">Crear nuevo partida</a>
 </idus_martii:layout>

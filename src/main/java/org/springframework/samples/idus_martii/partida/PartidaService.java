@@ -94,7 +94,7 @@ public class PartidaService {
     List<Partida> getPartidasEnJuego() {
 		return partidaRepo.findAllEnJuego();
 	}
-    Optional<Partida> getPartidaIniciada(int idpartida) {
+    Partida getPartidaIniciada(int idpartida) {
 		return partidaRepo.findPartidaIniciada(idpartida);
 	}
     List<Partida> getPartidasFinalizadasJugador(int idjugador) {

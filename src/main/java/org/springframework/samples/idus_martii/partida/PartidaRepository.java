@@ -29,7 +29,7 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     Partida jugadorPartidaEnCurso(@Param("idjugador") Integer idjugador);
     
     @Query("SELECT p FROM Partida p WHERE p.id = :idpartida AND p.fechaInicio IS NOT NULL ")
-    Optional<Partida> findPartidaIniciada(@Param("idpartida") Integer idpartida);
+    Partida findPartidaIniciada(@Param("idpartida") Integer idpartida);
     
     @Query("SELECT p FROM Partida p, Faccion f, Jugador j WHERE p.id = f.partida AND f.jugador = j.id AND j.id = :idjugador AND p.fechaFin IS NOT NULL ")
     List<Partida> findAllFinalizadasJugador(@Param("idjugador") Integer idjugador);
