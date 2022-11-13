@@ -139,13 +139,18 @@ public class PartidaController {
         return null;
     }
     
-    @GetMapping(value = "/{jugadorId}/{partidaId}/iniciar")
-    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId) {
-        partidaService.IniciarPartida(partidaId);
-        return new ModelAndView("redirect:/partida/{userId}/{partidaId}");
+    @Transactional(readOnly = true)
+    @GetMapping(value = "/{partidaId}/iniciar")
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
+        try {
+            partidaService.IniciarPartida(partidaId);
+        } catch (InitiationException e) {
+            //Ignorar
+        }
+        return new ModelAndView("redirect:/partida/{partidaId}");
     }
 
-    @GetMapping(value = "/create/{partidaId}")
+    @GetMapping(value = "/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId) {
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
