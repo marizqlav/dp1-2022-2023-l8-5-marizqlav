@@ -4,13 +4,24 @@ import java.util.List;
 
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.samples.idus_martii.user.Authorities;
+import org.springframework.samples.idus_martii.user.AuthoritiesService;
 import org.springframework.samples.idus_martii.user.User;
+import org.springframework.samples.idus_martii.user.UserService;
+
 
 @Service
 public class JugadorService {
 	private JugadorRepository jugadorRepo;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private AuthoritiesService authoritiesService;
 	
 	@Autowired
 	public JugadorService(JugadorRepository jugadorRepo) {
@@ -40,6 +51,14 @@ public class JugadorService {
 	
 	public List<Jugador> getJugadorByUsername(String username) {
 		return this.jugadorRepo.findJugadorByUsername(username);
+	}
+	
+	public void save(Jugador j) {
+		this.jugadorRepo.save(j);
+		this.userService.saveUser(j.getUser());
+		this.authoritiesService.saveAuthorities(j.getUser().getUsername(), "player");;
+		
+		
 	}
 	
 }
