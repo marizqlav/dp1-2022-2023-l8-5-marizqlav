@@ -55,7 +55,17 @@ public class Partida extends BaseEntity {
     private LocalDateTime fechaFin;
 
     public String getDuration() {
-        return Duration.between(fechaInicio, fechaFin).toString().substring(2).replace("M", " minutos ").replace("S", " segundos ");
+    	if(this.fechaFin==null)
+    		return "No finalizada";
+    	else
+    		return Duration.between(fechaInicio, fechaFin).toString().substring(2).replace("M", " minutos ").replace("S", " segundos ");
+    }
+    
+    public String getFechaCreacionParseada() {
+    	if(this.fechaCreacion==null)
+    		return "No iniciada";
+    	else
+    		return this.fechaCreacion.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaCreacion.toString().length()-7);
     }
     
 

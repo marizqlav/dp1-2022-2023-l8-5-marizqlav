@@ -25,6 +25,9 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     @Query("SELECT j FROM Partida p JOIN p.faccionesJugadoras f JOIN f.jugador j WHERE p.id LIKE :idPartida")
     Set<Jugador> findJugadores(@Param("idPartida") Integer idPartida);
     
+    @Query("SELECT p FROM Partida p WHERE p.jugador.id = :idjugador AND p.fechaFin IS NULL ")
+    Partida jugadorPartidaEnCurso(@Param("idjugador") Integer idjugador);
+    
     @Query("SELECT l FROM Lobby l WHERE l.id = :idpartida")
 	Lobby getLobby(@Param("idpartida") int idpartida);
     

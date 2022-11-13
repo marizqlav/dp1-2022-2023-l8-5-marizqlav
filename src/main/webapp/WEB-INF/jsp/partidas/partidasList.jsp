@@ -27,7 +27,7 @@
                     <c:out value="${partida.id}"/>
                 </td>
                  <td>                    
-                      <c:out value="${partida.actualFaccionGanadora}"/>                                        
+                      <c:out value="${partida.faccionGanadora}"/>                                        
                 </td>
                 <td>                    
                       <c:out value="${partida.numeroJugadores}"/>                                        
