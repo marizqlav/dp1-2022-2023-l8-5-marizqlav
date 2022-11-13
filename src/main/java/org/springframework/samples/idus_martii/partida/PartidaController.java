@@ -29,7 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class PartidaController {
 
 	private static final String VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM = "partidas/createOrUpdatePartidaForm";
-	private final String  PARTIDAS_LISTING_VIEW="/partidas/partidasList";
+	private final String PARTIDAS_LISTING_VIEW_FINALIZADAS ="/partidas/partidasList";
+    private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
     PartidaService partidaService;
@@ -50,6 +51,22 @@ public class PartidaController {
         result.addObject("partidas", partidaService.getPartidasEnJuego());
         return result;
     }
+    @Transactional(readOnly = true)
+    @GetMapping("/finalizadas")
+    public ModelAndView showPartidas(){
+        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_FINALIZADAS);
+        result.addObject("partidas", partidaService.getPartidas());
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/enJuego")
+    public ModelAndView showPartidasEnJuego(){
+        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_ACTUALES);
+        result.addObject("partidas", partidaService.getPartidasEnJuego());
+        return result;
+    }
+
 
 	@GetMapping(value = "/new")
 	public String initCreationForm(Map<String, Object> model) {
@@ -139,13 +156,18 @@ public class PartidaController {
         return null;
     }
     
-    @GetMapping(value = "/{jugadorId}/{partidaId}/iniciar")
-    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId) {
-        partidaService.IniciarPartida(partidaId);
-        return new ModelAndView("redirect:/partida/{userId}/{partidaId}");
+    @Transactional(readOnly = true)
+    @GetMapping(value = "/{partidaId}/iniciar")
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
+        try {
+            partidaService.IniciarPartida(partidaId);
+        } catch (InitiationException e) {
+            //Ignorar
+        }
+        return new ModelAndView("redirect:/partida/{partidaId}");
     }
 
-    @GetMapping(value = "/create/{partidaId}")
+    @GetMapping(value = "/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId) {
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));

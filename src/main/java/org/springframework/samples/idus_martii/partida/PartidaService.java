@@ -42,9 +42,14 @@ public class PartidaService {
         return partidaRepo.findJugadores(partidaId);
     }
     
-    public void IniciarPartida(Integer id) {
-        //TODO restricciones
+    public void IniciarPartida(Integer id) throws InitiationException {
+
         Partida partida = findPartida(id);
+        
+        //Restricciones
+        if (partida.getRondas().size() > 0) {
+            throw new InitiationException("No se puede iniciar una partida ya iniciada");
+        }
 
         Ronda rondaInicial = new Ronda();
         rondaInicial.setPartida(partida);

@@ -7,8 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <idus_martii:layout pageName="partidas">
     <h2>Partidas En Juego</h2>
-<p><c:out value="${now}"/></p>
-    <table id="turnosTable" class="table table-striped">
+    <table id="partidasTable" class="table table-striped">
         <thead>
         <tr>
             <th>Id</th>
@@ -25,7 +24,7 @@
                     <c:out value="${partida.id}"/>
                 </td>
                  <td>                    
-                      <c:out value="${partida.actualFaccionGanadora}"/>                                        
+                      <c:out value="${partida.faccionGanadora}"/>                                        
                 </td>
                 <td>                    
                       <c:out value="${partida.numeroJugadores}"/>                                        
@@ -40,5 +39,4 @@
         </c:forEach>
         </tbody>
     </table>
-	<a class="btn btn-default" href="/turnos/new">Crear nuevo partida</a>
 </idus_martii:layout>
