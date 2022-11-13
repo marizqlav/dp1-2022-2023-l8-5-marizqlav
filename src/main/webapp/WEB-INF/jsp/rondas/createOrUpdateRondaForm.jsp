@@ -21,7 +21,7 @@
                    class="form-horizontal">
             <input type="hidden" name="id" value="${ronda.id}"/>
             <div class="form-group has-feedback">                
-                <idus_martii:inputField label="Id de partida" name="partidaId"/>
+                <idus_martii:inputField label="Id de partida" name="partida"/>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">

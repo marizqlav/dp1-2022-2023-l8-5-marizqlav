@@ -20,6 +20,8 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -37,10 +39,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
 
 	private static final String VIEWS_OWNER_CREATE_FORM = "users/createOwnerForm";
+	private static final String VIEWS_JUGADOR_CREATE_FORM = "users/createJugadorForm";
+	private final JugadorService jugadorService;
 
 	@Autowired
-	public UserController() {
-
+	public UserController(JugadorService jugadorService) {
+		this.jugadorService=jugadorService;
 	}
 
 	@InitBinder
@@ -50,21 +54,21 @@ public class UserController {
 
 	@GetMapping(value = "/users/new")
 	public String initCreationForm(Map<String, Object> model) {
-		//Owner owner = new Owner();
-		//model.put("owner", owner);
+		Jugador jugador = new Jugador();
+		model.put("jugador", jugador);
 		//TODO
-		return VIEWS_OWNER_CREATE_FORM;
+		return VIEWS_JUGADOR_CREATE_FORM;
 	}
 
 	@PostMapping(value = "/users/new")
-	public String processCreationForm(/*@Valid Owner owner,*/ BindingResult result) {
+	public String processCreationForm(@Valid Jugador jugador, BindingResult result) {
 		//TODO
 		if (result.hasErrors()) {
-			return VIEWS_OWNER_CREATE_FORM;
+			return VIEWS_JUGADOR_CREATE_FORM;
 		}
 		else {
 			//creating owner, user, and authority
-			//this.ownerService.saveOwner(owner);
+			this.jugadorService.save(jugador);
 			return "redirect:/";
 		}
 	}
