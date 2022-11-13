@@ -64,8 +64,6 @@ public class PartidaController {
 		}else {
 			 return "redirect:/partida/"+jugador.getId().toString()+"/"+existe.getId().toString();
 		}
-		
-		
 	}
 
 
@@ -80,7 +78,6 @@ public class PartidaController {
 	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
 	        System.out.println(jugador.getUsername());
 	        partida.setFechaCreacion(LocalDateTime.now());
-	        partida.setFechaInicio(LocalDateTime.now());
 	        partida.setJugador(jugador);
 	        this.partidaService.save(partida);
 	        partidaService.anadirLobby(partida.getId(),partida.getId());
