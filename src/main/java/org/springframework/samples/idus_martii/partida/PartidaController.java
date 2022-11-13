@@ -29,7 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class PartidaController {
 
 	private static final String VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM = "partidas/createOrUpdatePartidaForm";
-	private final String  PARTIDAS_LISTING_VIEW="/partidas/partidasList";
+	private final String PARTIDAS_LISTING_VIEW_FINALIZADAS ="/partidas/partidasList";
+    private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
     PartidaService partidaService;
@@ -50,6 +51,22 @@ public class PartidaController {
         result.addObject("partidas", partidaService.getPartidasEnJuego());
         return result;
     }
+    @Transactional(readOnly = true)
+    @GetMapping("/finalizadas")
+    public ModelAndView showPartidas(){
+        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_FINALIZADAS);
+        result.addObject("partidas", partidaService.getPartidas());
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/enJuego")
+    public ModelAndView showPartidasEnJuego(){
+        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_ACTUALES);
+        result.addObject("partidas", partidaService.getPartidasEnJuego());
+        return result;
+    }
+
 
 	@GetMapping(value = "/new")
 	public String initCreationForm(Map<String, Object> model) {
