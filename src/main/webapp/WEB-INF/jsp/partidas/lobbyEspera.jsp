@@ -30,6 +30,5 @@
         </c:forEach>
         </tbody>
     </table>
-	<a class="btn btn-default" href='<spring:url value="/partida/iniciardos/${partida.id}" htmlEscape="true"/>' >Comenzar partida</a>
-	
+	<a class="btn btn-default" href='<spring:url value="/partida/juego/${partida.id}/${partida.jugador.id}" htmlEscape="true"/>' >Comenzar partida</a>
 </idus_martii:layout>

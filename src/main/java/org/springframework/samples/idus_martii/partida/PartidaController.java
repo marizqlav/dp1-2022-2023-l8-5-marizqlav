@@ -105,13 +105,7 @@ public class PartidaController {
 		}
 	        	
 	}
-	/*
-	@GetMapping(value = "/iniciardos/{partidaId}")
-	public void processIniciardos(@PathVariable("partidaId") Integer partidaId) {
-		System.out.println(partidaId);
-		    	Partida partida = partidaService.findPartida(partidaId);
-		    	partida.setFechaInicio(LocalDateTime.now());
-	}*/
+	
 	
     @GetMapping(value = "/{jugadorId}/{partidaId}")
     public ModelAndView lobby(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
@@ -123,23 +117,22 @@ public class PartidaController {
         
         if(partidaService.estaJugadorLobby(jugador.getId(), partidaId)==null)
         	partidaService.anadirJugadorLobby(jugador.getId(),partidaId);
-       System.out.println(partidaService.estaJugadorLobby(jugador.getId(), partidaId));
+        System.out.println(partidaService.estaJugadorLobby(jugador.getId(), partidaId));
         List<Jugador> enlobby = partidaService.getLobby(partidaId).getJugadores();
-        	ModelAndView result=new ModelAndView(LOBBY_ESPERA_VIEW);
-            result.addObject("jugadores", enlobby);
-            result.addObject("partida", partida);
-            return result;
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+            if(iniciada!=null) {
+            	ModelAndView result=new ModelAndView("redirect:/partida/juego/"+partida.getId().toString()+"/"+jugador.getId().toString());
+            	return result;
+            	}
+            else {
+            	ModelAndView result=new ModelAndView(LOBBY_ESPERA_VIEW);
+            	result.addObject("jugadores", enlobby);
+            	result.addObject("partida", partida);
+            	return result;
+            }
 	}
     
-    @PostMapping(value = "/{jugadorId}/{partidaId}")
-	public String processIniciar(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
-    	response.addHeader("Refresh", "10");
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	Partida partida = partidaService.findPartida(partidaId);
-    	User currentUser = (User) authentication.getPrincipal();
-        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-        return "redirect:/partida/juego/"+partida.getId().toString()+"/"+jugador.getId().toString();
-	}
+
     
    
     @Transactional(readOnly = true)
@@ -154,9 +147,58 @@ public class PartidaController {
     }
 
     @GetMapping(value = "/juego/{partidaId}/{jugadorId}")
-    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId) {
+    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
+    	response.addHeader("Refresh", "10");
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	Partida partida = partidaService.findPartida(partidaId);
+    	User currentUser = (User) authentication.getPrincipal();
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+    	if(iniciada==null)
+    		partida.setFechaInicio(LocalDateTime.now());
+    		partidaService.save(partida);
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         return result;
     }
     
