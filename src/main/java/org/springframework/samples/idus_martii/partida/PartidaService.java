@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.function.Function;
@@ -103,5 +104,9 @@ public class PartidaService {
     
     Jugador estaJugadorLobby(int idjugador, int idlobby) {
 		return partidaRepo.estaJugadorLobby(idjugador,idlobby);
+	}
+    
+    Partida jugadorPartidaEnCurso(int idjugador) {
+		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
 }

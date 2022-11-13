@@ -4,6 +4,7 @@ package org.springframework.samples.idus_martii.partida;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ public class PartidaController {
 
 	private static final String VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM = "partidas/createOrUpdatePartidaForm";
 	private final String  PARTIDAS_LISTING_VIEW="/partidas/partidasList";
+	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
     PartidaService partidaService;
     JugadorService jugadorService;
@@ -41,19 +43,29 @@ public class PartidaController {
     
     
     @Transactional(readOnly = true)
-    @GetMapping("/")
+    @GetMapping("/disponibles")
     public ModelAndView showPartidas(HttpServletResponse response){
     	response.addHeader("Refresh", "5");
-        ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW);
-        result.addObject("partidas", partidaService.getPartidas());
+        ModelAndView result=new ModelAndView(PARTIDAS_DISPONIBLES_LISTING_VIEW);
+        result.addObject("partidas", partidaService.getPartidasEnJuego());
         return result;
     }
 
 	@GetMapping(value = "/new")
 	public String initCreationForm(Map<String, Object> model) {
-		Partida partida = new Partida();
-		model.put("partida", partida);
-		return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Partida existe = partidaService.jugadorPartidaEnCurso(jugador.getId());
+		if(existe==null) {
+			Partida partida = new Partida();
+			model.put("partida", partida);
+			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+		}else {
+			 return "redirect:/partida/"+jugador.getId().toString()+"/"+existe.getId().toString();
+		}
+		
+		
 	}
 
 
@@ -83,6 +95,7 @@ public class PartidaController {
     	
     	
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	Partida partida = partidaService.findPartida(partidaId);
     	User currentUser = (User) authentication.getPrincipal();
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         ModelAndView result=new ModelAndView(LOBBY_ESPERA_VIEW);
@@ -91,6 +104,7 @@ public class PartidaController {
        System.out.println(partidaService.estaJugadorLobby(jugador.getId(), partidaId));
         List<Jugador> enlobby = partidaService.getLobby(partidaId).getJugadores();
         result.addObject("jugadores", enlobby);
+        result.addObject("partida", partida);
         return result;
 	        	
 	}
