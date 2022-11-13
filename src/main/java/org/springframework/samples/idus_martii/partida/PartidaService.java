@@ -1,11 +1,11 @@
 package org.springframework.samples.idus_martii.partida;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.ronda.Ronda;
@@ -33,6 +33,7 @@ public class PartidaService {
         partidaRepo.save(partida);
     }
 
+    
     public Partida findPartida(Integer id) {
         return partidaRepo.findById(id).get();
     }
@@ -57,15 +58,14 @@ public class PartidaService {
         Turno turnoInicial = new Turno();
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
-
-        
+  
         List<Jugador> jugadores = findJugadores(id).stream()
         .sorted(Comparator.comparing(Jugador::getId))
         .collect(Collectors.toList());
         
         Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? x + 1 : 0;
 
-        Integer n =  (int) (Math.random() * (partida.getNJugadores()));
+        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
         System.out.println(n);
 
         turnoInicial.setConsul(jugadores.get(n));
@@ -86,6 +86,32 @@ public class PartidaService {
         turnoService.save(turnoInicial);
         save(partida);
     }
+    List<Partida> getPartidas() {
+		return partidaRepo.findAll();
+	}
 
     
+    List<Partida> getPartidasEnJuego() {
+		return partidaRepo.findAllEnJuego();
+	}
+    
+    Lobby getLobby(int idpartida) {
+		return partidaRepo.getLobby(idpartida);
+	}
+    
+    Integer anadirLobby(int idlobby, int idpartida) {
+		return partidaRepo.anadirLobby(idlobby,idpartida);
+	}
+    
+    Integer anadirJugadorLobby(int idjugador, int idlobby) {
+		return partidaRepo.anadirJugadorLobby(idjugador,idlobby);
+	}
+    
+    Jugador estaJugadorLobby(int idjugador, int idlobby) {
+		return partidaRepo.estaJugadorLobby(idjugador,idlobby);
+	}
+    
+    Partida jugadorPartidaEnCurso(int idjugador) {
+		return partidaRepo.jugadorPartidaEnCurso(idjugador);
+	}
 }
