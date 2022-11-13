@@ -42,4 +42,8 @@ public class JugadorService {
 		return this.jugadorRepo.findJugadorByUsername(username);
 	}
 	
+	public Jugador save(Jugador j) {
+		return this.jugadorRepo.save(j);
+	}
+	
 }
