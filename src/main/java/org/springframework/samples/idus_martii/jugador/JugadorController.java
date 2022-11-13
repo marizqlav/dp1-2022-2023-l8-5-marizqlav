@@ -3,6 +3,8 @@ package org.springframework.samples.idus_martii.jugador;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.Authentication;
@@ -21,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class JugadorController {
-	
+	private static final String VIEWS_JUGADOR_CREATE_FORM = "jugadores/createOrUpdateJugadorForm";
 	private final String  JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
 	private final String  JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
 	private static final String VIEWS_USUARIO_LISTING = "jugadores/userByPlayer";
@@ -133,6 +135,27 @@ public class JugadorController {
 				// multiple jugadores found
 				model.put("selections", results);
 				return "jugadores/jugadoresList";
+			}
+		}
+		
+		@GetMapping(value = "/new")
+		public String initCreationForm(Map<String, Object> model) {
+			Jugador jugador = new Jugador();
+			model.put("jugador", jugador);
+			//TODO
+			return VIEWS_JUGADOR_CREATE_FORM;
+		}
+	
+		@PostMapping(value = "/new")
+		public String processCreationForm(@Valid Jugador jugador, BindingResult result) {
+			//TODO
+			if (result.hasErrors()) {
+				return VIEWS_JUGADOR_CREATE_FORM;
+			}
+			else {
+				//creating owner, user, and authority
+				this.jugadorService.save(jugador);
+				return "redirect:/";
 			}
 		}
 }
