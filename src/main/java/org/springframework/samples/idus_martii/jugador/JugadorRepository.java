@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.samples.idus_martii.user.User;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +34,8 @@ public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
 	User findUserByJugador(@Param("username") String username);
 	@Query("SELECT j FROM Jugador j, User u WHERE u.username LIKE :username% AND j.user=u.id")
 	List<Jugador> findJugadorByUsername(@Param("username") String username);
+	
+	
 	
 
 }
