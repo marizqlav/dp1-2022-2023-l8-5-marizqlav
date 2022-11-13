@@ -33,7 +33,11 @@ public class PartidaController {
     
     @GetMapping(value = "/{partidaId}/iniciar")
     public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
-        partidaService.IniciarPartida(partidaId);
+        try {
+            partidaService.IniciarPartida(partidaId);
+        } catch (InitiationException e) {
+            //Ignorar
+        }
         return new ModelAndView("redirect:/partida/{userId}/{partidaId}");
     }
 
