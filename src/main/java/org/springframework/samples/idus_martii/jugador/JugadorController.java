@@ -131,7 +131,6 @@ public class JugadorController {
 			}
 			else {
 				// multiple jugadores found
-				System.out.println("Hola");
 				model.put("selections", results);
 				return "jugadores/jugadoresList";
 			}

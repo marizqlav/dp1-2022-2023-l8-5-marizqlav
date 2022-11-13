@@ -83,9 +83,25 @@ public class PartidaService {
     List<Partida> getPartidas() {
 		return partidaRepo.findAll();
 	}
+
     
     List<Partida> getPartidasEnJuego() {
 		return partidaRepo.findAllEnJuego();
 	}
     
+    Lobby getLobby(int idpartida) {
+		return partidaRepo.getLobby(idpartida);
+	}
+    
+    Integer anadirLobby(int idlobby, int idpartida) {
+		return partidaRepo.anadirLobby(idlobby,idpartida);
+	}
+    
+    Integer anadirJugadorLobby(int idjugador, int idlobby) {
+		return partidaRepo.anadirJugadorLobby(idjugador,idlobby);
+	}
+    
+    Jugador estaJugadorLobby(int idjugador, int idlobby) {
+		return partidaRepo.estaJugadorLobby(idjugador,idlobby);
+	}
 }

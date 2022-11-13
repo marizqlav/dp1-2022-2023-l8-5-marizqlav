@@ -1,10 +1,19 @@
 package org.springframework.samples.idus_martii.partida;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -20,12 +29,16 @@ public class PartidaController {
 
 	private static final String VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM = "partidas/createOrUpdatePartidaForm";
 	private final String  PARTIDAS_LISTING_VIEW="/partidas/partidasList";
+	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
     PartidaService partidaService;
+    JugadorService jugadorService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService) {
         this.partidaService = partidaService;
+        this.jugadorService = jugadorService;
     }
+    
     
     @Transactional(readOnly = true)
     @GetMapping("/")
@@ -50,11 +63,39 @@ public class PartidaController {
 			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
 		}
 		else {
-			this.partidaService.save(partida);
-			
-			return "redirect:/partida/{userId}/" + partida.getId();
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	        User currentUser = (User) authentication.getPrincipal();
+	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        System.out.println(jugador.getUsername());
+	        partida.setFechaCreacion(LocalDateTime.now());
+	        partida.setFechaInicio(LocalDateTime.now());
+	        partida.setJugador(jugador);
+	        this.partidaService.save(partida);
+	        partidaService.anadirLobby(partida.getId(),partida.getId());
+	        return "redirect:/partida/"+jugador.getId().toString()+"/"+partida.getId().toString();
 		}
+	        	
 	}
+	
+    @GetMapping(value = "/{jugadorId}/{partidaId}")
+    public ModelAndView lobby(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
+    	response.addHeader("Refresh", "5");
+    	
+    	
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	User currentUser = (User) authentication.getPrincipal();
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        ModelAndView result=new ModelAndView(LOBBY_ESPERA_VIEW);
+        if(partidaService.estaJugadorLobby(jugador.getId(), partidaId)==null)
+        	partidaService.anadirJugadorLobby(jugador.getId(),partidaId);
+       System.out.println(partidaService.estaJugadorLobby(jugador.getId(), partidaId));
+        List<Jugador> enlobby = partidaService.getLobby(partidaId).getJugadores();
+        result.addObject("jugadores", enlobby);
+        return result;
+	        	
+	}
+    
+ 
 
     /*
     @Transactional(readOnly = true)
@@ -87,8 +128,8 @@ public class PartidaController {
         return null;
     }
     
-    @GetMapping(value = "/{partidaId}/iniciar")
-    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
+    @GetMapping(value = "/{jugadorId}/{partidaId}/iniciar")
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId) {
         partidaService.IniciarPartida(partidaId);
         return new ModelAndView("redirect:/partida/{userId}/{partidaId}");
     }
