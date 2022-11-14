@@ -11,10 +11,10 @@
         <thead>
         <tr>
             <th>Id</th>
-            <th>Facción Ganadora</th>
             <th>Número de jugadores</th>
             <th>Fecha de creación</th>
             <th>Fecha de inicio</th>
+           
         </tr>
         </thead>
         <tbody>
@@ -24,16 +24,16 @@
                     <c:out value="${partida.id}"/>
                 </td>
                  <td>                    
-                      <c:out value="${partida.faccionGanadora}"/>                                        
+                      <c:out value="${partida.jugador.user.username}"/>                                        
                 </td>
                 <td>                    
                       <c:out value="${partida.numeroJugadores}"/>                                        
                 </td>
                 <td>                    
-                      <c:out value="${partida.fechaCreacion}"/>                                        
+                      <c:out value="${partida.fechaCreacionParseada}"/>                                        
                 </td>
                  <td>                    
-                      <c:out value="${partida.fechaInicio}"/>                                        
+                      <c:out value="${partida.fechaInicioParseada}"/>                                        
                 </td>
             </tr>
         </c:forEach>
