@@ -40,6 +40,10 @@ public class PartidaService {
     public void save(Partida partida) {
         partidaRepo.save(partida);
     }
+    
+    public void cancelarPartida(int id){
+    	partidaRepo.deleteById(id);
+    }
 
     
     public Partida findPartida(Integer id) {
@@ -111,7 +115,12 @@ public class PartidaService {
     List<Partida> getPartidasEnJuego() {
 		return partidaRepo.findAllEnJuego();
 	}
-    
+    Partida getPartidaIniciada(int idpartida) {
+		return partidaRepo.findPartidaIniciada(idpartida);
+	}
+    List<Partida> getPartidasFinalizadasJugador(int idjugador) {
+		return partidaRepo.findAllFinalizadasJugador(idjugador);
+	}
     Lobby getLobby(int idpartida) {
 		return partidaRepo.getLobby(idpartida);
 	}
@@ -124,8 +133,8 @@ public class PartidaService {
 		return partidaRepo.anadirJugadorLobby(idjugador, idlobby);
 	}
     
-    Jugador findJugadorInLobby(int idjugador, int idlobby) {
-		return partidaRepo.findJugadorInLobby(idjugador, idlobby);
+    Jugador estaJugadorLobby(int idjugador, int idlobby) {
+		return partidaRepo.estaJugadorLobby(idjugador, idlobby);
 	}
     
     Partida jugadorPartidaEnCurso(int idjugador) {
