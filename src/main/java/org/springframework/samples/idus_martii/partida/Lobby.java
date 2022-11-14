@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -31,7 +32,7 @@ public class Lobby extends BaseEntity {
 	@ManyToMany
 	 private List<Jugador> jugadores;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
 	private Partida partida;
     
    

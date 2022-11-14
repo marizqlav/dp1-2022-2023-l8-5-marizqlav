@@ -32,6 +32,10 @@ public class PartidaService {
     public void save(Partida partida) {
         partidaRepo.save(partida);
     }
+    
+    public void cancelarPartida(int id){
+    	partidaRepo.deleteById(id);
+    }
 
     
     public Partida findPartida(Integer id) {
@@ -94,7 +98,12 @@ public class PartidaService {
     List<Partida> getPartidasEnJuego() {
 		return partidaRepo.findAllEnJuego();
 	}
-    
+    Partida getPartidaIniciada(int idpartida) {
+		return partidaRepo.findPartidaIniciada(idpartida);
+	}
+    List<Partida> getPartidasFinalizadasJugador(int idjugador) {
+		return partidaRepo.findAllFinalizadasJugador(idjugador);
+	}
     Lobby getLobby(int idpartida) {
 		return partidaRepo.getLobby(idpartida);
 	}
