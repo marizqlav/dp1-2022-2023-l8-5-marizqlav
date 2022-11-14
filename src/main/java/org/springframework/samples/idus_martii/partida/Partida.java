@@ -94,4 +94,7 @@ public class Partida extends BaseEntity {
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
     Lobby lobby;
     
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
+    Sufragium sufragium;
+    
 }
