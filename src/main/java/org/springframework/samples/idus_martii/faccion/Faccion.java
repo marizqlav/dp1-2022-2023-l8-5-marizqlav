@@ -25,9 +25,11 @@ import lombok.Setter;
 @Table(name = "faccion")
 public class Faccion extends BaseEntity{
 	
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionPosible1;
 
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionPosible2; //Facciones a elegir solo 2
 	

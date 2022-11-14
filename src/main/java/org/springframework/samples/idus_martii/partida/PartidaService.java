@@ -2,11 +2,16 @@ package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.Faccion;
+import org.springframework.samples.idus_martii.faccion.FaccionService;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
@@ -21,12 +26,15 @@ public class PartidaService {
 
     private RondaService rondaService;
     private TurnoService turnoService;
+    private FaccionService faccionService;
 
     @Autowired
-    public PartidaService(PartidaRepository partidaRepo, TurnoService turnoService, RondaService rondaService) {
+    public PartidaService(PartidaRepository partidaRepo, TurnoService turnoService, RondaService rondaService, 
+        FaccionService faccionService) {
         this.partidaRepo = partidaRepo;
         this.turnoService = turnoService;
         this.rondaService = rondaService;
+        this.faccionService = faccionService;
     }
 
     public void save(Partida partida) {
@@ -42,7 +50,7 @@ public class PartidaService {
         return partidaRepo.findJugadores(partidaId);
     }
     
-    public void IniciarPartida(Integer id) throws InitiationException {
+    public void IniciarPartida(Integer id, List<Jugador> jugadores) throws InitiationException {
 
         Partida partida = findPartida(id);
         
@@ -59,26 +67,35 @@ public class PartidaService {
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
   
-        List<Jugador> jugadores = findJugadores(id).stream()
-        .sorted(Comparator.comparing(Jugador::getId))
-        .collect(Collectors.toList());
-        
+        /*List<Jugador> jugadores = findJugadores(id).stream()
+            .sorted(Comparator.comparing(Jugador::getId))
+            .collect(Collectors.toList());*/
+
+        List<FaccionesEnumerado> faccionesBag = new ArrayList<>();
+        for (int i = 0; i < 2; i++) { faccionesBag.add(FaccionesEnumerado.Mercader); }
+        for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Leal); }
+        for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Traidor); }
+
+        for (Jugador jugador : jugadores) {
+            Integer r = (int) Math.random() * faccionesBag.size();
+
+            Faccion faccion = new Faccion();
+            FaccionesEnumerado f = faccionesBag.get(r);
+            faccionesBag.remove(r);
+        }
+
         Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? x + 1 : 0;
 
         Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
-        System.out.println(n);
 
         turnoInicial.setConsul(jugadores.get(n));
         n = addNumber.apply(n);
-        System.out.println(n);
 
         turnoInicial.setPredor(jugadores.get(n));
         n = addNumber.apply(n);
-        System.out.println(n);
 
         turnoInicial.setEdil1(jugadores.get(n));
         n = addNumber.apply(n);
-        System.out.println(n);
 
         turnoInicial.setEdil2(jugadores.get(n));
         
@@ -86,10 +103,10 @@ public class PartidaService {
         turnoService.save(turnoInicial);
         save(partida);
     }
+
     List<Partida> getPartidas() {
 		return partidaRepo.findAll();
 	}
-
     
     List<Partida> getPartidasEnJuego() {
 		return partidaRepo.findAllEnJuego();
@@ -100,15 +117,15 @@ public class PartidaService {
 	}
     
     Integer anadirLobby(int idlobby, int idpartida) {
-		return partidaRepo.anadirLobby(idlobby,idpartida);
+		return partidaRepo.anadirLobby(idlobby, idpartida);
 	}
     
     Integer anadirJugadorLobby(int idjugador, int idlobby) {
-		return partidaRepo.anadirJugadorLobby(idjugador,idlobby);
+		return partidaRepo.anadirJugadorLobby(idjugador, idlobby);
 	}
     
-    Jugador estaJugadorLobby(int idjugador, int idlobby) {
-		return partidaRepo.estaJugadorLobby(idjugador,idlobby);
+    Jugador findJugadorInLobby(int idjugador, int idlobby) {
+		return partidaRepo.findJugadorInLobby(idjugador, idlobby);
 	}
     
     Partida jugadorPartidaEnCurso(int idjugador) {
