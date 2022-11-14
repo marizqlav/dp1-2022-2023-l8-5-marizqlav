@@ -21,10 +21,10 @@
         <c:forEach items="${rondas}" var="ronda">
             <tr>
                 <td>
-                    <c:out value="${ronda.id}"/>
+                    <a href="/users/<c:out value="${ronda.id}"/>"><c:out value="${ronda.id}"/></a>
                 </td>
                 <td>                    
-                      <c:out value="${ronda.partidaId} "/>                                        
+                      <c:out value="${ronda.partida} "/>                                        
                 </td>
                 <td> 
                     <a href="/rondas/${ronda.id}/edit"> 

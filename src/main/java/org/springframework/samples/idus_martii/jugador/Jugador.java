@@ -2,9 +2,9 @@ package org.springframework.samples.idus_martii.jugador;
 
 import java.util.Set;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.partida.Lobby;
+import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.statistics.Achievement;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.user.User;
@@ -39,11 +41,17 @@ public class Jugador extends BaseEntity{
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Faccion> faccion;
+
+	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
+	//private Set<Peticion> peticionesEnviadas;
+
+	public String getUsername() {
+		return this.getUser().getUsername();
+	}
+	public void setUsername(String username) {
+		 this.user.setUsername(username) ;
+	}
 	
-	@ManyToMany
-	@JoinTable(name = "turno_jugador", joinColumns = @JoinColumn(name="jugador_id"),
-	inverseJoinColumns = @JoinColumn(name = "turno_id"))
-	private Set<Turno> turno;
 	
 	@ManyToMany
 	@JoinTable(name = "jugador_achievement", joinColumns = @JoinColumn(name="jugador_id"),
@@ -53,9 +61,15 @@ public class Jugador extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
 	
+    //@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "jugador")
+    //private Set<Partida> partidasCreadas;
+
+	
 	@ManyToMany
 	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "jugador"))
 	private Set<Jugador> jugador;
+	
+
 	
 }

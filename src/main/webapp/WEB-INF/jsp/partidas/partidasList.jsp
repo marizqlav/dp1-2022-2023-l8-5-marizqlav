@@ -27,7 +27,7 @@
                     <c:out value="${partida.id}"/>
                 </td>
                  <td>                    
-                      <c:out value="${partida.actualFaccionGanadora}"/>                                        
+                      <c:out value="${partida.faccionGanadora}"/>                                        
                 </td>
                 <td>                    
                       <c:out value="${partida.numeroJugadores}"/>                                        
@@ -49,5 +49,4 @@
         </c:forEach>
         </tbody>
     </table>
-	<a class="btn btn-default" href="/turnos/new">Crear nuevo partida</a>
 </idus_martii:layout>
