@@ -64,7 +64,8 @@ public class PartidaController {
 
     @Transactional(readOnly = true)
     @GetMapping("/enJuego")
-    public ModelAndView showPartidasEnJuego(){
+    public ModelAndView showPartidasEnJuego(HttpServletResponse response){
+    	response.addHeader("Refresh", "10");
         ModelAndView result=new ModelAndView(PARTIDAS_LISTING_VIEW_ACTUALES);
         result.addObject("partidas", partidaService.getPartidasEnJuego());
         return result;
@@ -82,7 +83,7 @@ public class PartidaController {
 			model.put("partida", partida);
 			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
 		}else {
-			 return "redirect:/partida/"+jugador.getId().toString()+"/"+existe.getId().toString();
+			 return "redirect:/partida/"+existe.getId().toString();
 		}
 	}
 
@@ -101,15 +102,15 @@ public class PartidaController {
 	        partida.setJugador(jugador);
 	        this.partidaService.save(partida);
 	        partidaService.anadirLobby(partida.getId(),partida.getId());
-	        return "redirect:/partida/"+jugador.getId().toString()+"/"+partida.getId().toString();
+	        return "redirect:/partida/"+partida.getId().toString();
 		}
 	        	
 	}
 	
-	@GetMapping(value = "/juego/{partidaId}/{jugadorId}/cancelar")
-    public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId) {
+	@GetMapping(value = "/juego/{partidaId}/cancelar")
+    public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId) {
     	Partida partida = partidaService.findPartida(partidaId);
-        Partida iniciada = partidaService.jugadorPartidaEnCurso(jugadorId);
+        Partida iniciada = partidaService.jugadorPartidaEnCurso(partida.getJugador().getId());
     	if(iniciada==null) {
     		ModelAndView result=new ModelAndView("redirect:/");
             result.addObject("message", "No se ha encontrado una partida que cancelar");
@@ -123,8 +124,8 @@ public class PartidaController {
         }
 	
 	
-    @GetMapping(value = "/{jugadorId}/{partidaId}")
-    public ModelAndView lobby(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
+    @GetMapping(value = "/{partidaId}")
+    public ModelAndView lobby(@PathVariable("partidaId") Integer partidaId,HttpServletResponse response) {
     	response.addHeader("Refresh", "10");
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	Partida partida = partidaService.findPartida(partidaId);
@@ -139,7 +140,7 @@ public class PartidaController {
         if(partida!=null) {
         	Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
             if(iniciada!=null && partida.getNumeroJugadores()==enlobby.size()) {
-            	ModelAndView result=new ModelAndView("redirect:/partida/juego/"+partida.getId().toString()+"/"+jugador.getId().toString());
+            	ModelAndView result=new ModelAndView("redirect:/partida/juego/"+partida.getId().toString());
             	return result;
             	}else {
              		ModelAndView result=new ModelAndView(LOBBY_ESPERA_VIEW);
@@ -170,8 +171,8 @@ public class PartidaController {
 
    
     
-    @GetMapping(value = "/juego/{partidaId}/{jugadorId}")
-    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
+    @GetMapping(value = "/juego/{partidaId}")
+    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId,HttpServletResponse response) {
     	response.addHeader("Refresh", "10");
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	Partida partida = partidaService.findPartida(partidaId);

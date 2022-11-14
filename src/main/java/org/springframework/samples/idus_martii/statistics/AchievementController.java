@@ -28,13 +28,19 @@ public class AchievementController {
 	    }
 
 	    @Transactional(readOnly = true)
-	    @GetMapping("/")
+	    @GetMapping("/manageAchievements")
 	    public ModelAndView showAchievements(){
 	        ModelAndView result=new ModelAndView(ACHIEVEMENTS_LISTING_VIEW);
 	        result.addObject("achievements", service.getAchievements());
 	        return result;
 	    }
-	    
+	    @Transactional(readOnly = true)
+	    @GetMapping("/")
+	    public ModelAndView showPlayerAchievements(){
+	        ModelAndView result=new ModelAndView(ACHIEVEMENTS_LISTING_VIEW);
+	        result.addObject("achievements", service.getAchievements()); //TODO Crear meteodo para devover los logros de un jugador
+	        return result;
+	    }
 	    @Transactional()
 	    @GetMapping("/{id}/delete")
 	    public ModelAndView deleteAchievement(@PathVariable int id){

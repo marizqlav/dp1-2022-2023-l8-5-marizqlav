@@ -63,9 +63,32 @@ public class Partida extends BaseEntity {
     
     public String getFechaCreacionParseada() {
     	if(this.fechaCreacion==null)
-    		return "No iniciada";
+    		return "No creada";
     	else
     		return this.fechaCreacion.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaCreacion.toString().length()-7);
+    }
+    
+    public String getFechaInicioParseada() {
+    	if(this.fechaInicio==null)
+    		return "No iniciada";
+    	else
+    		return this.fechaInicio.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaCreacion.toString().length()-7);
+    }
+    
+    public String getFechaFinParseada() {
+    	if(this.fechaFin==null)
+    		return "No finalizada";
+    	else
+    		return this.fechaFin.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaCreacion.toString().length()-7);
+    }
+    public String getEstadoPartida() {
+    	if(this.fechaInicio==null)
+    		return "Esperando jugadores";
+    	else
+    		if(this.fechaInicio!=null && this.fechaFin==null)
+    			return "En juego";
+    		else
+    			return "Finalizada";
     }
     
 
@@ -93,5 +116,8 @@ public class Partida extends BaseEntity {
     
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
     Lobby lobby;
+    
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
+    Sufragium sufragium;
     
 }

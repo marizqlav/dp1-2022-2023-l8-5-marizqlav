@@ -51,10 +51,7 @@ public class Jugador extends BaseEntity{
 	public void setUsername(String username) {
 		 this.user.setUsername(username) ;
 	}
-	@ManyToMany
-	@JoinTable(name = "turno_jugador", joinColumns = @JoinColumn(name="jugador_id"),
-	inverseJoinColumns = @JoinColumn(name = "turno_id"))
-	private Set<Turno> turno;
+	
 	
 	@ManyToMany
 	@JoinTable(name = "jugador_achievement", joinColumns = @JoinColumn(name="jugador_id"),
