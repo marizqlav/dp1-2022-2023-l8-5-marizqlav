@@ -91,7 +91,7 @@ public class Partida extends BaseEntity {
     Set<Jugador> espectadores;
     
     
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
     Lobby lobby;
     
 }

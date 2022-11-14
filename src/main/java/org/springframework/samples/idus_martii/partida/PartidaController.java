@@ -106,12 +106,29 @@ public class PartidaController {
 	        	
 	}
 	
+	@GetMapping(value = "/juego/{partidaId}/{jugadorId}/cancelar")
+    public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId) {
+    	Partida partida = partidaService.findPartida(partidaId);
+        Partida iniciada = partidaService.jugadorPartidaEnCurso(jugadorId);
+    	if(iniciada==null) {
+    		ModelAndView result=new ModelAndView("redirect:/");
+            result.addObject("message", "No se ha encontrado una partida que cancelar");
+            return result;
+    	}else{
+    	partidaService.cancelarPartida(partidaId);
+    	ModelAndView result=new ModelAndView("redirect:/");
+        result.addObject("message", "Se ha cancelado la partida correctamente");
+        return result;
+        }
+        }
+	
 	
     @GetMapping(value = "/{jugadorId}/{partidaId}")
     public ModelAndView lobby(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
     	response.addHeader("Refresh", "10");
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	Partida partida = partidaService.findPartida(partidaId);
+    		
     	User currentUser = (User) authentication.getPrincipal();
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         
@@ -119,16 +136,21 @@ public class PartidaController {
         	partidaService.anadirJugadorLobby(jugador.getId(),partidaId);
         System.out.println(partidaService.estaJugadorLobby(jugador.getId(), partidaId));
         List<Jugador> enlobby = partidaService.getLobby(partidaId).getJugadores();
-        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
-            if(iniciada!=null) {
+        if(partida!=null) {
+        	Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+            if(iniciada!=null && partida.getNumeroJugadores()==enlobby.size()) {
             	ModelAndView result=new ModelAndView("redirect:/partida/juego/"+partida.getId().toString()+"/"+jugador.getId().toString());
             	return result;
-            	}
-            else {
-            	ModelAndView result=new ModelAndView(LOBBY_ESPERA_VIEW);
-            	result.addObject("jugadores", enlobby);
-            	result.addObject("partida", partida);
-            	return result;
+            	}else {
+             		ModelAndView result=new ModelAndView(LOBBY_ESPERA_VIEW);
+                	result.addObject("jugadores", enlobby);
+                	result.addObject("partida", partida);
+                	return result;
+                 }
+            }else {
+            	ModelAndView result=new ModelAndView("redirect:/");
+                result.addObject("message", "Se ha cancelado la partida");
+                return result;
             }
 	}
     
@@ -146,6 +168,8 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/{partidaId}");
     }
 
+   
+    
     @GetMapping(value = "/juego/{partidaId}/{jugadorId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId,HttpServletResponse response) {
     	response.addHeader("Refresh", "10");
