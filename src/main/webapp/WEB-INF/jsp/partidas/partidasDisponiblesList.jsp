@@ -60,9 +60,9 @@
         <thead>
         <tr>
         	<th></th>
-            <th>Id</th>
+            <th>Creador</th>
             <th>Número de jugadores</th>
-            <th>Fecha de creación</th>
+            <th>Estado</th>
 
         </tr>
         </thead>
@@ -70,7 +70,7 @@
         <c:forEach items="${partidas}" var="partida">
    			<tr>       
     			<td>
-                    <a href="/partida/${partida.jugador.id}/${partida.id}" class="botona">Unirme</a>
+                    <a href="/partida/${partida.id}" class="botona">Unirme</a>
                 </td> 
                 <td>
                     <a href="/jugadores/profile/${partida.jugador.id}" target="_blank"><c:out value="${partida.jugador.user.username}"/></a>
@@ -79,7 +79,7 @@
                       <c:out value="${partida.numeroJugadores}"/>                                        
                 </td>
                 <td>                    
-                      <c:out value="${partida.fechaCreacionParseada}"/>                                        
+                      <c:out value="${partida.estadoPartida}"/>                                        
                 </td>
             </tr>
         </c:forEach>
