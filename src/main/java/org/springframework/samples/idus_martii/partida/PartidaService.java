@@ -32,6 +32,10 @@ public class PartidaService {
     public void save(Partida partida) {
         partidaRepo.save(partida);
     }
+    
+    public void cancelarPartida(int id){
+    	partidaRepo.deleteById(id);
+    }
 
     
     public Partida findPartida(Integer id) {

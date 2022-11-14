@@ -25,7 +25,7 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     @Query("SELECT j FROM Partida p JOIN p.faccionesJugadoras f JOIN f.jugador j WHERE p.id LIKE :idPartida")
     Set<Jugador> findJugadores(@Param("idPartida") Integer idPartida);
     
-    @Query("SELECT p FROM Partida p WHERE p.jugador.id = :idjugador AND p.fechaInicio IS NULL ")
+    @Query("SELECT p FROM Partida p WHERE p.jugador.id = :idjugador AND p.fechaFin IS NULL ")
     Partida jugadorPartidaEnCurso(@Param("idjugador") Integer idjugador);
     
     @Query("SELECT p FROM Partida p WHERE p.id = :idpartida AND p.fechaInicio IS NOT NULL ")
@@ -33,6 +33,10 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     
     @Query("SELECT p FROM Partida p, Faccion f, Jugador j WHERE p.id = f.partida AND f.jugador = j.id AND j.id = :idjugador AND p.fechaFin IS NOT NULL ")
     List<Partida> findAllFinalizadasJugador(@Param("idjugador") Integer idjugador);
+    
+    @Modifying
+    @Query("DELETE FROM Lobby l where l.partida=:partidaId")
+    void eliminarLobby(@Param("partidaId") int partidaId);
     
     @Query("SELECT l FROM Lobby l WHERE l.id = :idpartida")
 	Lobby getLobby(@Param("idpartida") int idpartida);
