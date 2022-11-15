@@ -135,7 +135,6 @@ public class PartidaController {
 
     }
 	
-	
 	@GetMapping(value = "/juego/{partidaId}/cancelar")
     public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId) {
     	Partida partida = partidaService.findPartida(partidaId);
