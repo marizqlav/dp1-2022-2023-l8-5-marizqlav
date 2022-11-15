@@ -36,7 +36,7 @@ public class TurnoService {
     public void anadirVotoVerde(int turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
 
-        if (jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2())) {
+        if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
             throw new AccessException("Solo pueden votar los ediles");
         }
 
@@ -47,7 +47,7 @@ public class TurnoService {
     public void anadirVotoRojo(int turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
 
-        if (jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2())) {
+        if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
             throw new AccessException("Solo pueden votar los ediles");
         }
 
@@ -58,7 +58,7 @@ public class TurnoService {
     public void anadirVotoAmarillo(int turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
 
-        if (jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2())) {
+        if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
             throw new AccessException("Solo pueden votar los ediles");
         }
 
