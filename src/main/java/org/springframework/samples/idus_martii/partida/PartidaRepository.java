@@ -59,5 +59,4 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
 	Jugador findJugadorInLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
     
     
-
 }
