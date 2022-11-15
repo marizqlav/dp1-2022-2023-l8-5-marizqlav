@@ -135,12 +135,12 @@ public class PartidaServiceTest {
          when(partidaRepo.findById(any(Integer.class))).thenReturn(p);
          
          
-         Ronda r = new Ronda();  
+         Ronda r = new Ronda(); 
      	partida.setRondas(Arrays.asList(r));
      	Turno t = new Turno();
      	partida.getRondas().get(0).setTurnos(Arrays.asList(t));
      	
-     	
+
      	assertEquals(t, partidaService.turnoActual(0));
     }
 }

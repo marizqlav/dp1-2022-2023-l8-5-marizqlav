@@ -11,10 +11,12 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.EstadoTurno;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.security.core.Authentication;
@@ -38,17 +40,21 @@ public class PartidaController {
     private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
+	private final String  VOTACIONES_DISPONIBLES_RONDA1_VIEW="/partidas/votacionesRonda1";
+	private final String  VOTACIONES_DISPONIBLES_RONDA2_VIEW="/partidas/votacionesRonda2";
     PartidaService partidaService;
     JugadorService jugadorService;
     RondaService rondaService;
     TurnoService turnoService;
+    FaccionService faccionService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService, FaccionService facionService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
         this.rondaService = rondaService;
         this.turnoService = turnoService;
+        this.faccionService = faccionService;
     }
 
     
@@ -135,7 +141,6 @@ public class PartidaController {
 
     }
 	
-	
 	@GetMapping(value = "/juego/{partidaId}/cancelar")
     public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId) {
     	Partida partida = partidaService.findPartida(partidaId);
@@ -194,7 +199,7 @@ public class PartidaController {
 	}
    
     @GetMapping(value = "/juego/{partidaId}/iniciar")
-    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId, @PathVariable("turnoId") Integer turnoId ) {
 
         Lobby lobby = partidaService.getLobby(partidaId);
 
@@ -203,7 +208,17 @@ public class PartidaController {
         } catch (Exception e) {
             System.out.println(e);
         }
+        
+        //ELEGIR FACCION
+        if(rondaService.getById(partidaId).getNumRonda() == 1 && turnoService.getById(turnoId).getConsul() == jugadorService.getJugadorById(turnoId)
+        		&& turnoService.getById(turnoId).getEstadoTurno().equals(EstadoTurno.Elegir_faccion.toString()))  {
+              	faccionService.setFaccionSelecionada(jugadorId, partidaId, LOBBY_ESPERA_VIEW); //Falta enlazar con el input de eleccion de faccion del tablero
+              	
+             }
 
+
+        
+        
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
@@ -227,4 +242,80 @@ public class PartidaController {
         return result;
     }
     
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar")
+    public ModelAndView votacion(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar");
+         }else {
+        	 if(partidaService.rondaActual(partidaId).getNumRonda()==1) {
+        		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA1_VIEW);
+        	 }else {
+        		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA2_VIEW);
+        	 }
+        	 
+        	 
+         }
+    	
+    }
+
+    @PostMapping(value="partida/juego/{partidaId}/votar/rojo")
+    public ModelAndView votacionRojo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/rojo");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoRojo(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+        	 
+         }
+    	
+    }
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar/verde")
+    public ModelAndView votacionVerde(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/verde");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoVerde(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString()); 
+         }
+    	
+    }
+    
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar/amarillo")
+    public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoAmarillo(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+        	 return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+         }
+    	
+    
+    }
 }
