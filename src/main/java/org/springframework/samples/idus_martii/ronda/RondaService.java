@@ -30,4 +30,8 @@ public class RondaService {
     public void save(Ronda ronda){
         repo.save(ronda);
     }
+    
+     public Integer anadirRonda(int numRonda, int idpartida) {
+		return repo.anadirRonda(numRonda,idpartida);
+	}
 }

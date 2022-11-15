@@ -4,12 +4,20 @@ package org.springframework.samples.idus_martii.partida;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.samples.idus_martii.ronda.Ronda;
+import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.Turno;
+import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -33,11 +41,15 @@ public class PartidaController {
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
     PartidaService partidaService;
     JugadorService jugadorService;
+    RondaService rondaService;
+    TurnoService turnoService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
+        this.rondaService = rondaService;
+        this.turnoService = turnoService;
     }
 
     
@@ -94,31 +106,46 @@ public class PartidaController {
 			 return "redirect:/partida/" + existe.getId().toString();
 		}
 	}
-
-
+	
+	
 	@PostMapping(value = "/new")
-	public String processCreationForm(@Valid Partida partida, BindingResult result) {
-		if (result.hasErrors()) {
-			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
-		}
-		else {
-
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        User currentUser = (User) authentication.getPrincipal();
-
-	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-	        //System.out.println(jugador.getUsername());
-	        
+    public String processCreationForm(@Valid Partida partida, BindingResult result) {
+        if (result.hasErrors()) {
+            return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+        }
+        else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = (User) authentication.getPrincipal();
+            Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+            System.out.println(jugador.getUsername());
             partida.setFechaCreacion(LocalDateTime.now());
-	        partida.setJugador(jugador);
-	        this.partidaService.save(partida);
+            partida.setJugador(jugador);
+            this.partidaService.save(partida);
+            int idPartida = partida.getId();
+            partidaService.anadirLobby(idPartida,idPartida);
 
-	        partidaService.anadirLobby(partida.getId(),partida.getId());
+            int numj = partida.getNumeroJugadores();
+            int  limite= 0;
+            System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
 
-	        return "redirect:/partida/" + partida.getId().toString();
-		}
-	        	
-	}
+            if(numj == 5) {
+                limite=13;
+            }
+            else if(numj==6) {
+                limite=15;
+            }else if(numj==7){
+                limite=17;
+            }
+            else {
+                limite=20;
+            }
+            partidaService.crearSufragium(idPartida, idPartida, limite);
+            rondaService.anadirRonda(1, idPartida);
+            return "redirect:/partida/"+partida.getId().toString();
+        }
+
+    }
+	
 	
 	@GetMapping(value = "/juego/{partidaId}/cancelar")
     public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId) {
@@ -187,7 +214,41 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/{partidaId}");
     }
 
-   
+//    @GetMapping(value = "/juego/{partidaId}")
+//    public ModelAndView GetRonda(Partida partida, Turno turnoEnPartida, Ronda ronda, HttpServletResponse response) {
+//    	
+//        if(turnoEnPartida.getTurnoPartida()+1 >= (partida.getNumeroJugadores())*2){
+//            if(partida.votosLeal(turnoEnPartida)-partida.votosTraidores(turnoEnPartida) >= 2){
+//            	partida.setFaccionGanadora(FaccionesEnumerado.Leal);
+//            }else if(partida.votosTraidores(turnoEnPartida)-partida.votosLeal(turnoEnPartida) >= 2){
+//            	partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
+//            }else{
+//                partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+//            }
+//
+////            finalizarPartida(partida, turno);
+//
+//        }else  if(turnoEnPartida.getTurnoPartida()+1 >= partida.getNumeroJugadores() && ronda.getNumRonda() == 2){
+//            Jugador consul = partida.getRondas().get(1).getTurnos().stream()
+//                .filter(x-> x.getTurnoPartida()==(turnoEnPartida.getTurnoPartida()+1)%(partida.getNumeroJugadores()))
+//                .map(x->x.getConsul()).collect(Collectors.toList()).get(0);
+//            if(consul == turnoEnPartida.getConsul()) {
+//            	Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1, consul), 14);
+//                turnoService.save(nuevoTurno);
+//            }else {
+//            	ModelAndView resultConsul=new ModelAndView("redirect:/");
+//            	resultConsul.addObject("message", "Se ha cancelado la partida");
+//                return resultConsul;
+//            }
+//        }else{
+//            //Primera ronda
+//            Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1), 8);
+//            turnoService.save(nuevoTurno);
+//        }
+//        
+//
+//    }
+
     
     @GetMapping(value = "/juego/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {

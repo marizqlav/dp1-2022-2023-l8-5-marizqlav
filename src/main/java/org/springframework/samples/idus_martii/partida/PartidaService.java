@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.partida;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,4 +154,9 @@ public class PartidaService {
     Partida jugadorPartidaEnCurso(int idjugador) {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
+    
+    
+    Integer crearSufragium(int id, int idPartida, int max) {
+        return partidaRepo.crearSufragium(id,idPartida, max);
+    }
 }
