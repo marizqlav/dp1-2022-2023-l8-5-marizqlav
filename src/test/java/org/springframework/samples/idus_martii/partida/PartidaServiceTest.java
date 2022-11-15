@@ -125,5 +125,19 @@ public class PartidaServiceTest {
         assertThrows(InitiationException.class, () -> partidaService.IniciarPartida(0, null));
     }
 
-    
+    @Test
+    public void testTurnoActual() {
+    	
+    	Partida partida = new Partida();
+
+        Optional<Partida> p = Optional.of(partida);
+        when(partidaRepo.findById(any(Integer.class))).thenReturn(p);
+         
+        Ronda r = new Ronda();  
+     	partida.setRondas(Arrays.asList(r));
+     	Turno t = new Turno();
+     	partida.getRondas().get(0).setTurnos(Arrays.asList(t));
+     	
+     	assertEquals(t, partidaService.turnoActual(0));
+    }
 }
