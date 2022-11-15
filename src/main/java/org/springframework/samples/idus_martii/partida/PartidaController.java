@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
-import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
@@ -131,7 +130,6 @@ public class PartidaController {
 
             
             partidaService.crearSufragium(idPartida, idPartida, numj);
-            rondaService.anadirRonda(1, idPartida);
           
             return "redirect:/partida/"+partida.getId().toString();
         }
@@ -203,7 +201,7 @@ public class PartidaController {
 
         partidaService.IniciarPartida(partidaId, lobby);
 
-        return new ModelAndView("redirect:/partida/juego/{partidaId}");
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
     @GetMapping(value = "/juego/{partidaId}")
@@ -217,7 +215,7 @@ public class PartidaController {
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
 
-    	if(iniciada == null) {
+    	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
 
