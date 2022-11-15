@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.ronda;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -36,5 +37,5 @@ public class Ronda extends BaseEntity {
 	Integer numRonda;
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "ronda")
-	List<Turno> turnos; //Por alguna razón el set no se inicializa solo
+	List<Turno> turnos = new ArrayList();
 }
