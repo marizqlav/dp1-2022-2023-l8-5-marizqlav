@@ -11,10 +11,12 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.EstadoTurno;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.security.core.Authentication;
@@ -44,13 +46,15 @@ public class PartidaController {
     JugadorService jugadorService;
     RondaService rondaService;
     TurnoService turnoService;
+    FaccionService faccionService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService, FaccionService facionService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
         this.rondaService = rondaService;
         this.turnoService = turnoService;
+        this.faccionService = faccionService;
     }
 
     
@@ -195,8 +199,8 @@ public class PartidaController {
 	}
    
     @GetMapping(value = "/juego/{partidaId}/iniciar")
+
     public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
-    	
         Lobby lobby = partidaService.getLobby(partidaId);
         try {
             partidaService.IniciarPartida(partidaId, lobby);
@@ -205,8 +209,13 @@ public class PartidaController {
             System.out.println(e);
             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
         }
-
-       
+        
+        //ELEGIR FACCION
+        //if(rondaService.getById(partidaId).getNumRonda() == 1 && turnoService.getById(turnoId).getConsul() == jugadorService.getJugadorById(turnoId)
+        	//	&& turnoService.getById(turnoId).getEstadoTurno().equals(EstadoTurno.Elegir_faccion.toString()))  {
+              //	faccionService.setFaccionSelecionada(jugadorId, partidaId, LOBBY_ESPERA_VIEW); //Falta enlazar con el input de eleccion de faccion del tablero
+              	
+             //}
     }
     
     @GetMapping(value = "/juego/{partidaId}")
