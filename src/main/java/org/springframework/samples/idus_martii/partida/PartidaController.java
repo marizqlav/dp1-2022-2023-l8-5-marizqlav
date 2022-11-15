@@ -196,16 +196,17 @@ public class PartidaController {
    
     @GetMapping(value = "/juego/{partidaId}/iniciar")
     public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
-
+    	
         Lobby lobby = partidaService.getLobby(partidaId);
-
         try {
             partidaService.IniciarPartida(partidaId, lobby);
+            return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
         } catch (Exception e) {
             System.out.println(e);
+            return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
         }
 
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+       
     }
     
     @GetMapping(value = "/juego/{partidaId}")
