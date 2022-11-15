@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -147,7 +151,7 @@ public class PartidaController {
         result.addObject("message", "Se ha cancelado la partida correctamente");
         return result;
         }
-        }
+    }
 	
 	
     @GetMapping(value = "/{partidaId}")
@@ -195,7 +199,41 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/{partidaId}");
     }
 
-   
+//    @GetMapping(value = "/juego/{partidaId}")
+//    public ModelAndView GetRonda(Partida partida, Turno turnoEnPartida, Ronda ronda, HttpServletResponse response) {
+//    	
+//        if(turnoEnPartida.getTurnoPartida()+1 >= (partida.getNumeroJugadores())*2){
+//            if(partida.votosLeal(turnoEnPartida)-partida.votosTraidores(turnoEnPartida) >= 2){
+//            	partida.setFaccionGanadora(FaccionesEnumerado.Leal);
+//            }else if(partida.votosTraidores(turnoEnPartida)-partida.votosLeal(turnoEnPartida) >= 2){
+//            	partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
+//            }else{
+//                partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+//            }
+//
+////            finalizarPartida(partida, turno);
+//
+//        }else  if(turnoEnPartida.getTurnoPartida()+1 >= partida.getNumeroJugadores() && ronda.getNumRonda() == 2){
+//            Jugador consul = partida.getRondas().get(1).getTurnos().stream()
+//                .filter(x-> x.getTurnoPartida()==(turnoEnPartida.getTurnoPartida()+1)%(partida.getNumeroJugadores()))
+//                .map(x->x.getConsul()).collect(Collectors.toList()).get(0);
+//            if(consul == turnoEnPartida.getConsul()) {
+//            	Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1, consul), 14);
+//                turnoService.save(nuevoTurno);
+//            }else {
+//            	ModelAndView resultConsul=new ModelAndView("redirect:/");
+//            	resultConsul.addObject("message", "Se ha cancelado la partida");
+//                return resultConsul;
+//            }
+//        }else{
+//            //Primera ronda
+//            Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1), 8);
+//            turnoService.save(nuevoTurno);
+//        }
+//        
+//
+//    }
+
     
     @GetMapping(value = "/juego/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId,HttpServletResponse response) {

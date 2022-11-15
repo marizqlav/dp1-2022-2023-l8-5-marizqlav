@@ -37,9 +37,9 @@ INSERT INTO sufragium(id, votos_leales, votos_traidores, limite, partida_id) VAL
 INSERT INTO ronda(id, num_ronda,partida_id)
                 VALUES (1,1,1);
 
-INSERT INTO turno(id, consul_id, predor_id, edil1_id, edil2_id, votos_traidores, votos_leales, votos_neutrales, ronda_id) 
-                VALUES (1, 1,2,3,4, 1,1,0, 1),
-                        (2, 2,3,4,5, 2,0,0, 1);
+INSERT INTO turno(id,turno_partida, consul_id, predor_id, edil1_id, edil2_id, votos_traidores, votos_leales, votos_neutrales, ronda_id) 
+                VALUES (1,1, 1,2,3,4, 1,1,0, 1),
+                        (2,2, 2,3,4,5, 2,0,0, 1);
 
 INSERT INTO faccion(id, faccion_posible1, faccion_posible2, faccion_selecionada, partida_id, jugador_id) 
 VALUES (1, 'Leal', 'Mercader', 'Leal', 1, 1), 

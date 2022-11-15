@@ -62,7 +62,7 @@ public class TurnoController {
     @Transactional(readOnly = true)
     @GetMapping("/new")
     public ModelAndView createTurno(){
-        Turno turno=new Turno();
+        Turno turno= new Turno();
         ModelAndView result=new ModelAndView(TURNOS_FORM);
         result.addObject("turno", turno);
         return result;
