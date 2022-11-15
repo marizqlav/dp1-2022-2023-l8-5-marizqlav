@@ -26,4 +26,8 @@ public class FaccionService {
 	public Faccion save(Faccion f) {
 		return repo.save(f);
 	}
+	
+	public void  setFaccionSelecionada(int jugadorid, int partidaid, String faccionElegida) {
+		 repo.setFaccionSelecionada(jugadorid, partidaid, faccionElegida);
+	}
 }
