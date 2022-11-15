@@ -124,4 +124,6 @@ public class PartidaServiceTest {
 
         assertThrows(InitiationException.class, () -> partidaService.IniciarPartida(0, null));
     }
+
+    
 }

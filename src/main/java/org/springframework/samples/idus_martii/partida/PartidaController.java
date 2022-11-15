@@ -38,6 +38,8 @@ public class PartidaController {
     private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
+	private final String  VOTACIONES_DISPONIBLES_RONDA1_VIEW="/partidas/votacionesRonda1";
+	private final String  VOTACIONES_DISPONIBLES_RONDA2_VIEW="/partidas/votacionesRonda2";
     PartidaService partidaService;
     JugadorService jugadorService;
     RondaService rondaService;
@@ -226,4 +228,80 @@ public class PartidaController {
         return result;
     }
     
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar")
+    public ModelAndView votacion(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar");
+         }else {
+        	 if(partidaService.rondaActual(partidaId).getNumRonda()==1) {
+        		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA1_VIEW);
+        	 }else {
+        		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA2_VIEW);
+        	 }
+        	 
+        	 
+         }
+    	
+    }
+
+    @PostMapping(value="partida/juego/{partidaId}/votar/rojo")
+    public ModelAndView votacionRojo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/rojo");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoRojo(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+        	 
+         }
+    	
+    }
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar/verde")
+    public ModelAndView votacionVerde(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/verde");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoVerde(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString()); 
+         }
+    	
+    }
+    
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar/amarillo")
+    public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoAmarillo(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+        	 return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+         }
+    	
+    
+    }
 }
