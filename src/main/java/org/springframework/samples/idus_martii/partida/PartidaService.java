@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
+import java.util.Optional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Set;
@@ -163,7 +164,14 @@ public class PartidaService {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
     
-
+    Turno turnoActual(int partidaId) {
+    	Ronda r = partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+    	return r.getTurnos().get(r.getTurnos().size()-1);
+    }
     
-
+    Ronda rondaActual(int partidaId) {
+    	return partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+    	
+    }
+    
 }
