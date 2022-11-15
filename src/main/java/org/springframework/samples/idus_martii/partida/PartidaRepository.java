@@ -54,4 +54,10 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
 
     @Query("SELECT j FROM Lobby l JOIN l.jugadores j WHERE j.id = :idjugador AND l.id = :idlobby")
 	Jugador estaJugadorLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
+    
+    
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO sufragium(id, partida_id, leales, traidores, max) VALUES (:id, :idpartida, 0, 0, :max)", nativeQuery = true)
+    Integer crearSufragium(@Param("id") int id, @Param("idpartida") int idpartida, @Param("max") int max);
 }
