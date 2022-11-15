@@ -124,6 +124,69 @@ public class PartidaService {
 
         save(partida);
     }
+    
+public void roles(Integer turnoPartida, Integer partidaId) {
+    	
+    	List<Jugador> listaJugadores = partidaRepo.findJugadores(partidaId);
+        Function<Integer, Integer> addNumber = x -> (x == listaJugadores.size()) ? 0 : x + 1;
+        
+        Turno turno = new Turno();
+        turno.setNumTurno(turnoPartida);
+        Integer posicionConsul = listaJugadores.indexOf(turno.getConsul());
+        Integer n =  posicionConsul+1;
+        turno.setConsul(listaJugadores.get(n));
+        addNumber.apply(n);
+
+        turno.setPredor(listaJugadores.get(n));
+        addNumber.apply(n);
+
+        turno.setEdil1(listaJugadores.get(n));
+        addNumber.apply(n);
+
+        turno.setEdil2(listaJugadores.get(n));
+        addNumber.apply(n);
+        
+        turnoService.save(turno);
+
+    }
+    
+////Final ronda 1 y ronda 2
+//  public void GetRondaTerminar(Partida partida, Turno turnoEnPartida, Ronda ronda) {    	
+//  	
+//      if(turnoEnPartida.getNumTurno()+1 >= (partida.getNumeroJugadores())*2){
+//          if(partida.votosLeal(turnoEnPartida)-partida.votosTraidores(turnoEnPartida) >= 2){
+//          	partida.setFaccionGanadora(FaccionesEnumerado.Leal);
+//          }else if(partida.votosTraidores(turnoEnPartida)-partida.votosLeal(turnoEnPartida) >= 2){
+//          	partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
+//          }else{
+//              partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+//          }
+//
+////          finalizarPartida(partida, turno);
+//
+//      }else  if(turnoEnPartida.getNumTurno()+1 >= partida.getNumeroJugadores() && ronda.getNumRonda() == 2){
+//          Jugador consul = partida.getRondas().get(1).getTurnos().stream()
+//              .filter(x-> x.getNumTurno()==(turnoEnPartida.getNumTurno()+1)%(partida.getNumeroJugadores()))
+//              .map(x->x.getConsul()).collect(Collectors.toList()).get(0);
+//          if(consul == turnoEnPartida.getConsul()) {
+//          	turnoService.save(turnoEnPartida);
+//          }else {
+//          	ModelAndView resultConsul=new ModelAndView("redirect:/");
+//          	resultConsul.addObject("message", "Se ha cancelado la partida");
+//              return resultConsul;
+//          }
+//      }else{
+//          //Primera ronda
+//      	Jugador consul = partida.getRondas().get(0).getTurnos().stream()
+//      			.map(x->x.getConsul()).collect(Collectors.toList()).get(0);
+////      	Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1), 8);
+////          turnoService.save(nuevoTurno);
+//      }
+//  	ModelAndView result=new ModelAndView("/partidas/tablero");
+//      result.addObject("partida", partidaService.findPartida(partida.getId()));
+//      return result;
+//
+//  }
 
     List<Partida> getPartidas() {
 		return partidaRepo.findAll();
