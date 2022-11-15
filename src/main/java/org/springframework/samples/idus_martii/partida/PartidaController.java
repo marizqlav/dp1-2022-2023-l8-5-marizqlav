@@ -293,7 +293,17 @@ public class PartidaController {
          }
     	
     }
-    
+    @GetMapping(value = "/juego/{partidaId}/cambiar")
+    public ModelAndView GetPasarRolTurnosRondaPrimera(@PathVariable("partidaId") Integer partidaId, Turno turnoEnPartida, HttpServletResponse response) {
+    	Integer numeroTurno = turnoEnPartida.getNumTurno();
+        try {
+        	partidaService.roles(numeroTurno, partidaId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+    }
     
     @PostMapping(value="partida/juego/{partidaId}/votar/amarillo")
     public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
