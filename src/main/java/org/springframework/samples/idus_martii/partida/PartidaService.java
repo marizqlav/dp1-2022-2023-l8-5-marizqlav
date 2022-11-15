@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
+import java.util.Optional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Set;
@@ -57,6 +58,10 @@ public class PartidaService {
         //Restricciones
         if (partida.getFechaInicio() != null) {
             throw new InitiationException("No se puede iniciar una partida ya iniciada");
+        } else if (lobby.getJugadores().size() > 8) {
+            throw new InitiationException("Demasiados jugadores");
+        } else if (lobby.getJugadores().size() < 5) {
+            throw new InitiationException("No hay suficientes jugadores");
         }
 
     	partida.setFechaInicio(LocalDateTime.now());
@@ -72,10 +77,28 @@ public class PartidaService {
         turnoInicial.setNumTurno(1);
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
-  
-        /*List<Jugador> jugadores = findJugadores(id).stream()
-            .sorted(Comparator.comparing(Jugador::getId))
-            .collect(Collectors.toList());*/
+        
+        Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? 0 : x + 1;
+
+        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
+
+        turnoInicial.setConsul(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setPredor(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setEdil1(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setEdil2(jugadores.get(n));
+        System.out.println(n);
+        
+        rondaService.save(rondaInicial);
+        turnoService.save(turnoInicial);
 
         List<FaccionesEnumerado> faccionesBag = new ArrayList<>();
         for (int i = 0; i < 2; i++) { faccionesBag.add(FaccionesEnumerado.Mercader); }
@@ -102,23 +125,6 @@ public class PartidaService {
             faccionService.save(faccion);
         }
 
-        Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? x + 1 : 0;
-
-        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
-
-        turnoInicial.setConsul(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setPredor(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil1(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil2(jugadores.get(n));
-        
-        rondaService.save(rondaInicial);
-        turnoService.save(turnoInicial);
         save(partida);
     }
 
@@ -158,17 +164,15 @@ public class PartidaService {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
     
-
-    
-    Integer crearSufragium(int id, int idPartida, int numj) {
-    	int limite=0;
-    	if(numj <8) {
-            limite= (numj*2)+3;
-        }
-        else {
-            limite=20;
-        }
-        return partidaRepo.crearSufragium(id,idPartida, limite);
-
+    Turno turnoActual(int partidaId) {
+    	//Ronda r = partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+    	//return r.getTurnos().get(r.getTurnos().size()-1);
+        return  partidaRepo.findById(partidaId).get().getRondas().get(-1).getTurnos().get(-1);
     }
+    
+    Ronda rondaActual(int partidaId) {
+    	return partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+    	
+    }
+    
 }

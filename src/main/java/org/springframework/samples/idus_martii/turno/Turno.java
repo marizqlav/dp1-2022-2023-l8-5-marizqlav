@@ -43,21 +43,19 @@ public class Turno extends BaseEntity {
 
 	@Min(0)
 	@Max(2)
-    private Integer votosTraidores;
+    private Integer votosTraidores = 0;
 
 	@Min(0)
 	@Max(2)
-    private Integer votosLeales;
+    private Integer votosLeales = 0;
 
 	@Min(0)
 	@Max(2)
-    private Integer votosNeutrales;
+    private Integer votosNeutrales = 0;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "ronda_id")
 	private Ronda ronda;
-	
-
 	
 }

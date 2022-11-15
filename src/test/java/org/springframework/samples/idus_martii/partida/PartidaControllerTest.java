@@ -40,13 +40,6 @@ public class PartidaControllerTest {
     public void IniciarPartidaTest() throws Exception {
         mockMvc.perform(get("/partida/juego/{partidaId}/iniciar", 1))
             .andExpect(status().is3xxRedirection());
-            
     }
 
-    @Test
-    public void JuegoTest() throws Exception {
-        mockMvc.perform(get("/partida/juego/{partidaId}/"))
-            .andExpect(status().isOk());
-            
-    }
 }

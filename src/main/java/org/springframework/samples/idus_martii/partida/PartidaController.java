@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
-import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
@@ -39,6 +38,8 @@ public class PartidaController {
     private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
+	private final String  VOTACIONES_DISPONIBLES_RONDA1_VIEW="/partidas/votacionesRonda1";
+	private final String  VOTACIONES_DISPONIBLES_RONDA2_VIEW="/partidas/votacionesRonda2";
     PartidaService partidaService;
     JugadorService jugadorService;
     RondaService rondaService;
@@ -123,21 +124,18 @@ public class PartidaController {
             this.partidaService.save(partida);
 
             int idPartida = partida.getId();
-            partidaService.anadirLobby(idPartida, idPartida);
+            
 
             int numj = partida.getNumeroJugadores();
+            partida.setVotosTraidores(0);
+            partida.setVotosLeales(0);
+            partida.setLimite(2*numj +3 + numj/8);
+            partidaService.anadirLobby(idPartida, idPartida);
 
-            System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
-
-            
-            partidaService.crearSufragium(idPartida, idPartida, numj);
-            rondaService.anadirRonda(1, idPartida);
-          
-            return "redirect:/partida/"+partida.getId().toString();
+            return "redirect:/partida/" + partida.getId().toString();
         }
 
     }
-	
 	
 	@GetMapping(value = "/juego/{partidaId}/cancelar")
     public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId) {
@@ -197,13 +195,17 @@ public class PartidaController {
 	}
    
     @GetMapping(value = "/juego/{partidaId}/iniciar")
-    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) throws InitiationException {
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
 
         Lobby lobby = partidaService.getLobby(partidaId);
 
-        partidaService.IniciarPartida(partidaId, lobby);
+        try {
+            partidaService.IniciarPartida(partidaId, lobby);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-        return new ModelAndView("redirect:/partida/juego/{partidaId}");
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
     @GetMapping(value = "/juego/{partidaId}")
@@ -217,7 +219,7 @@ public class PartidaController {
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
 
-    	if(iniciada == null) {
+    	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
 
@@ -226,4 +228,80 @@ public class PartidaController {
         return result;
     }
     
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar")
+    public ModelAndView votacion(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar");
+         }else {
+        	 if(partidaService.rondaActual(partidaId).getNumRonda()==1) {
+        		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA1_VIEW);
+        	 }else {
+        		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA2_VIEW);
+        	 }
+        	 
+        	 
+         }
+    	
+    }
+
+    @PostMapping(value="partida/juego/{partidaId}/votar/rojo")
+    public ModelAndView votacionRojo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/rojo");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoRojo(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+        	 
+         }
+    	
+    }
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar/verde")
+    public ModelAndView votacionVerde(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/verde");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoVerde(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString()); 
+         }
+    	
+    }
+    
+    
+    @PostMapping(value="partida/juego/{partidaId}/votar/amarillo")
+    public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
+    	 if (result.hasErrors()) {
+             return new ModelAndView("partida/juego/{partidaId}/votar/");
+         }else {
+        	 Turno turno = partidaService.turnoActual(partidaId);
+        	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             User currentUser = (User) authentication.getPrincipal();
+             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+             try {
+            	 turnoService.anadirVotoAmarillo(turno.getId(), jugador); 
+             }catch(Exception e){
+            	System.out.println(e);
+             }
+        	 return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+         }
+    	
+    
+    }
 }
