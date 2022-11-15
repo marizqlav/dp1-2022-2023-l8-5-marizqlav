@@ -1,12 +1,10 @@
 package org.springframework.samples.idus_martii.ronda;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,5 +36,5 @@ public class Ronda extends BaseEntity {
 	Integer numRonda;
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "ronda")
-	Set<Turno> turnos = new HashSet<>(); //Por alguna razón el set no se inicializa solo
+	List<Turno> turnos; //Por alguna razón el set no se inicializa solo
 }

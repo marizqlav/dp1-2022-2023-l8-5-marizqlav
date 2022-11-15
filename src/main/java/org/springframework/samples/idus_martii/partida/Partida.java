@@ -28,6 +28,7 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
 import org.springframework.samples.idus_martii.ronda.Ronda;
+import org.springframework.samples.idus_martii.turno.Turno;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +54,15 @@ public class Partida extends BaseEntity {
     private LocalDateTime fechaInicio;
 
     private LocalDateTime fechaFin;
+    
+    public Integer votosLeal(Turno t) {
+    	return t.getVotosLeales() + votosLeal(t);
+    }
+    
+    public Integer votosTraidores(Turno t) {
+    	return t.getVotosTraidores() + votosTraidores(t);
+    }
+
 
     public String getDuration() {
     	if(this.fechaFin==null)
