@@ -199,26 +199,17 @@ public class PartidaController {
 	}
    
     @GetMapping(value = "/juego/{partidaId}/iniciar")
-    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId,@PathVariable("jugadorId") Integer jugadorId, @PathVariable("turnoId") Integer turnoId ) {
 
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
         Lobby lobby = partidaService.getLobby(partidaId);
-
         try {
             partidaService.IniciarPartida(partidaId, lobby);
+            return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
         } catch (Exception e) {
             System.out.println(e);
+            return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
         }
-        
-        //ELEGIR FACCION
-        if(rondaService.getById(partidaId).getNumRonda() == 1 && turnoService.getById(turnoId).getConsul() == jugadorService.getJugadorById(turnoId)
-        		&& turnoService.getById(turnoId).getEstadoTurno().equals(EstadoTurno.Elegir_faccion.toString()))  {
-              	faccionService.setFaccionSelecionada(jugadorId, partidaId, LOBBY_ESPERA_VIEW); //Falta enlazar con el input de eleccion de faccion del tablero
-              	
-             }
 
-
-        
-        
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
@@ -242,6 +233,17 @@ public class PartidaController {
         return result;
     }
     
+    @GetMapping(value = "/juego/{partidaId}/cambiar")
+    public ModelAndView GetPasarRolTurnosRondaPrimera(@PathVariable("partidaId") Integer partidaId, Turno turnoEnPartida, HttpServletResponse response) {
+    	Integer numeroTurno = turnoEnPartida.getNumTurno();
+        try {
+        	partidaService.roles(numeroTurno, partidaId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+    }
     
     @PostMapping(value="partida/juego/{partidaId}/votar")
     public ModelAndView votacion(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
@@ -298,18 +300,7 @@ public class PartidaController {
          }
     	
     }
-    @GetMapping(value = "/juego/{partidaId}/cambiar")
-    public ModelAndView GetPasarRolTurnosRondaPrimera(@PathVariable("partidaId") Integer partidaId, Turno turnoEnPartida, HttpServletResponse response) {
-    	Integer numeroTurno = turnoEnPartida.getNumTurno();
-        try {
-        	partidaService.roles(numeroTurno, partidaId);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
 
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
-    }
-    
     @PostMapping(value="partida/juego/{partidaId}/votar/amarillo")
     public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId, BindingResult result) {
     	 if (result.hasErrors()) {
