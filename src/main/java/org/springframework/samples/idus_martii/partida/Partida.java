@@ -73,6 +73,28 @@ public class Partida extends BaseEntity {
     	return t.getVotosTraidores() + votosTraidores(t);
     }
 
+//  public Integer votosLeal(Turno t) {
+//	Integer sumaTotal=0;
+//	List<Integer> lista=new ArrayList<>();
+//	Integer votosLeales=t.getVotosLeales();
+//	lista.add(votosLeales);
+//	for(Integer i:lista) {
+//		sumaTotal = sumaTotal+i;
+//	}
+//	return sumaTotal;
+//}
+//public Integer votosTraidores(Turno t) {
+//	Integer sumaTotal=0;
+//	List<Integer> lista=new ArrayList<>();
+//	Integer votosTraidores=t.getVotosTraidores();
+//	lista.add(votosTraidores);
+//	for(Integer i:lista) {
+//		sumaTotal = sumaTotal+i;
+//	}
+//	return sumaTotal;
+//	
+////	return t.getVotosTraidores() + votosTraidores(t);
+//}
 
     public String getDuration() {
     	if(this.fechaFin==null)
