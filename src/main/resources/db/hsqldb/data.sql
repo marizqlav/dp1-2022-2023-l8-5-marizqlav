@@ -29,8 +29,11 @@ INSERT INTO jugadores(id, user) VALUES
         (6, 'pabparmen');
 
 
+        
 INSERT INTO partida(id, faccion_ganadora, numero_jugadores, fecha_creacion, fecha_inicio, fecha_fin, jugador_id)
-        VALUES (1, null, 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31', 1);
+        VALUES (1, 'null', 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31', 1);
+        
+INSERT INTO sufragium(id, leales, traidores, max, partida_id) VALUES (1, 0, 0, 20, 1);
 
 INSERT INTO ronda(id, partida_id)
                 VALUES (1,1),
@@ -39,8 +42,6 @@ INSERT INTO ronda(id, partida_id)
 INSERT INTO turno(id, consul_id, predor_id, edil1_id, edil2_id, votos_traidores, votos_leales, votos_neutrales, ronda_id) 
                 VALUES (1, 1,2,3,4, 1,1,0, 1),
                         (2, 2,3,4,5, 2,0,0, 1);
-
-INSERT INTO turno_jugador VALUES (1, 2);
 
 INSERT INTO faccion(id, faccion_posible1, faccion_posible2, faccion_selecionada, partida_id, jugador_id) 
 VALUES (1, 'Leal', 'Mercader', 'Leal', 1, 1), 

@@ -198,9 +198,11 @@ public class PartidaController {
 
     	Partida partida = partidaService.findPartida(partidaId);
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-
-        partidaService.save(partida);
-
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+    	if(iniciada==null) {
+    		partida.setFechaInicio(LocalDateTime.now());
+    		partidaService.save(partida);
+    		}
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
         return result;
