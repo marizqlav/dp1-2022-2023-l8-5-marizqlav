@@ -209,8 +209,6 @@ public class PartidaController {
             System.out.println(e);
             return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
         }
-
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
     @GetMapping(value = "/juego/{partidaId}")
