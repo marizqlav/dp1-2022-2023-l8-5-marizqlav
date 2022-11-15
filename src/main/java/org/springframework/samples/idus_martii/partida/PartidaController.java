@@ -125,21 +125,10 @@ public class PartidaController {
             partidaService.anadirLobby(idPartida,idPartida);
 
             int numj = partida.getNumeroJugadores();
-            int  limite= 0;
             System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
 
-            if(numj == 5) {
-                limite=13;
-            }
-            else if(numj==6) {
-                limite=15;
-            }else if(numj==7){
-                limite=17;
-            }
-            else {
-                limite=20;
-            }
-            partidaService.crearSufragium(idPartida, idPartida, limite);
+            
+            partidaService.crearSufragium(idPartida, idPartida, numj);
             rondaService.anadirRonda(1, idPartida);
             return "redirect:/partida/"+partida.getId().toString();
         }
