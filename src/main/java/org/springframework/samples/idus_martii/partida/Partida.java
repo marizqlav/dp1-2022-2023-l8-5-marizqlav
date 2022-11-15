@@ -21,7 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-
+import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
@@ -40,7 +40,7 @@ import lombok.Setter;
 @Table(name = "partida")
 public class Partida extends BaseEntity {
 
-
+	@NotNull
     @Min(5)
     @Max(8)
     private Integer numeroJugadores;
