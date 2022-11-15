@@ -199,7 +199,7 @@ public class PartidaController {
 
         Lobby lobby = partidaService.getLobby(partidaId);
 
-        partidaService.IniciarPartida(partidaId, lobby);
+        //partidaService.IniciarPartida(partidaId, lobby);
 
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
@@ -215,9 +215,9 @@ public class PartidaController {
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
 
-    	if (iniciada == null) {
+    	/*if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
-    	}
+    	}*/
 
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
