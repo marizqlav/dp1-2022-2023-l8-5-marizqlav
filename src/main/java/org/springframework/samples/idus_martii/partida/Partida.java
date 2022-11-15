@@ -106,7 +106,7 @@ public class Partida extends BaseEntity {
     Set<Faccion> faccionesJugadoras;
     //TODO aplicar restriccion de tres facciones en service
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "partida")
     List<Ronda> rondas;
 
     
