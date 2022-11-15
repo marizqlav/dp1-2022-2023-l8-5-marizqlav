@@ -47,7 +47,7 @@ public class PartidaService {
         return partidaRepo.findById(id).get();
     }
 
-    public Set<Jugador> findJugadores(Integer partidaId) {
+    public List<Jugador> findJugadores(Integer partidaId) {
         return partidaRepo.findJugadores(partidaId);
     }
     
@@ -235,5 +235,10 @@ public void roles(Integer turnoPartida, Integer partidaId) {
     	Ronda r = p.getRondas().get(p.getRondas().size()-1);
     	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
     	return t;
+    }
+    
+    Ronda rondaActual(int partidaId) {
+    	return partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+
     }
 }
