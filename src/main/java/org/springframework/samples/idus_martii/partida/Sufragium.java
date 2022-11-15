@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.turno.Turno;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,13 +24,13 @@ public class Sufragium extends BaseEntity{
 	@OneToOne(cascade = CascadeType.REMOVE)
 	private Partida partida;
 	
-	@Column(name = "leales")
-	int leales;
+	@Column(name = "votos_leales")
+	int votosLeales;
 	
-	@Column(name = "traidores")
-	int traidores;
+	@Column(name = "votos_traidores")
+	int votosTraidores;
 	
-	@Column(name = "max")
-	int max;
+	@Column(name = "limite")
+	int limite;
 	
 }

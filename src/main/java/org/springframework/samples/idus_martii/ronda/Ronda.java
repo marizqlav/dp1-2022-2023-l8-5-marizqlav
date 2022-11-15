@@ -4,12 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.idus_martii.model.BaseEntity;
@@ -28,6 +31,11 @@ public class Ronda extends BaseEntity {
 	@JoinColumn(name = "partida_id")
 	@ManyToOne(cascade = CascadeType.REMOVE)
     Partida partida;
+	
+	@Column(name = "num_ronda")
+	@Min(1)
+	@Max(2)
+	Integer numRonda;
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "ronda")
 	Set<Turno> turnos = new HashSet<>(); //Por alguna razón el set no se inicializa solo
