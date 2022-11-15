@@ -248,7 +248,8 @@ public class PartidaController {
     	 if (result.hasErrors()) {
              return new ModelAndView("partida/juego/{partidaId}/votar");
          }else {
-        	 if(partidaService.rondaActual(partidaId).getNumRonda()==1) {
+        	 if(partidaService.rondaActual(partidaId).getNumRonda()==1
+        			) {
         		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA1_VIEW);
         	 }else {
         		 return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA2_VIEW);
