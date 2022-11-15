@@ -17,15 +17,15 @@ import org.springframework.samples.idus_martii.user.UserService;
 public class JugadorService {
 	private JugadorRepository jugadorRepo;
 	
-	@Autowired
 	private UserService userService;
 	
-	@Autowired
 	private AuthoritiesService authoritiesService;
 	
 	@Autowired
-	public JugadorService(JugadorRepository jugadorRepo) {
+	public JugadorService(JugadorRepository jugadorRepo, UserService userService, AuthoritiesService authoritiesService) {
 		this.jugadorRepo = jugadorRepo;
+		this.userService = userService;
+		this.authoritiesService = authoritiesService;
 	}
 	
 	public List<Jugador> getAll(){

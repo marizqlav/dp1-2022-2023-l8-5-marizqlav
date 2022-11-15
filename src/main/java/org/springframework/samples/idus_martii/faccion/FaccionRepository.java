@@ -16,9 +16,4 @@ public interface FaccionRepository extends CrudRepository<Faccion, Integer> {
 	
 	Faccion save (Faccion f);
 	
-	
-	
-	
-	
-
 }

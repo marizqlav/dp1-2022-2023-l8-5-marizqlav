@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.partida;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +25,6 @@ import javax.validation.constraints.Min;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
-//import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
 import org.springframework.samples.idus_martii.ronda.Ronda;
@@ -104,11 +104,9 @@ public class Partida extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     Set<Faccion> faccionesJugadoras;
-    //TODO aplicar restriccion de tres facciones en service
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
-    List<Ronda> rondas;
-
+    List<Ronda> rondas = new ArrayList();
     
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida") //TODO mappedBy
     List<Mensaje> mensajes;
