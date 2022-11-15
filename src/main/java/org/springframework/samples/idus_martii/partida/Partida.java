@@ -98,6 +98,7 @@ public class Partida extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     List<Ronda> rondas;
+
     
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida") //TODO mappedBy
     List<Mensaje> mensajes;

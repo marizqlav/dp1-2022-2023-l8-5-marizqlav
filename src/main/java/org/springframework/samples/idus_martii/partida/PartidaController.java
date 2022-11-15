@@ -12,6 +12,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -35,11 +37,15 @@ public class PartidaController {
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
     PartidaService partidaService;
     JugadorService jugadorService;
+    RondaService rondaService;
+    TurnoService turnoService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
+        this.rondaService = rondaService;
+        this.turnoService = turnoService;
     }
     
     
@@ -105,21 +111,22 @@ public class PartidaController {
             partidaService.anadirLobby(idPartida,idPartida);
 
             int numj = partida.getNumeroJugadores();
-            int max = 0;
+            int  limite= 0;
             System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
 
             if(numj == 5) {
-                max=13;
+                limite=13;
             }
             else if(numj==6) {
-                max=15;
+                limite=15;
             }else if(numj==7){
-                max=17;
+                limite=17;
             }
             else {
-                max=20;
+                limite=20;
             }
-            partidaService.crearSufragium(idPartida, idPartida, max);
+            partidaService.crearSufragium(idPartida, idPartida, limite);
+            rondaService.anadirRonda(1, idPartida);
             return "redirect:/partida/"+partida.getId().toString();
         }
 
