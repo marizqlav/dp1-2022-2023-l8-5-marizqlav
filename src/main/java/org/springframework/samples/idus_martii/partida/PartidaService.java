@@ -13,6 +13,7 @@ import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.EstadoTurno;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,7 @@ public class PartidaService {
         partida.getRondas().add(rondaInicial);
        
         Turno turnoInicial = new Turno();
+        turnoInicial.setEstadoTurno(EstadoTurno.Elegir_rol);
         turnoInicial.setNumTurno(1);
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
