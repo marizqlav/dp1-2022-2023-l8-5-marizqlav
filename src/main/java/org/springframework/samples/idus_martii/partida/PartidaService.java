@@ -160,14 +160,12 @@ public class PartidaService {
     Partida jugadorPartidaEnCurso(int idjugador) {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
-    
-    Turno turnoActual(Integer partidaId) {
 
-    	Partida partida = partidaRepo.findById(partidaId).get();
-    	Ronda r = partida.getRondas().get(partida.getRondas().size()-1);
+
+    Turno turnoActual(Integer partidaId) {
+    	Partida p = partidaRepo.findById(partidaId).get();
+    	Ronda r = p.getRondas().get(p.getRondas().size()-1);
     	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
     	return t;
-    	
     }
-    
 }
