@@ -117,19 +117,22 @@ public class PartidaController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User currentUser = (User) authentication.getPrincipal();
             Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-            System.out.println(jugador.getUsername());
+
             partida.setFechaCreacion(LocalDateTime.now());
             partida.setJugador(jugador);
             this.partidaService.save(partida);
+
             int idPartida = partida.getId();
-            partidaService.anadirLobby(idPartida,idPartida);
+            partidaService.anadirLobby(idPartida, idPartida);
 
             int numj = partida.getNumeroJugadores();
+
             System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
 
             
             partidaService.crearSufragium(idPartida, idPartida, numj);
             rondaService.anadirRonda(1, idPartida);
+          
             return "redirect:/partida/"+partida.getId().toString();
         }
 
@@ -202,45 +205,9 @@ public class PartidaController {
 
         return new ModelAndView("redirect:/partida/juego/{partidaId}");
     }
-
-//    @GetMapping(value = "/juego/{partidaId}")
-//    public ModelAndView GetRonda(Partida partida, Turno turnoEnPartida, Ronda ronda, HttpServletResponse response) {
-//    	
-//        if(turnoEnPartida.getTurnoPartida()+1 >= (partida.getNumeroJugadores())*2){
-//            if(partida.votosLeal(turnoEnPartida)-partida.votosTraidores(turnoEnPartida) >= 2){
-//            	partida.setFaccionGanadora(FaccionesEnumerado.Leal);
-//            }else if(partida.votosTraidores(turnoEnPartida)-partida.votosLeal(turnoEnPartida) >= 2){
-//            	partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
-//            }else{
-//                partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-//            }
-//
-////            finalizarPartida(partida, turno);
-//
-//        }else  if(turnoEnPartida.getTurnoPartida()+1 >= partida.getNumeroJugadores() && ronda.getNumRonda() == 2){
-//            Jugador consul = partida.getRondas().get(1).getTurnos().stream()
-//                .filter(x-> x.getTurnoPartida()==(turnoEnPartida.getTurnoPartida()+1)%(partida.getNumeroJugadores()))
-//                .map(x->x.getConsul()).collect(Collectors.toList()).get(0);
-//            if(consul == turnoEnPartida.getConsul()) {
-//            	Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1, consul), 14);
-//                turnoService.save(nuevoTurno);
-//            }else {
-//            	ModelAndView resultConsul=new ModelAndView("redirect:/");
-//            	resultConsul.addObject("message", "Se ha cancelado la partida");
-//                return resultConsul;
-//            }
-//        }else{
-//            //Primera ronda
-//            Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1), 8);
-//            turnoService.save(nuevoTurno);
-//        }
-//        
-//
-//    }
-
     
     @GetMapping(value = "/juego/{partidaId}")
-    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
+    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) throws Exception {
     	response.addHeader("Refresh", "10");
 
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -249,10 +216,11 @@ public class PartidaController {
     	Partida partida = partidaService.findPartida(partidaId);
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
-    	if(iniciada==null) {
-    		partida.setFechaInicio(LocalDateTime.now());
-    		partidaService.save(partida);
-    		}
+
+    	if(iniciada == null) {
+    		throw new Exception("Esta partida no ha sido iniciada");
+    	}
+
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
         return result;

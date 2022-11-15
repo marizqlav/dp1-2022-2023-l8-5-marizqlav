@@ -3,7 +3,6 @@ package org.springframework.samples.idus_martii.partida;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Set;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,6 @@ public class PartidaService {
     public void cancelarPartida(int id){
     	partidaRepo.deleteById(id);
     }
-
     
     public Partida findPartida(Integer id) {
         return partidaRepo.findById(id).get();
@@ -66,10 +64,12 @@ public class PartidaService {
         List<Jugador> jugadores = lobby.getJugadores();
 
         Ronda rondaInicial = new Ronda();
+        rondaInicial.setNumRonda(1);
         rondaInicial.setPartida(partida);
         partida.getRondas().add(rondaInicial);
        
         Turno turnoInicial = new Turno();
+        turnoInicial.setNumTurno(1);
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
   
@@ -129,12 +129,15 @@ public class PartidaService {
     List<Partida> getPartidasEnJuego() {
 		return partidaRepo.findAllEnJuego();
 	}
+
     Partida getPartidaIniciada(int idpartida) {
 		return partidaRepo.findPartidaIniciada(idpartida);
 	}
+
     List<Partida> getPartidasFinalizadasJugador(int idjugador) {
 		return partidaRepo.findAllFinalizadasJugador(idjugador);
 	}
+
     Lobby getLobby(int idpartida) {
 		return partidaRepo.getLobby(idpartida);
 	}
@@ -155,6 +158,7 @@ public class PartidaService {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
     
+
     
     Integer crearSufragium(int id, int idPartida, int numj) {
     	int limite=0;
@@ -165,5 +169,6 @@ public class PartidaService {
             limite=20;
         }
         return partidaRepo.crearSufragium(id,idPartida, limite);
+
     }
 }
