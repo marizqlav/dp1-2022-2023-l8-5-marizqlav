@@ -2,6 +2,8 @@ package org.springframework.samples.idus_martii.turno;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -57,5 +59,10 @@ public class Turno extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "ronda_id")
 	private Ronda ronda;
+	
+	
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private EstadoTurno estadoTurno;
 	
 }

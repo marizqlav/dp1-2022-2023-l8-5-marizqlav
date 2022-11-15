@@ -78,21 +78,18 @@ public class PartidaService {
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
         
-        Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? 0 : x + 1;
+        Function<Integer, Integer> addNumber = x -> (x >= jugadores.size()) ? 0 : x + 1;
 
-        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
+        Integer n = (int) Math.floor((Math.random() * (partida.getNumeroJugadores())));
 
         turnoInicial.setConsul(jugadores.get(n));
-        n = addNumber.apply(n);
-        System.out.println(n);
+        addNumber.apply(n);
 
         turnoInicial.setPredor(jugadores.get(n));
-        n = addNumber.apply(n);
-        System.out.println(n);
+        addNumber.apply(n);
 
         turnoInicial.setEdil1(jugadores.get(n));
-        n = addNumber.apply(n);
-        System.out.println(n);
+        addNumber.apply(n);
 
         turnoInicial.setEdil2(jugadores.get(n));
         System.out.println(n);
@@ -112,12 +109,12 @@ public class PartidaService {
             faccion.setPartida(partida);
             faccion.setFaccionSelecionada(null);
             
-            Integer r1 = (int) Math.random() * faccionesBag.size();
+            Integer r1 = (int) Math.floor(Math.random() * faccionesBag.size());
             FaccionesEnumerado f1 = faccionesBag.get(r1);
             faccionesBag.remove(f1);
             faccion.setFaccionPosible1(f1);
 
-            Integer r2 = (int) Math.random() * faccionesBag.size();
+            Integer r2 = (int) Math.floor(Math.random() * faccionesBag.size());
             FaccionesEnumerado f2 = faccionesBag.get(r2);
             faccionesBag.remove(f2);
             faccion.setFaccionPosible2(f2);
@@ -164,14 +161,12 @@ public class PartidaService {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
     
-    Turno turnoActual(int partidaId) {
-    	//Ronda r = partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
-    	//return r.getTurnos().get(r.getTurnos().size()-1);
-        return  partidaRepo.findById(partidaId).get().getRondas().get(-1).getTurnos().get(-1);
-    }
-    
-    Ronda rondaActual(int partidaId) {
-    	return partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+    Turno turnoActual(Integer partidaId) {
+
+    	Partida partida = partidaRepo.findById(partidaId).get();
+    	Ronda r = partida.getRondas().get(partida.getRondas().size()-1);
+    	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
+    	return t;
     	
     }
     

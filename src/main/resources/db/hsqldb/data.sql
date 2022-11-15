@@ -36,9 +36,9 @@ INSERT INTO partida(id, faccion_ganadora, numero_jugadores, fecha_creacion, fech
 INSERT INTO ronda(id, num_ronda,partida_id)
                 VALUES (1,1,1);
 
-INSERT INTO turno(id,turno_partida, consul_id, predor_id, edil1_id, edil2_id, votos_traidores, votos_leales, votos_neutrales, ronda_id) 
-                VALUES (1,1, 1,2,3,4, 1,1,0, 1),
-                        (2,2, 2,3,4,5, 2,0,0, 1);
+INSERT INTO turno(id,turno_partida, consul_id, predor_id, edil1_id, edil2_id, votos_traidores, votos_leales, votos_neutrales, estado_turno, ronda_id) 
+                VALUES (1,1, 1,2,3,4, 1,1,0, 'Esperar_voto', 1),
+                        (2,2, 2,3,4,5, 2,0,0, 'Elegir_faccion', 1);
 
 INSERT INTO faccion(id, faccion_posible1, faccion_posible2, faccion_selecionada, partida_id, jugador_id) 
 VALUES (1, 'Leal', 'Mercader', 'Leal', 1, 1), 
