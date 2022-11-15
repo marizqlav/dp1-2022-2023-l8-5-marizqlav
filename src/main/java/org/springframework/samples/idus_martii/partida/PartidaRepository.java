@@ -56,5 +56,5 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     
 
     @Query("SELECT j FROM Lobby l JOIN l.jugadores j WHERE j.id = :idjugador AND l.id = :idlobby")
-	Jugador estaJugadorLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
+	Jugador findJugadorInLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
 }

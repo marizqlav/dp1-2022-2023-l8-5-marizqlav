@@ -1,13 +1,10 @@
 package org.springframework.samples.idus_martii.partida;
 
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import javax.persistence.OneToOne;
@@ -30,7 +27,7 @@ import lombok.Setter;
 public class Lobby extends BaseEntity {
 
 	@ManyToMany
-	 private List<Jugador> jugadores;
+	private List<Jugador> jugadores = new ArrayList();
 
     @OneToOne(cascade = CascadeType.REMOVE)
 	private Partida partida;

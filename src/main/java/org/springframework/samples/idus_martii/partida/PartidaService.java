@@ -1,13 +1,10 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
@@ -54,14 +51,18 @@ public class PartidaService {
         return partidaRepo.findJugadores(partidaId);
     }
     
-    public void IniciarPartida(Integer id, List<Jugador> jugadores) throws InitiationException {
+    public void IniciarPartida(Integer id, Lobby lobby) throws InitiationException {
 
         Partida partida = findPartida(id);
-        
+
         //Restricciones
-        if (partida.getRondas().size() > 0) {
+        if (partida.getFechaInicio() != null) {
             throw new InitiationException("No se puede iniciar una partida ya iniciada");
         }
+
+    	partida.setFechaInicio(LocalDateTime.now());
+
+        List<Jugador> jugadores = lobby.getJugadores();
 
         Ronda rondaInicial = new Ronda();
         rondaInicial.setPartida(partida);
@@ -81,11 +82,23 @@ public class PartidaService {
         for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Traidor); }
 
         for (Jugador jugador : jugadores) {
-            Integer r = (int) Math.random() * faccionesBag.size();
 
             Faccion faccion = new Faccion();
-            FaccionesEnumerado f = faccionesBag.get(r);
-            faccionesBag.remove(r);
+            faccion.setJugador(jugador);
+            faccion.setPartida(partida);
+            faccion.setFaccionSelecionada(null);
+            
+            Integer r1 = (int) Math.random() * faccionesBag.size();
+            FaccionesEnumerado f1 = faccionesBag.get(r1);
+            faccionesBag.remove(f1);
+            faccion.setFaccionPosible1(f1);
+
+            Integer r2 = (int) Math.random() * faccionesBag.size();
+            FaccionesEnumerado f2 = faccionesBag.get(r2);
+            faccionesBag.remove(f2);
+            faccion.setFaccionPosible2(f2);
+
+            faccionService.save(faccion);
         }
 
         Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? x + 1 : 0;
@@ -133,8 +146,8 @@ public class PartidaService {
 		return partidaRepo.anadirJugadorLobby(idjugador, idlobby);
 	}
     
-    Jugador estaJugadorLobby(int idjugador, int idlobby) {
-		return partidaRepo.estaJugadorLobby(idjugador, idlobby);
+    Jugador findJugadorInLobby(int idjugador, int idlobby) {
+		return partidaRepo.findJugadorInLobby(idjugador, idlobby);
 	}
     
     Partida jugadorPartidaEnCurso(int idjugador) {

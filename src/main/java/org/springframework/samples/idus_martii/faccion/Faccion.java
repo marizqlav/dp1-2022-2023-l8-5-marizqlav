@@ -1,8 +1,5 @@
 package org.springframework.samples.idus_martii.faccion;
 
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -33,7 +30,6 @@ public class Faccion extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionPosible2; //Facciones a elegir solo 2
 	
-	@NotNull
 	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionSelecionada;
 
