@@ -209,10 +209,10 @@ public class PartidaController {
             System.out.println(e);
         }
         
-
+        //ELEGIR FACCION
         if(rondaService.getById(partidaId).getNumRonda() == 1 && turnoService.getById(turnoId).getConsul() == jugadorService.getJugadorById(turnoId)
         		&& turnoService.getById(turnoId).getEstadoTurno().equals(EstadoTurno.Elegir_faccion.toString()))  {
-              	faccionService.setFaccionSelecionada(jugadorId, partidaId, LOBBY_ESPERA_VIEW);
+              	faccionService.setFaccionSelecionada(jugadorId, partidaId, LOBBY_ESPERA_VIEW); //Falta enlazar con el input de eleccion de faccion del tablero
               	
              }
 
