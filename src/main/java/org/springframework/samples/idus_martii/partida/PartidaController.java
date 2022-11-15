@@ -86,26 +86,45 @@ public class PartidaController {
 			 return "redirect:/partida/"+existe.getId().toString();
 		}
 	}
-
-
+	
+	
 	@PostMapping(value = "/new")
-	public String processCreationForm(@Valid Partida partida, BindingResult result) {
-		if (result.hasErrors()) {
-			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
-		}
-		else {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        User currentUser = (User) authentication.getPrincipal();
-	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-	        System.out.println(jugador.getUsername());
-	        partida.setFechaCreacion(LocalDateTime.now());
-	        partida.setJugador(jugador);
-	        this.partidaService.save(partida);
-	        partidaService.anadirLobby(partida.getId(),partida.getId());
-	        return "redirect:/partida/"+partida.getId().toString();
-		}
-	        	
-	}
+    public String processCreationForm(@Valid Partida partida, BindingResult result) {
+        if (result.hasErrors()) {
+            return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+        }
+        else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = (User) authentication.getPrincipal();
+            Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+            System.out.println(jugador.getUsername());
+            partida.setFechaCreacion(LocalDateTime.now());
+            partida.setJugador(jugador);
+            this.partidaService.save(partida);
+            int idPartida = partida.getId();
+            partidaService.anadirLobby(idPartida,idPartida);
+
+            int numj = partida.getNumeroJugadores();
+            int max = 0;
+            System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
+
+            if(numj == 5) {
+                max=13;
+            }
+            else if(numj==6) {
+                max=15;
+            }else if(numj==7){
+                max=17;
+            }
+            else {
+                max=20;
+            }
+            partidaService.crearSufragium(idPartida, idPartida, max);
+            return "redirect:/partida/"+partida.getId().toString();
+        }
+
+    }
+	
 	
 	@GetMapping(value = "/juego/{partidaId}/cancelar")
     public ModelAndView CancelarPartida(@PathVariable("partidaId") Integer partidaId) {
@@ -185,44 +204,6 @@ public class PartidaController {
     		}
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         return result;

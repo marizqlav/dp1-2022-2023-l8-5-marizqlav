@@ -123,4 +123,9 @@ public class PartidaService {
     Partida jugadorPartidaEnCurso(int idjugador) {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
+    
+    
+    Integer crearSufragium(int id, int idPartida, int max) {
+        return partidaRepo.crearSufragium(id,idPartida, max);
+    }
 }
