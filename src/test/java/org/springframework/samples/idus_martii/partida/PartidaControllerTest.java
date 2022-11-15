@@ -43,10 +43,4 @@ public class PartidaControllerTest {
             
     }
 
-    @Test
-    public void JuegoTest() throws Exception {
-        mockMvc.perform(get("/partida/juego/{partidaId}/"))
-            .andExpect(status().isOk());
-            
-    }
 }

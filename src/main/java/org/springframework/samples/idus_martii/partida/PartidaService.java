@@ -57,6 +57,10 @@ public class PartidaService {
         //Restricciones
         if (partida.getFechaInicio() != null) {
             throw new InitiationException("No se puede iniciar una partida ya iniciada");
+        } else if (lobby.getJugadores().size() > 8) {
+            throw new InitiationException("Demasiados jugadores");
+        } else if (lobby.getJugadores().size() < 5) {
+            throw new InitiationException("No hay suficientes jugadores");
         }
 
     	partida.setFechaInicio(LocalDateTime.now());
@@ -72,11 +76,7 @@ public class PartidaService {
         turnoInicial.setNumTurno(1);
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
-  
-        /*List<Jugador> jugadores = findJugadores(id).stream()
-            .sorted(Comparator.comparing(Jugador::getId))
-            .collect(Collectors.toList());*/
-
+        
         List<FaccionesEnumerado> faccionesBag = new ArrayList<>();
         for (int i = 0; i < 2; i++) { faccionesBag.add(FaccionesEnumerado.Mercader); }
         for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Leal); }

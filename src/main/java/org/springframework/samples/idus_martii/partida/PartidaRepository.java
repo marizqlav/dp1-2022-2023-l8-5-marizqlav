@@ -41,7 +41,7 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     @Query("DELETE FROM Lobby l where l.partida=:partidaId")
     void eliminarLobby(@Param("partidaId") int partidaId);
     
-    @Query("SELECT l FROM Lobby l WHERE l.id = :idpartida")
+    @Query("SELECT l FROM Lobby l WHERE l.partida.id = :idpartida")
 	Lobby getLobby(@Param("idpartida") int idpartida);
     
     @Transactional

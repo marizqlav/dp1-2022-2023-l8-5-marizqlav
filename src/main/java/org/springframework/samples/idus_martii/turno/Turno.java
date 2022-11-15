@@ -58,6 +58,4 @@ public class Turno extends BaseEntity {
 	@JoinColumn(name = "ronda_id")
 	private Ronda ronda;
 	
-
-	
 }

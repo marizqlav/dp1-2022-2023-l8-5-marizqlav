@@ -33,7 +33,6 @@ public class Faccion extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private FaccionesEnumerado faccionSelecionada;
 
-	
 	@JoinColumn(name = "partida_id")
     @ManyToOne(cascade = CascadeType.REMOVE)
     Partida partida;
