@@ -105,7 +105,7 @@ public class Partida extends BaseEntity {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     Set<Faccion> faccionesJugadoras;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "partida")
     List<Ronda> rondas = new ArrayList();
     
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida") //TODO mappedBy
