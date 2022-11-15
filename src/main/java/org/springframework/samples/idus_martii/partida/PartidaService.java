@@ -160,15 +160,5 @@ public class PartidaService {
     
 
     
-    Integer crearSufragium(int id, int idPartida, int numj) {
-    	int limite=0;
-    	if(numj <8) {
-            limite= (numj*2)+3;
-        }
-        else {
-            limite=20;
-        }
-        return partidaRepo.crearSufragium(id,idPartida, limite);
 
-    }
 }

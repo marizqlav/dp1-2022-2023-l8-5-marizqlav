@@ -123,14 +123,17 @@ public class PartidaController {
             this.partidaService.save(partida);
 
             int idPartida = partida.getId();
-            partidaService.anadirLobby(idPartida, idPartida);
+            
 
             int numj = partida.getNumeroJugadores();
-
+            partida.setVotosTraidores(0);
+            partida.setVotosLeales(0);
+            partida.setLimite(2*numj +3 + numj/8);
+            partidaService.anadirLobby(idPartida, idPartida);
             System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
 
             
-            partidaService.crearSufragium(idPartida, idPartida, numj);
+            
             rondaService.anadirRonda(1, idPartida);
           
             return "redirect:/partida/"+partida.getId().toString();

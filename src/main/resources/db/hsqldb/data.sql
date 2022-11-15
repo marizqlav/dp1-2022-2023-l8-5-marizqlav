@@ -33,7 +33,7 @@ INSERT INTO jugadores(id, user) VALUES
 INSERT INTO partida(id, faccion_ganadora, numero_jugadores, fecha_creacion, fecha_inicio, fecha_fin, jugador_id)
         VALUES (1, 'null', 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31', 1);
 
-INSERT INTO sufragium(id, votos_leales, votos_traidores, limite, partida_id) VALUES (1, 0, 0, 20, 1);
+
 
 INSERT INTO ronda(id, num_ronda,partida_id)
                 VALUES (1,1,1);

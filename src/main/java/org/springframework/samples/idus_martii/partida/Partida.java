@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -54,6 +55,15 @@ public class Partida extends BaseEntity {
     private LocalDateTime fechaInicio;
 
     private LocalDateTime fechaFin;
+    
+    @Column(name = "votos_leales")
+   	int votosLeales;
+   	
+   	@Column(name = "votos_traidores")
+   	int votosTraidores;
+   	
+   	@Column(name = "limite")
+   	int limite;
     
     public Integer votosLeal(Turno t) {
     	return t.getVotosLeales() + votosLeal(t);
@@ -125,8 +135,6 @@ public class Partida extends BaseEntity {
     
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
     Lobby lobby;
-    
-    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
-    Sufragium sufragium;
+
     
 }
