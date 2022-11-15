@@ -17,9 +17,12 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 public interface PartidaRepository extends CrudRepository<Partida, Integer> {
 
     List<Partida> findAll();
+    
     Optional<Partida> findById(int id);
+
     @Query("SELECT p FROM Partida p WHERE p.fechaFin = null")
 	List<Partida> findAllEnJuego();
+    
     Optional<Partida> findById(Integer id);
 
     @Query("SELECT j FROM Partida p JOIN p.faccionesJugadoras f JOIN f.jugador j WHERE p.id LIKE :idPartida")
@@ -48,10 +51,16 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
 
     @Transactional  
 	@Modifying
-	@Query(value = "INSERT INTO lobby(id,partida_id) VALUES (:idlobby,:idpartida)", nativeQuery = true)
+	@Query(value = "INSERT INTO lobby(id, partida_id) VALUES (:idlobby, :idpartida)", nativeQuery = true)
 	Integer anadirLobby(@Param("idlobby") int idlobby, @Param("idpartida") int idpartida);
     
 
     @Query("SELECT j FROM Lobby l JOIN l.jugadores j WHERE j.id = :idjugador AND l.id = :idlobby")
-	Jugador estaJugadorLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
+	Jugador findJugadorInLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
+    
+    
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO sufragium(id, partida_id, votos_leales, votos_traidores, limite) VALUES (:id, :idpartida, 0, 0, :limite)", nativeQuery = true)
+    Integer crearSufragium(@Param("id") int id, @Param("idpartida") int idpartida, @Param("limite") int max);
 }

@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.partida;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,10 +25,10 @@ import javax.validation.constraints.Min;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
-//import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
 import org.springframework.samples.idus_martii.ronda.Ronda;
+import org.springframework.samples.idus_martii.turno.Turno;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +54,15 @@ public class Partida extends BaseEntity {
     private LocalDateTime fechaInicio;
 
     private LocalDateTime fechaFin;
+    
+    public Integer votosLeal(Turno t) {
+    	return t.getVotosLeales() + votosLeal(t);
+    }
+    
+    public Integer votosTraidores(Turno t) {
+    	return t.getVotosTraidores() + votosTraidores(t);
+    }
+
 
     public String getDuration() {
     	if(this.fechaFin==null)
@@ -94,10 +104,9 @@ public class Partida extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     Set<Faccion> faccionesJugadoras;
-    //TODO aplicar restriccion de tres facciones en service
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
-    List<Ronda> rondas;
+    List<Ronda> rondas = new ArrayList();
     
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida") //TODO mappedBy
     List<Mensaje> mensajes;
