@@ -47,7 +47,7 @@ public class PartidaService {
         return partidaRepo.findById(id).get();
     }
 
-    public Set<Jugador> findJugadores(Integer partidaId) {
+    public List<Jugador> findJugadores(Integer partidaId) {
         return partidaRepo.findJugadores(partidaId);
     }
     
