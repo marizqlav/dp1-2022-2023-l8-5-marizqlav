@@ -231,4 +231,9 @@ public void roles(Integer turnoPartida, Integer partidaId) {
     	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
     	return t;
     }
+    
+    Ronda rondaActual(int partidaId) {
+    	return partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+
+    }
 }
