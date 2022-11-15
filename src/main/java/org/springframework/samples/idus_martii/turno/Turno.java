@@ -23,7 +23,7 @@ public class Turno extends BaseEntity {
 	
 	@NotNull
 	@Column(name = "turno_partida")
-	private Integer turnoPartida;
+	private Integer numTurno;
     
 	@NotNull
 	@ManyToOne
