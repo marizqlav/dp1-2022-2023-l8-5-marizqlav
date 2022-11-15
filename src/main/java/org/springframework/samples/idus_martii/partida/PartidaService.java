@@ -77,6 +77,28 @@ public class PartidaService {
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
         
+        Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? 0 : x + 1;
+
+        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
+
+        turnoInicial.setConsul(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setPredor(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setEdil1(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setEdil2(jugadores.get(n));
+        System.out.println(n);
+        
+        rondaService.save(rondaInicial);
+        turnoService.save(turnoInicial);
+
         List<FaccionesEnumerado> faccionesBag = new ArrayList<>();
         for (int i = 0; i < 2; i++) { faccionesBag.add(FaccionesEnumerado.Mercader); }
         for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Leal); }
@@ -102,23 +124,6 @@ public class PartidaService {
             faccionService.save(faccion);
         }
 
-        Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? x + 1 : 0;
-
-        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
-
-        turnoInicial.setConsul(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setPredor(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil1(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil2(jugadores.get(n));
-        
-        rondaService.save(rondaInicial);
-        turnoService.save(turnoInicial);
         save(partida);
     }
 
