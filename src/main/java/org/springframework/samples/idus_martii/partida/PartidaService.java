@@ -57,6 +57,10 @@ public class PartidaService {
         //Restricciones
         if (partida.getFechaInicio() != null) {
             throw new InitiationException("No se puede iniciar una partida ya iniciada");
+        } else if (lobby.getJugadores().size() > 8) {
+            throw new InitiationException("Demasiados jugadores");
+        } else if (lobby.getJugadores().size() < 5) {
+            throw new InitiationException("No hay suficientes jugadores");
         }
 
     	partida.setFechaInicio(LocalDateTime.now());
@@ -72,10 +76,28 @@ public class PartidaService {
         turnoInicial.setNumTurno(1);
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
-  
-        /*List<Jugador> jugadores = findJugadores(id).stream()
-            .sorted(Comparator.comparing(Jugador::getId))
-            .collect(Collectors.toList());*/
+        
+        Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? 0 : x + 1;
+
+        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
+
+        turnoInicial.setConsul(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setPredor(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setEdil1(jugadores.get(n));
+        n = addNumber.apply(n);
+        System.out.println(n);
+
+        turnoInicial.setEdil2(jugadores.get(n));
+        System.out.println(n);
+        
+        rondaService.save(rondaInicial);
+        turnoService.save(turnoInicial);
 
         List<FaccionesEnumerado> faccionesBag = new ArrayList<>();
         for (int i = 0; i < 2; i++) { faccionesBag.add(FaccionesEnumerado.Mercader); }
@@ -102,23 +124,6 @@ public class PartidaService {
             faccionService.save(faccion);
         }
 
-        Function<Integer, Integer> addNumber = x -> (x == jugadores.size()) ? x + 1 : 0;
-
-        Integer n =  (int) (Math.random() * (partida.getNumeroJugadores()));
-
-        turnoInicial.setConsul(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setPredor(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil1(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil2(jugadores.get(n));
-        
-        rondaService.save(rondaInicial);
-        turnoService.save(turnoInicial);
         save(partida);
     }
 

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
-import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
@@ -130,13 +129,8 @@ public class PartidaController {
             partida.setVotosLeales(0);
             partida.setLimite(2*numj +3 + numj/8);
             partidaService.anadirLobby(idPartida, idPartida);
-            System.out.println("Número de jugadores: " + numj+ "Idpartida" + idPartida);
 
-            
-            
-            rondaService.anadirRonda(1, idPartida);
-          
-            return "redirect:/partida/"+partida.getId().toString();
+            return "redirect:/partida/" + partida.getId().toString();
         }
 
     }
@@ -200,13 +194,17 @@ public class PartidaController {
 	}
    
     @GetMapping(value = "/juego/{partidaId}/iniciar")
-    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) throws InitiationException {
+    public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
 
         Lobby lobby = partidaService.getLobby(partidaId);
 
-        partidaService.IniciarPartida(partidaId, lobby);
+        try {
+            partidaService.IniciarPartida(partidaId, lobby);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-        return new ModelAndView("redirect:/partida/juego/{partidaId}");
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
     @GetMapping(value = "/juego/{partidaId}")
@@ -220,7 +218,7 @@ public class PartidaController {
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
 
-    	if(iniciada == null) {
+    	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
 
