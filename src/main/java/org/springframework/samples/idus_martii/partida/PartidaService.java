@@ -165,8 +165,9 @@ public class PartidaService {
 	}
     
     Turno turnoActual(int partidaId) {
-    	Ronda r = partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
-    	return r.getTurnos().get(r.getTurnos().size()-1);
+    	//Ronda r = partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+    	//return r.getTurnos().get(r.getTurnos().size()-1);
+        return  partidaRepo.findById(partidaId).get().getRondas().get(-1).getTurnos().get(-1);
     }
     
 
