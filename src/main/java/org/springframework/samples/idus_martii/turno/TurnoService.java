@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.AccessException;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +66,14 @@ public class TurnoService {
 
         turno.setVotosNeutrales(turno.getVotosNeutrales() + 1);
         save(turno);
+    }
+    
+    public FaccionesEnumerado espiarVotos(int turnoId, int jugadorId){
+    	return repo.espiarVoto(turnoId, jugadorId);
+    }
+    
+    public void cambiarVoto() {
+    	
     }
 
 }
