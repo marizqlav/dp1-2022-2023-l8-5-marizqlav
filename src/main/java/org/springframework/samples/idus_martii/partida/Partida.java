@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -65,36 +66,14 @@ public class Partida extends BaseEntity {
    	@Column(name = "limite")
    	int limite;
     
-    public Integer votosLeal(Turno t) {
-    	return t.getVotosLeales() + votosLeal(t);
-    }
-    
-    public Integer votosTraidores(Turno t) {
-    	return t.getVotosTraidores() + votosTraidores(t);
-    }
-
-//  public Integer votosLeal(Turno t) {
-//	Integer sumaTotal=0;
-//	List<Integer> lista=new ArrayList<>();
-//	Integer votosLeales=t.getVotosLeales();
-//	lista.add(votosLeales);
-//	for(Integer i:lista) {
-//		sumaTotal = sumaTotal+i;
-//	}
-//	return sumaTotal;
-//}
-//public Integer votosTraidores(Turno t) {
-//	Integer sumaTotal=0;
-//	List<Integer> lista=new ArrayList<>();
-//	Integer votosTraidores=t.getVotosTraidores();
-//	lista.add(votosTraidores);
-//	for(Integer i:lista) {
-//		sumaTotal = sumaTotal+i;
-//	}
-//	return sumaTotal;
-//	
-////	return t.getVotosTraidores() + votosTraidores(t);
-//}
+   	void actualizarVotos() {
+   		for(Ronda r : this.getRondas()) {
+   			for(Turno t : r.getTurnos()) {
+   		   		this.votosLeales = this.votosLeales + t.getVotosLeales();
+   		   		this.votosTraidores = this.votosTraidores + t.getVotosTraidores();
+   			}
+   		}
+   	}
 
     public String getDuration() {
     	if(this.fechaFin==null)
@@ -138,7 +117,7 @@ public class Partida extends BaseEntity {
     Set<Faccion> faccionesJugadoras;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "partida")
-    List<Ronda> rondas = new ArrayList();
+    List<Ronda> rondas;
     
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida") //TODO mappedBy
     List<Mensaje> mensajes;
