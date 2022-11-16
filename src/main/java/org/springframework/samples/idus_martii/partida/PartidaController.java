@@ -229,8 +229,29 @@ public class PartidaController {
     	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
-
+        
         //Redireccion
+        switch (partidaService.getTurnoActual(partidaId).getEstadoTurno()) {
+            case Elegir_rol: {
+                if () {
+                    return new ModelAndView("redirect:/partida/juego/cambiar");
+                }
+                break;
+            }
+            case Esperar_voto:
+                break;
+            case Cambiar_voto:
+                break;
+            case Votar_de_nuevo:
+                break;
+            case Contar_votos:
+                break;
+            case Elegir_faccion:
+                break;
+            default:
+                break;
+        }
+        //Meter nuevo turno al terminar turno
 
     	ModelAndView result = new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
