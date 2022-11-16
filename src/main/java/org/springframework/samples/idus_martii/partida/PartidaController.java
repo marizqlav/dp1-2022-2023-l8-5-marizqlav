@@ -220,20 +220,24 @@ public class PartidaController {
 
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	User currentUser = (User) authentication.getPrincipal();
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+
     	Turno turno = partidaService.getTurnoActual(partidaId);
     	Partida partida = partidaService.findPartida(partidaId);
-        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
 
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
     	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
 
-    	ModelAndView result=new ModelAndView("/partidas/tablero");
+        //Redireccion
+
+    	ModelAndView result = new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
         result.addObject("jugador", jugador);
         result.addObject("turno", turno);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
+        
         return result;
     }
     

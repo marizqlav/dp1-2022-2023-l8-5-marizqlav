@@ -153,7 +153,6 @@ public class PartidaService {
         n = addNumber.apply(n);
         
         turnoService.save(turno);
-
     }
     
     
@@ -272,8 +271,9 @@ public class PartidaService {
     	return t;
     }
     
-    Ronda getRondaActual(int partidaId) {
-    	return partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+    Ronda getRondaActual(Integer partidaId) {
+    	return partidaRepo.findById(partidaId).get().getRondas()
+            .get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
 
     }
 }

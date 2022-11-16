@@ -146,6 +146,34 @@ public class PartidaServiceTest {
 
     @Test
     public void testRoles() {
-        
+
+        Partida partida = new Partida();
+        Ronda ronda = new Ronda();
+        Turno turno = new Turno();
+        partida.setRondas(Arrays.asList(ronda));
+        ronda.setTurnos(Arrays.asList(turno));
+
+        Jugador j1 = new Jugador();
+        Jugador j2 = new Jugador();
+        Jugador j3 = new Jugador();
+        Jugador j4 = new Jugador();
+        Jugador j5 = new Jugador();
+
+        turno.setConsul(j1);
+        turno.setPredor(j2);
+        turno.setEdil1(j3);
+        turno.setEdil2(j4);
+
+        when(partidaRepo.findById(any(Integer.class))).thenReturn(Optional.of(partida));  
+        when(partidaRepo.findJugadores(any(Integer.class))).thenReturn(Arrays.asList(j1, j2, j3, j4, j5));
+
+        partidaService.rotarRoles(0);       
+
+        ArgumentCaptor<Turno> agTurno = ArgumentCaptor.forClass(Turno.class);
+        verify(turnoService, times(1)).save(agTurno.capture());
+        assertEquals(agTurno.getValue().getConsul(), j2);
+        assertEquals(agTurno.getValue().getPredor(), j3);
+        assertEquals(agTurno.getValue().getEdil1(), j4);
+        assertEquals(agTurno.getValue().getEdil2(), j5);
     }
 }
