@@ -159,10 +159,10 @@ public class PartidaServiceTest {
         Jugador j4 = new Jugador();
         Jugador j5 = new Jugador();
 
-        turno.setConsul(j1);
-        turno.setPredor(j2);
-        turno.setEdil1(j3);
-        turno.setEdil2(j4);
+        turno.setConsul(j2);
+        turno.setPredor(j3);
+        turno.setEdil1(j4);
+        turno.setEdil2(j5);
 
         when(partidaRepo.findById(any(Integer.class))).thenReturn(Optional.of(partida));  
         when(partidaRepo.findJugadores(any(Integer.class))).thenReturn(Arrays.asList(j1, j2, j3, j4, j5));
@@ -171,9 +171,9 @@ public class PartidaServiceTest {
 
         ArgumentCaptor<Turno> agTurno = ArgumentCaptor.forClass(Turno.class);
         verify(turnoService, times(1)).save(agTurno.capture());
-        assertEquals(agTurno.getValue().getConsul(), j2);
-        assertEquals(agTurno.getValue().getPredor(), j3);
-        assertEquals(agTurno.getValue().getEdil1(), j4);
-        assertEquals(agTurno.getValue().getEdil2(), j5);
+        assertEquals(agTurno.getValue().getConsul(), j3);
+        assertEquals(agTurno.getValue().getPredor(), j4);
+        assertEquals(agTurno.getValue().getEdil1(), j5);
+        assertEquals(agTurno.getValue().getEdil2(), j1);
     }
 }
