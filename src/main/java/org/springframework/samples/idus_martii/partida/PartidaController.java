@@ -332,24 +332,6 @@ public class PartidaController {
         
     	 return votar;
     }
-    
-    
-    @PostMapping(value="/juego/{partidaId}/elegirRol")
-    public ModelAndView elegirRol(@PathVariable("partidaId") Integer partidaId, @Valid String rol) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-        
-        Turno turno = partidaService.getTurnoActual(partidaId);
-        try {
-            turnoService.asignarRol(rol, jugador, turno.getId());
-            
-        } catch(Exception e){
-            System.out.println(e);
-        }
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString()); 
-
-    }
 
 
                 
