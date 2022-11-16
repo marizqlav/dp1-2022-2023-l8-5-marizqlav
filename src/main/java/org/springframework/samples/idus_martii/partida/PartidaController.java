@@ -16,6 +16,7 @@ import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.EstadoTurno;
 import org.springframework.samples.idus_martii.turno.Turno;
@@ -234,6 +235,18 @@ public class PartidaController {
         result.addObject("turno", turno);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         return result;
+    }
+    
+    @GetMapping(value = "/juego/{partidaId}/finalRonda")
+    public ModelAndView getFinalRonda(@PathVariable("partidaId") Integer partidaId, Ronda rondaEnPartida, HttpServletResponse response) {
+    	Integer numeroRonda = rondaEnPartida.getNumRonda();
+        try {
+        	partidaService.iniciarRondas(numeroRonda, rondaEnPartida.getPartida(), rondaEnPartida.getTurnos().get(rondaEnPartida.getTurnos().size()-1));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
     @GetMapping(value = "/juego/{partidaId}/cambiar")
