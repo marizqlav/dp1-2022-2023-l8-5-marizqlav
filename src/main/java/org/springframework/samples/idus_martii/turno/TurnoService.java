@@ -103,6 +103,7 @@ public class TurnoService {
         }
 
         turno.setVotosTraidores(turno.getVotosTraidores() + 1);
+        anadirVotoTurno(turno.getId(),jugador.getId());
         save(turno);
     }
 
