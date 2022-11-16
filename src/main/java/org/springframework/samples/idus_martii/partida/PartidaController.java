@@ -248,6 +248,7 @@ public class PartidaController {
         }
         if(turno.getVotosLeales()==2 || turno.getVotosLeales()==2 || (turno.getVotosLeales()==1 && turno.getVotosTraidores()==1)) {
         	turno.setEstadoTurno(EstadoTurno.Cambiar_voto);
+        	turnoService.save(turno);
         }
         	
         switch (turno.getEstadoTurno()) {
@@ -260,13 +261,14 @@ public class PartidaController {
                 }
                 break;
             }
-            case Esperar_voto:
+            case Esperar_voto:{
                 if ((jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2())) && vototurno == null) {
-                    result = new ModelAndView("redirect:/partida/juego/" + partidaId.toString()+"/votar");//TODO redirect JSP votar
-                    
-                }
-            case Cambiar_voto:
-                break;
+                    result = new ModelAndView("redirect:/partida/juego/" + partidaId.toString()+"/votar");//TODO redirect JSP votar      
+                }}
+            case Cambiar_voto:{
+            	if (jugador.equals(turno.getPredor()) && turno.getEstadoTurno()==EstadoTurno.Cambiar_voto) {
+            		result = new ModelAndView("redirect:/partida/juego/" + partidaId.toString()+"/cambiar");
+            	}}
             case Votar_de_nuevo:
                 break;
             case Contar_votos:
