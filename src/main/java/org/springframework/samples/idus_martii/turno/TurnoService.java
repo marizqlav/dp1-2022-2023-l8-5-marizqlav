@@ -89,6 +89,7 @@ public class TurnoService {
         }
 
         turno.setVotosLeales(turno.getVotosLeales() + 1);
+        anadirVotoTurno(turno.getId(),jugador.getId());
         save(turno);
     }
 
@@ -122,5 +123,11 @@ public class TurnoService {
     public void cambiarVoto(int turnoId, int jugadorId, FaccionesEnumerado voto){
     	repo.findVotoByturnoAndPlayer(turnoId, jugadorId).setTipoVoto(voto);
     }
-
+    public VotosTurno conocerVoto(int turnoId, int jugadorId){
+    	return repo.findVotoByturnoAndPlayer(turnoId, jugadorId);
+    }
+    
+    public Integer anadirVotoTurno(int turnoId, int jugadorId){
+    	return repo.anadirVotoTurno(turnoId, jugadorId);
+    }
 }
