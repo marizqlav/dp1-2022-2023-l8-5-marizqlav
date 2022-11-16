@@ -38,4 +38,5 @@ public class Ronda extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "ronda")
 	List<Turno> turnos = new ArrayList();
+	
 }

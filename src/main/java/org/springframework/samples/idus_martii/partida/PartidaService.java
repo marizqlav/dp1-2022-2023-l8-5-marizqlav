@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Function;
+
+import javax.validation.constraints.Max;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
@@ -153,44 +156,73 @@ public class PartidaService {
 
     }
     
-////Final ronda 1 y ronda 2
-//  public void GetRondaTerminar(Partida partida, Turno turnoEnPartida, Ronda ronda) {    	
-//  	
-//      if(turnoEnPartida.getNumTurno()+1 >= (partida.getNumeroJugadores())*2){
-//          if(partida.votosLeal(turnoEnPartida)-partida.votosTraidores(turnoEnPartida) >= 2){
-//          	partida.setFaccionGanadora(FaccionesEnumerado.Leal);
-//          }else if(partida.votosTraidores(turnoEnPartida)-partida.votosLeal(turnoEnPartida) >= 2){
-//          	partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
-//          }else{
-//              partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-//          }
-//
-////          finalizarPartida(partida, turno);
-//
-//      }else  if(turnoEnPartida.getNumTurno()+1 >= partida.getNumeroJugadores() && ronda.getNumRonda() == 2){
-//          Jugador consul = partida.getRondas().get(1).getTurnos().stream()
-//              .filter(x-> x.getNumTurno()==(turnoEnPartida.getNumTurno()+1)%(partida.getNumeroJugadores()))
-//              .map(x->x.getConsul()).collect(Collectors.toList()).get(0);
-//          if(consul == turnoEnPartida.getConsul()) {
-//          	turnoService.save(turnoEnPartida);
-//          }else {
-//          	ModelAndView resultConsul=new ModelAndView("redirect:/");
-//          	resultConsul.addObject("message", "Se ha cancelado la partida");
-//              return resultConsul;
-//          }
-//      }else{
-//          //Primera ronda
-//      	Jugador consul = partida.getRondas().get(0).getTurnos().stream()
-//      			.map(x->x.getConsul()).collect(Collectors.toList()).get(0);
-////      	Turno nuevoTurno = partida.makeTurn(new Turno(partida, turnoEnPartida.getTurnoPartida()+1), 8);
-////          turnoService.save(nuevoTurno);
-//      }
-//  	ModelAndView result=new ModelAndView("/partidas/tablero");
-//      result.addObject("partida", partidaService.findPartida(partida.getId()));
-//      return result;
-//
-//  }
+    
+    public void finalizarRonda(Ronda ronda) {
+    	
+    	if(ronda.getNumRonda() == 1) {
+    		Turno turno = new Turno();
+    		turno.setNumTurno(ronda.getTurnos().get(ronda.getTurnos().size()-1).getNumTurno()+1);
+    		turno.setConsul(ronda.getTurnos().get(0).getConsul());
+    		iniciarRondas(2 , ronda.getPartida(), turno);
+    	} else {
+    		terminarPartida(ronda.getPartida());
+    	}
+    }
+    
+    
+    
+    
+	private void terminarPartida(Partida partida) {
+		partida.setFechaFin(LocalDateTime.now());
+		partida.actualizarVotos();
+		int votosTotalesLeal = partida.getVotosLeales();
+		int votosTotalesTraidor =  partida.getVotosTraidores();
+		
+		if(Math.max(votosTotalesLeal, votosTotalesTraidor)>partida.limite ) {
+			int contadorLeales= 0;
+			int contadorTraidores= 0;
+			
+			for(Faccion f: faccionService.getFaccionesPartida(partida.getId())) {
+				if (f.getFaccionSelecionada() == FaccionesEnumerado.Leal) {
+					contadorLeales= contadorLeales+1;
+				} else if(f.getFaccionSelecionada() == FaccionesEnumerado.Traidor){
+					contadorTraidores = contadorTraidores+1;
+				}
+			}
+			if(contadorLeales == 0 || contadorTraidores == 0) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+			} else if(votosTotalesLeal>votosTotalesTraidor) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
+			} else if(votosTotalesLeal<votosTotalesTraidor){
+				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
+			} else {
+				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+			}
+		} else {
+			if(Math.abs(votosTotalesLeal-votosTotalesTraidor) <= 1) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+			} else if(votosTotalesLeal>votosTotalesTraidor) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
+			} else {
+				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
+			}
+		}
+		
+		
+	}
 
+	public void iniciarRondas(Integer rondaEnPartida, Partida partida, Turno turno){
+		
+		Ronda ronda = new Ronda();
+        ronda.setNumRonda(rondaEnPartida);
+        ronda.setPartida(partida);
+        partida.getRondas().add(ronda);
+       
+        turno.setRonda(ronda);
+        ronda.getTurnos().add(turno);
+        
+	}
+    
     List<Partida> getPartidas() {
 		return partidaRepo.findAll();
 	}

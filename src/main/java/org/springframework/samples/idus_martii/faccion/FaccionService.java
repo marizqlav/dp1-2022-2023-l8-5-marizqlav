@@ -35,4 +35,9 @@ public class FaccionService {
 	public void  setFaccionSelecionada(int jugadorid, int partidaid, String faccionElegida) {
 		 repo.setFaccionSelecionada(jugadorid, partidaid, faccionElegida);
 	}
+	
+	
+	public List<Faccion> getFaccionesPartida(int id){
+		return repo.getFaccionesPartida(id);
+	}
 }

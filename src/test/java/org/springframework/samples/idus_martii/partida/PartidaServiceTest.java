@@ -141,6 +141,11 @@ public class PartidaServiceTest {
      	partida.getRondas().get(0).setTurnos(Arrays.asList(t));
      	
 
-     	assertEquals(t, partidaService.turnoActual(0));
+     	assertEquals(t, partidaService.getTurnoActual(0));
+    }
+
+    @Test
+    public void testRoles() {
+        
     }
 }

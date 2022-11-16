@@ -20,8 +20,11 @@ public interface FaccionRepository extends CrudRepository<Faccion, Integer> {
 	
 	Faccion save (Faccion f);
 	
-	  @Query("SELECT f.jugador FROM Faccion f WHERE f.partida.id LIKE :idPartida")
-	    List<Jugador> getJugadoresPartida(@Param("idPartida") Integer idPartida);
+	@Query("SELECT f.jugador FROM Faccion f WHERE f.partida.id LIKE :idPartida")
+	List<Jugador> getJugadoresPartida(@Param("idPartida") Integer idPartida);
+	
+	@Query("SELECT f FROM Faccion f WHERE f.partida.id LIKE :idPartida")
+	List<Faccion> getFaccionesPartida(@Param("idPartida") Integer idPartida);
 	
 	@Transactional
 	@Modifying
