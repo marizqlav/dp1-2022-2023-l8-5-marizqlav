@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.partida;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +17,8 @@ import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.samples.idus_martii.mensaje.Mensaje;
+import org.springframework.samples.idus_martii.mensaje.MensajeService;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.EstadoTurno;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -49,14 +53,16 @@ public class PartidaController {
     RondaService rondaService;
     TurnoService turnoService;
     FaccionService faccionService;
+    MensajeService mensajeService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService, FaccionService faccionService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService, FaccionService faccionService, MensajeService mensajeService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
         this.rondaService = rondaService;
         this.turnoService = turnoService;
         this.faccionService = faccionService;
+        this.mensajeService = mensajeService;
     }
 
     
@@ -216,30 +222,39 @@ public class PartidaController {
     
     @GetMapping(value = "/juego/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) throws Exception {
-    	response.addHeader("Refresh", "1");
+    	response.addHeader("Refresh", "5");
 
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	User currentUser = (User) authentication.getPrincipal();
-        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-
     	Turno turno = partidaService.getTurnoActual(partidaId);
+    	Ronda ronda = partidaService.rondaActual(partidaId);
     	Partida partida = partidaService.findPartida(partidaId);
-
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+        
+        	/*Mensaje nmensaje = new Mensaje();
+            //nmensaje.setHora(LocalTime.now());
+            nmensaje.setJugador(jugador);
+            nmensaje.setPartida(partida);
+            nmensaje.setTexto("hola");
+            mensajeService.save(nmensaje);
+        */
+        
+        List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
     	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
 
-        //Redireccion
-
-    	ModelAndView result = new ModelAndView("/partidas/tablero");
+    	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
         result.addObject("jugador", jugador);
         result.addObject("turno", turno);
+        result.addObject("ronda", ronda);
+        result.addObject("mensajes", mensajes);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
-        
         return result;
     }
+
     
     @GetMapping(value = "/juego/{partidaId}/finalRonda")
     public ModelAndView getFinalRonda(@PathVariable("partidaId") Integer partidaId, Ronda rondaEnPartida, HttpServletResponse response) {
@@ -265,7 +280,7 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
-    @GetMapping(value="partida/juego/{partidaId}/votar")
+    @GetMapping(value="juego/{partidaId}/votar")
     public ModelAndView votacion(@PathVariable("partidaId") Integer partidaId) {
 
         if (partidaService.rondaActual(partidaId).getNumRonda() == 1) 
@@ -277,7 +292,7 @@ public class PartidaController {
     }
     
     //TODO Cambiar todo esto para que sea un solo post
-    @GetMapping(value="partida/juego/{partidaId}/votar/rojo")
+    @GetMapping(value="/juego/{partidaId}/votar/rojo")
     public ModelAndView votacionRojo(@PathVariable("partidaId") Integer partidaId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -295,7 +310,7 @@ public class PartidaController {
     	
     }
     
-    @PostMapping(value="partida/juego/{partidaId}/votar/verde")
+    @GetMapping(value="/juego/{partidaId}/votar/verde")
     public ModelAndView votacionVerde(@PathVariable("partidaId") Integer partidaId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -314,7 +329,7 @@ public class PartidaController {
     	
     }
 
-    @GetMapping(value="partida/juego/{partidaId}/votar/amarillo")
+    @GetMapping(value="/juego/{partidaId}/votar/amarillo")
     public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -332,4 +347,6 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());    	
     
     }
+    
+
 }

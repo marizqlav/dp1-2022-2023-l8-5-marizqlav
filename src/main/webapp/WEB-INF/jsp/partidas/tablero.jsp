@@ -128,13 +128,13 @@ display:inline;
 width: 10 px;
 }
 #marcador{
-  width:210px;
+  width:205px;
   display: block;
   position: absolute;
-  top: 430px;
+  top: 436px;
 }
 #faccionactual{
-     width:210px;
+     width:205px;
   display: block;
   position: absolute;
 }
@@ -152,7 +152,12 @@ font-size: 20px;
 #tdrol{
 width:60px;
 }
-
+#votacionnegativa{
+ margin-left:100px;
+}
+#votacionpositiva{
+ margin-left:400px;
+}
 .button {
     background-color: #4CAF50;
     border: 1px solid green;
@@ -179,7 +184,15 @@ width:60px;
 			        <span id="tiempoPartida">Tiempo de partida: <c:out value="${temporizador}"/></span><br><br>
 			        <span id="espectadores">Espectadores: 2 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
-	        	<td class="juego" rowspan="2"></td>
+	        	<td class="juego" rowspan="2">
+	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
+	        			<a href="/partida/juego/${partida.id}/votar/rojo"><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
+	        			
+	        			<a href="/partida/juego/${partida.id}/votar/verde"><img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" /></a>
+	        		</c:if>
+	        	
+	        	
+	        	</td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>
 	        		<span style="font-size:20px;">Rol actual: 
@@ -206,12 +219,15 @@ width:60px;
 	        </tr>
 	        <tr>
 		    	<td class="chat" rowspan="3">
-			        <table id="mensajesTable">
+		    	<table id="mensajesTable">
 			        	<thead>
 			        		<tr>
 			            		<th>Chat<hr></th>
 			        		</tr>
 			        	</thead>
+			        	</table>
+		    	<div style="width:320px; height:500px; overflow:auto;">
+			        <table id="mensajesTable">
 			        	<tbody>
 			       			<c:forEach items="${mensajes}" var="mensaje">
 			            		<tr>
@@ -222,6 +238,7 @@ width:60px;
 			        		</c:forEach>
 			        	</tbody>
 			    	</table>
+			    	</div>
 			    	<form>
 			        	<div class="botonmensaje">
 			            	<input type="text" label="Mensaje" placeholder="Escribe un mensaje" name="mensaje"/>

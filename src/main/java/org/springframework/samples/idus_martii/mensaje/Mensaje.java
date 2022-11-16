@@ -23,7 +23,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "mensaje")
 public class Mensaje extends BaseEntity{
-	@NotBlank
+	
 	@Column(name = "hora")
 	@DateTimeFormat(pattern = "hh:mm")
 	private LocalTime hora;
