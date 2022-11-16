@@ -80,21 +80,20 @@ public class PartidaService {
         turnoInicial.setRonda(rondaInicial);
         rondaInicial.getTurnos().add(turnoInicial);
         
-        Function<Integer, Integer> addNumber = x -> (x >= jugadores.size()) ? 0 : x + 1;
+        Function<Integer, Integer> addNumber = x -> (x >= jugadores.size() - 1) ? 0 : x + 1;
 
         Integer n = (int) Math.floor((Math.random() * (partida.getNumeroJugadores())));
 
         turnoInicial.setConsul(jugadores.get(n));
-        addNumber.apply(n);
+        n = addNumber.apply(n);
 
         turnoInicial.setPredor(jugadores.get(n));
-        addNumber.apply(n);
+        n = addNumber.apply(n);
 
         turnoInicial.setEdil1(jugadores.get(n));
-        addNumber.apply(n);
+        n = addNumber.apply(n);
 
         turnoInicial.setEdil2(jugadores.get(n));
-        System.out.println(n);
         
         rondaService.save(rondaInicial);
         turnoService.save(turnoInicial);
@@ -130,23 +129,23 @@ public class PartidaService {
 public void roles(Integer turnoPartida, Integer partidaId) {
     	
     	List<Jugador> listaJugadores = partidaRepo.findJugadores(partidaId);
-        Function<Integer, Integer> addNumber = x -> (x == listaJugadores.size()) ? 0 : x + 1;
+        Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
         
         Turno turno = new Turno();
         turno.setNumTurno(turnoPartida);
         Integer posicionConsul = listaJugadores.indexOf(turno.getConsul());
         Integer n =  posicionConsul+1;
         turno.setConsul(listaJugadores.get(n));
-        addNumber.apply(n);
+        n = addNumber.apply(n);
 
         turno.setPredor(listaJugadores.get(n));
-        addNumber.apply(n);
+        n = addNumber.apply(n);
 
         turno.setEdil1(listaJugadores.get(n));
-        addNumber.apply(n);
+        n = addNumber.apply(n);
 
         turno.setEdil2(listaJugadores.get(n));
-        addNumber.apply(n);
+        n = addNumber.apply(n);
         
         turnoService.save(turno);
 
