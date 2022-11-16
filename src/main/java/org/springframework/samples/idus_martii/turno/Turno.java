@@ -59,6 +59,6 @@ public class Turno extends BaseEntity {
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private EstadoTurno estadoTurno;
+	private EstadoTurno estadoTurno = EstadoTurno.Principio_turno;
 	
 }

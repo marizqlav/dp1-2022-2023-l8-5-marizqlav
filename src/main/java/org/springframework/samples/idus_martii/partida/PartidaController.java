@@ -226,26 +226,57 @@ public class PartidaController {
 
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	User currentUser = (User) authentication.getPrincipal();
-    	Turno turno = partidaService.getTurnoActual(partidaId);
-    	Ronda ronda = partidaService.rondaActual(partidaId);
-    	Partida partida = partidaService.findPartida(partidaId);
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
-        
-        	/*Mensaje nmensaje = new Mensaje();
-            //nmensaje.setHora(LocalTime.now());
-            nmensaje.setJugador(jugador);
-            nmensaje.setPartida(partida);
-            nmensaje.setTexto("hola");
-            mensajeService.save(nmensaje);
-        */
-        
+
         List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+
+    	Turno turno = partidaService.getTurnoActual(partidaId);
+    	Ronda ronda = partidaService.getRondaActual(partidaId);
+    	Partida partida = partidaService.findPartida(partidaId);
+
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
     	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
+        
+        //Redirection
+        ModelAndView result = new ModelAndView("/partidas/tablero");
 
-    	ModelAndView result=new ModelAndView("/partidas/tablero");
+        switch (turno.getEstadoTurno()) {
+            case Principio_turno: {
+                break;
+            }
+            case Elegir_rol: {
+                if (ronda.getNumRonda() == 2) {
+                    result = new ModelAndView();//TODO redirect JSP elegir roles consul
+                }
+                break;
+            }
+            case Esperar_voto:
+                if (jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2())) {
+                    result = new ModelAndView();//TODO redirect JSP votar
+                }
+            case Cambiar_voto:
+                break;
+            case Votar_de_nuevo:
+                break;
+            case Contar_votos:
+                break;
+            case Elegir_faccion:{
+                if (ronda.getNumRonda() == 2 || turno.getNumTurno() == partidaService.findJugadores(partidaId).size()) {
+                    return new ModelAndView();//TODO redirect JSP elegir faccion
+                }
+                break;
+            }
+            case Terminar_turno: {
+                partidaService.siguienteTurno(partidaId);
+                break;
+            }
+            default:
+                break;
+        }
+        turnoService.continuarTurno(turno.getId());
+
         result.addObject("partida", partidaService.findPartida(partidaId));
         result.addObject("jugador", jugador);
         result.addObject("turno", turno);
@@ -255,42 +286,7 @@ public class PartidaController {
         return result;
     }
 
-    
-    @GetMapping(value = "/juego/{partidaId}/finalRonda")
-    public ModelAndView getFinalRonda(@PathVariable("partidaId") Integer partidaId, Ronda rondaEnPartida, HttpServletResponse response) {
-    	Integer numeroRonda = rondaEnPartida.getNumRonda();
-        try {
-        	partidaService.iniciarRondas(numeroRonda, rondaEnPartida.getPartida(), rondaEnPartida.getTurnos().get(rondaEnPartida.getTurnos().size()-1));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
-    }
-    
-    @GetMapping(value = "/juego/{partidaId}/cambiar")
-    public ModelAndView pasarRolTurnosRondaPrimera(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
-
-        try {
-        	partidaService.rotarRoles(partidaId);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
-    }
-    
-    @GetMapping(value="juego/{partidaId}/votar")
-    public ModelAndView votacion(@PathVariable("partidaId") Integer partidaId) {
-
-        if (partidaService.rondaActual(partidaId).getNumRonda() == 1) 
-        {
-            return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA1_VIEW);
-        } else {
-            return new ModelAndView(VOTACIONES_DISPONIBLES_RONDA2_VIEW);
-        }    	
-    }
-    
+                
     //TODO Cambiar todo esto para que sea un solo post
     @GetMapping(value="/juego/{partidaId}/votar/rojo")
     public ModelAndView votacionRojo(@PathVariable("partidaId") Integer partidaId) {
