@@ -126,15 +126,17 @@ public class PartidaService {
         save(partida);
     }
     
-public void roles(Integer turnoPartida, Integer partidaId) {
+    public void rotarRoles(Integer partidaId) {
     	
     	List<Jugador> listaJugadores = partidaRepo.findJugadores(partidaId);
+        
         Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
         
-        Turno turno = new Turno();
-        turno.setNumTurno(turnoPartida);
+        Turno turno = getTurnoActual(partidaId);
+
         Integer posicionConsul = listaJugadores.indexOf(turno.getConsul());
-        Integer n =  posicionConsul+1;
+        Integer n =  posicionConsul + 1;
+
         turno.setConsul(listaJugadores.get(n));
         n = addNumber.apply(n);
 
@@ -231,14 +233,14 @@ public void roles(Integer turnoPartida, Integer partidaId) {
     	return r;
     }
 
-    Turno turnoActual(Integer partidaId) {
+    Turno getTurnoActual(Integer partidaId) {
     	Partida p = partidaRepo.findById(partidaId).get();
     	Ronda r = p.getRondas().get(p.getRondas().size()-1);
     	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
     	return t;
     }
     
-    Ronda rondaActual(int partidaId) {
+    Ronda getRondaActual(int partidaId) {
     	return partidaRepo.findById(partidaId).get().getRondas().get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
 
     }
