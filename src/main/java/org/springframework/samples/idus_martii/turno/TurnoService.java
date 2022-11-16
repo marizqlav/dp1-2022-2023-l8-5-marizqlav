@@ -72,8 +72,8 @@ public class TurnoService {
     	return repo.espiarVoto(turnoId, jugadorId);
     }
     
-    public void cambiarVoto() {
-    	
+    public void cambiarVoto(int turnoId, int jugadorId, FaccionesEnumerado voto){
+    	repo.findVotoByturnoAndPlayer(turnoId, jugadorId).setTipoVoto(voto);
     }
 
 }

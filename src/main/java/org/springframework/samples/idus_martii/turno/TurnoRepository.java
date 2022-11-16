@@ -14,4 +14,8 @@ public interface TurnoRepository extends CrudRepository<Turno, Integer>{
     
     @Query("SELECT v.tipoVoto FROM VotosTurno v WHERE v.turno.id=:turno_id AND v.jugador.id=:jugador_id")
     FaccionesEnumerado espiarVoto(@Param("turno_id") int turno_id,@Param("jugador_id") int jugador_id);
+    
+    @Query("SELECT v FROM VotosTurno v WHERE v.turno.id=:turno_id AND v.jugador.id=:jugador_id")
+    VotosTurno findVotoByturnoAndPlayer(@Param("turno_id") int turno_id,@Param("jugador_id") int jugador_id);
+    
 }
