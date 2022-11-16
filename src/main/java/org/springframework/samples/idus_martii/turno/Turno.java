@@ -27,19 +27,15 @@ public class Turno extends BaseEntity {
 	@Column(name = "turno_partida")
 	private Integer numTurno;
     
-	@NotNull
 	@ManyToOne
     private Jugador consul;
 
-	@NotNull
 	@ManyToOne
     private Jugador predor;
 
-	@NotNull
 	@ManyToOne
 	private Jugador edil1;
 
-	@NotNull
 	@ManyToOne
     private Jugador edil2;
 
