@@ -46,13 +46,14 @@ public class TurnoService {
 
     public void anadirVotoRojo(int turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
-
+        System.out.println("hola");
         if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
             throw new AccessException("Solo pueden votar los ediles");
         }
 
         turno.setVotosTraidores(turno.getVotosTraidores() + 1);
         save(turno);
+        System.out.println("holaffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     }
 
     public void anadirVotoAmarillo(int turnoId, Jugador jugador) throws AccessException {

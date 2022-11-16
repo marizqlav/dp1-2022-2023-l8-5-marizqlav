@@ -22,6 +22,10 @@ public class MensajeService {
     public Mensaje getById(int id){
         return mensajeRepository.findById(id).get();
     }
+    
+    public List<Mensaje> getMensajesByPartidaId(int partidaid){
+        return mensajeRepository.findMensajesByPartidaId(partidaid);
+    }
 
     public void deleteMensajeById(int id){
     	mensajeRepository.deleteById(id);
