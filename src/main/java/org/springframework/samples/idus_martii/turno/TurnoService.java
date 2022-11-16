@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.turno;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +130,42 @@ public class TurnoService {
     
     public Integer anadirVotoTurno(int turnoId, int jugadorId){
     	return repo.anadirVotoTurno(turnoId, jugadorId);
+    }
+    
+public void asignarRol(String rol, Jugador jugador, Integer turnoId) {
+    	
+    	Turno turno = getById(turnoId);
+    	int anterior = repo.findById(turnoId).get().getNumTurno()-1;
+    	
+    	
+    	List<Jugador> edilesTurnoAnterior= new ArrayList<>();
+    	edilesTurnoAnterior.add(repo.turnoPorNumero(anterior).getEdil1());
+    	edilesTurnoAnterior.add(repo.turnoPorNumero(anterior).getEdil2());
+    	
+    	List<Jugador> edilesTurnoActual= new ArrayList<>();
+    	if(repo.turnoPorNumero(anterior+1).getEdil1()!=null) {edilesTurnoActual.add(jugador);}
+    	if(repo.turnoPorNumero(anterior+1).getEdil2()!=null) {edilesTurnoActual.add(jugador);}
+    	
+    	
+    	
+    	
+    	if(rol.equals("predor") && repo.turnoPorNumero(anterior).getPredor() != jugador) {
+    		turno.setPredor(jugador);
+    	}
+    	else if(!edilesTurnoAnterior.contains(jugador) 
+    			&& (edilesTurnoActual.get(0)==null || (edilesTurnoActual.get(1)==null)) ) {
+        			edilesTurnoActual.add(jugador);
+    	}
+    	else if(edilesTurnoAnterior.contains(jugador) && turno.getRonda().getPartida().getNumeroJugadores()==5
+    			&& (edilesTurnoActual.isEmpty() || !edilesTurnoActual.contains(jugador))) {
+    			edilesTurnoActual.add(jugador);
+    	}
+    	else {
+    		System.out.println("Ha petao el edil, mal hecho");
+    	}
+    	
+    	turno.setEdil1(edilesTurnoActual.get(0));
+    	turno.setEdil1(edilesTurnoActual.get(1));
+    	save(turno);
     }
 }
