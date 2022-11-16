@@ -28,4 +28,6 @@ public interface TurnoRepository extends CrudRepository<Turno, Integer>{
     
     @Query("SELECT t FROM Turno WHERE t.turno_partida=:i")
     Turno turnoPorNumero(@Param("i") int i);
+   
+
 }
