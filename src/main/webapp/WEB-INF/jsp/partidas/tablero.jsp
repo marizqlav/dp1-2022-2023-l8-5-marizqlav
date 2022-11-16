@@ -7,8 +7,33 @@
 <head>
   <title>Partida</title>
   </head>
-<style type="text/css" media="screen">
+  <script>
+    function Temporizador(id, inicio, final){
+      this.id = id;
+      this.inicio = inicio;
+      this.final = final;
+      this.contador = this.inicio;
 
+      this.conteoSegundos = function(){
+        if (this.contador == this.final){
+          this.conteoSegundos = null;
+          return;
+        }
+
+        document.getElementById(this.id).innerHTML = this.contador--;
+        setTimeout(this.conteoSegundos.bind(this), 1000);
+      };
+    }
+
+    let temporizador = new Temporizador('temporizador', 10, 0);
+    temporizador.conteoSegundos();
+  </script>
+<style type="text/css" media="screen">
+#temporizador {
+      font-size: 72pt;
+      margin: 70px auto;
+      width: 100px;
+    }
 body{
 margin: 0 auto;
   padding: 0;
@@ -150,14 +175,30 @@ width:60px;
         <tbody>
 	        <tr>
 		        <td class="datosJugador">
-			        <span id="nombreJugador">Jugador: usuario</span><br><br>
-			        <span id="tiempoPartida">Tiempo de partida: tiempo</span><br><br>
+			        <span id="nombreJugador">Jugador: <c:out value="${jugador.user.username}"/> </span><br><br>
+			        <span id="tiempoPartida">Tiempo de partida: <c:out value="${temporizador}"/></span><br><br>
 			        <span id="espectadores">Espectadores: 2 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2"></td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>
-	        		<span style="font-size:20px;">Rol actual: Cónsul</span> 
+	        		<span style="font-size:20px;">Rol actual: 
+	        		<c:if test="${jugador.user.username == turno.consul.user.username}">
+	        			Cónsul
+	        		</c:if>
+	        		<c:if test="${jugador.user.username == turno.predor.user.username}">
+	        			Predor
+	        		</c:if>
+	        		<c:if test="${jugador.user.username == turno.edil1.user.username}">
+	        			Edil
+	        		</c:if>
+	        		<c:if test="${jugador.user.username == turno.edil2.user.username}">
+	        			Edil
+	        		</c:if>
+	        		<c:if test="${jugador.user.username != turno.consul.user.username && jugador.user.username != turno.predor.user.username && jugador.user.username != turno.edil1.user.username && jugador.user.username != turno.edil2.user.username}">
+	        			Sin rol
+	        		</c:if>
+	        		</span> 
 	        		<hr>
 	        		<span>Facción:</span> Mercader
 	        		<img src="/resources/images/faccion_mercader.jpg" id="faccionactual"/>
@@ -195,10 +236,10 @@ width:60px;
 					<table>
 						<tr>
 							<td id="tdrol"></td>
-							<td>Cónsul</td>
-							<td>Predor</td>
-							<td>Edil</td>
-							<td>Edil</td>
+							<td>Cónsul: <c:out value="${turno.consul.user.username}"/></td>
+							<td>Predor: <c:out value="${turno.predor.user.username}"/></td>
+							<td>Edil: <c:out value="${turno.edil1.user.username}"/></td>
+							<td>Edil: <c:out value="${turno.edil2.user.username}"/></td>
 						</tr>
 						<tr>
 							<td></td>

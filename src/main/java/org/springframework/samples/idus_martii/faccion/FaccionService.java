@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.faccion;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,10 @@ public class FaccionService {
 	
 	public Faccion findFaccionById(int id) {
 		return repo.findById(id);
+	}
+	
+	public List<Jugador> getJugadoresPartida(int id) {
+		return repo.getJugadoresPartida(id);
 	}
 	
 	public Faccion save(Faccion f) {

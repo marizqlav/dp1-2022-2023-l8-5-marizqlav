@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,6 +20,8 @@ public interface FaccionRepository extends CrudRepository<Faccion, Integer> {
 	
 	Faccion save (Faccion f);
 	
+	  @Query("SELECT f.jugador FROM Faccion f WHERE f.partida.id LIKE :idPartida")
+	    List<Jugador> getJugadoresPartida(@Param("idPartida") Integer idPartida);
 	
 	@Transactional
 	@Modifying
