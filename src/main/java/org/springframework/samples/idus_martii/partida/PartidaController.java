@@ -2,6 +2,7 @@ package org.springframework.samples.idus_martii.partida;
 
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -170,17 +171,19 @@ public class PartidaController {
     	User currentUser = (User) authentication.getPrincipal();
         Partida partida = partidaService.findPartida(partidaId);
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-        
+
         if(partidaService.findJugadorInLobby(jugador.getId(), partidaId)==null)
         	partidaService.anadirJugadorLobby(jugador.getId(),partidaId);
-
         List<Jugador> enlobby = partidaService.getLobby(partidaId).getJugadores();
 
+        
         if(partida != null) {
         	Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
-
+        	
+        	
             if (iniciada != null && partida.getNumeroJugadores() == enlobby.size()) {
-
+            	//NO BORRAR, Servirá para los espectadores List<Jugador> jugadoresEnPartida = faccionService.getJugadoresPartida(partidaId);
+            	
             	ModelAndView result=new ModelAndView("redirect:/partida/juego/" + partida.getId().toString());
             	return result;
 
@@ -199,7 +202,6 @@ public class PartidaController {
 	}
    
     @GetMapping(value = "/juego/{partidaId}/iniciar")
-
     public ModelAndView IniciarPartida(@PathVariable("partidaId") Integer partidaId) {
         Lobby lobby = partidaService.getLobby(partidaId);
         try {
@@ -213,11 +215,11 @@ public class PartidaController {
     
     @GetMapping(value = "/juego/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) throws Exception {
-    	response.addHeader("Refresh", "10");
+    	response.addHeader("Refresh", "1");
 
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	User currentUser = (User) authentication.getPrincipal();
-
+    	Turno turno = partidaService.turnoActual(partidaId);
     	Partida partida = partidaService.findPartida(partidaId);
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
@@ -228,6 +230,9 @@ public class PartidaController {
 
     	ModelAndView result=new ModelAndView("/partidas/tablero");
         result.addObject("partida", partidaService.findPartida(partidaId));
+        result.addObject("jugador", jugador);
+        result.addObject("turno", turno);
+        result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         return result;
     }
     

@@ -30,8 +30,7 @@
 					<a href="/jugadores/profile/${jugador.id}" target="_blank"><c:out value="${jugador.user.username}"/></a>
                 </td>
 
-            </tr>
-           
+            </tr>    
         </c:forEach>
         </tbody>
     </table>
