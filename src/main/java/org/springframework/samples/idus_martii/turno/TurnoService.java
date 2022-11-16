@@ -34,6 +34,53 @@ public class TurnoService {
         repo.save(turno);
     }
 
+    public void continuarTurno(Integer turnoId) {
+        Turno turno = getById(turnoId);
+
+        switch (turno.getEstadoTurno()) {
+            case Principio_turno: {
+                turno.setEstadoTurno(EstadoTurno.Elegir_rol);
+                repo.save(turno);
+                break;
+            }
+            case Elegir_rol: {
+                turno.setEstadoTurno(EstadoTurno.Esperar_voto);
+                repo.save(turno);
+                break;
+            }
+            case Esperar_voto: {
+                turno.setEstadoTurno(EstadoTurno.Cambiar_voto);
+                repo.save(turno);
+                break;
+            }
+            case Cambiar_voto: {
+                turno.setEstadoTurno(EstadoTurno.Votar_de_nuevo);
+                repo.save(turno);
+                break;
+            }
+            case Votar_de_nuevo: {
+                turno.setEstadoTurno(EstadoTurno.Contar_votos);
+                repo.save(turno);
+                break;
+            }
+            case Contar_votos: {
+                turno.setEstadoTurno(EstadoTurno.Elegir_faccion);
+                repo.save(turno);
+                break;
+            }
+            case Elegir_faccion: {
+                turno.setEstadoTurno(EstadoTurno.Terminar_turno);
+                repo.save(turno);
+                break;
+            }
+            case Terminar_turno:
+                break;
+            default:
+                break;
+  
+        }
+    }
+
     public void anadirVotoVerde(int turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
 
@@ -45,7 +92,8 @@ public class TurnoService {
         save(turno);
     }
 
-    public void anadirVotoRojo(int turnoId, Jugador jugador) throws AccessException {
+    //TODO restriccion un jugador solo puede votar una vez
+    public void anadirVotoRojo(Integer turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
         System.out.println("hola");
         if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
@@ -54,10 +102,9 @@ public class TurnoService {
 
         turno.setVotosTraidores(turno.getVotosTraidores() + 1);
         save(turno);
-        System.out.println("holaffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     }
 
-    public void anadirVotoAmarillo(int turnoId, Jugador jugador) throws AccessException {
+    public void anadirVotoAmarillo(Integer turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
 
         if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {

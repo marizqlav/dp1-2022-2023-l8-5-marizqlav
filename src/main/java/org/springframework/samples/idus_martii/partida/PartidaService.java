@@ -156,19 +156,43 @@ public class PartidaService {
     }
     
     
-    public void finalizarRonda(Ronda ronda) {
-    	
-    	if(ronda.getNumRonda() == 1) {
-    		Turno turno = new Turno();
-    		turno.setNumTurno(ronda.getTurnos().get(ronda.getTurnos().size()-1).getNumTurno()+1);
-    		turno.setConsul(ronda.getTurnos().get(0).getConsul());
-    		iniciarRondas(2 , ronda.getPartida(), turno);
+    private void finalizarRonda(Integer partidaId) {
+        Ronda ronda = getRondaActual(partidaId);
+
+    	if (ronda.getNumRonda() == 1) {
+    		iniciarRonda(ronda.getPartida().getId());
     	} else {
     		terminarPartida(ronda.getPartida());
     	}
     }
     
     
+    public void siguienteTurno(Integer partidaId) {
+        Turno turno = getTurnoActual(partidaId);
+
+        if (turno.getNumTurno() == findJugadores(partidaId).size()) {
+            finalizarRonda(partidaId);
+        }
+        iniciarTurno(partidaId);
+    }
+
+    private void iniciarRonda(Integer partidaId) { //Use instead of iniciarTurno for new Ronda
+		Partida partida = findPartida(partidaId);
+
+		Ronda ronda = new Ronda();
+        ronda.setNumRonda(getRondaActual(partidaId).getNumRonda() + 1);
+        ronda.setPartida(partida);
+        
+        rondaService.save(ronda);
+	}
+
+    public void iniciarTurno(Integer partidaId) {
+        Turno turno = new Turno();
+        turno.setNumTurno(getTurnoActual(partidaId).getNumTurno() + 1);
+        turno.setRonda(getRondaActual(partidaId));
+
+        turnoService.save(turno);
+    }
     
     
 	private void terminarPartida(Partida partida) {
@@ -210,18 +234,6 @@ public class PartidaService {
 		
 	}
 
-	public void iniciarRondas(Integer rondaEnPartida, Partida partida, Turno turno){
-		
-		Ronda ronda = new Ronda();
-        ronda.setNumRonda(rondaEnPartida);
-        ronda.setPartida(partida);
-        partida.getRondas().add(ronda);
-       
-        turno.setRonda(ronda);
-        ronda.getTurnos().add(turno);
-        
-	}
-    
     List<Partida> getPartidas() {
 		return partidaRepo.findAll();
 	}
@@ -257,12 +269,6 @@ public class PartidaService {
     Partida jugadorPartidaEnCurso(int idjugador) {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
-
-    Ronda rondaActual(Integer partidaId) {
-    	Partida p = partidaRepo.findById(partidaId).get();
-    	Ronda r = p.getRondas().get(p.getRondas().size()-1);
-    	return r;
-    }
 
     Turno getTurnoActual(Integer partidaId) {
     	Partida p = partidaRepo.findById(partidaId).get();
