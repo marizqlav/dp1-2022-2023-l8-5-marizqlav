@@ -129,6 +129,27 @@ public class PartidaService {
         save(partida);
     }
     
+    public void rotarConsul(Integer partidaId) {
+    	if(findPartida(partidaId).getRondas().get(-1).getNumRonda() == 2) {
+        	List<Jugador> listaJugadores = partidaRepo.findJugadores(partidaId);
+        	List<Jugador> listaJugadores2 = partidaRepo.findJugadores(partidaId);
+
+            Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
+            
+            Turno turno = getTurnoActual(partidaId);
+
+            Integer posicionConsul = listaJugadores.indexOf(turno.getConsul());
+            Integer n =  posicionConsul + 1;
+
+            turno.setConsul(listaJugadores.get(n));
+            listaJugadores2.remove(n);
+            
+            n=addNumber.apply(n);
+            turnoService.save(turno);
+    	}
+    }
+
+    
     public void rotarRoles(Integer partidaId) {
     	
     	List<Jugador> listaJugadores = partidaRepo.findJugadores(partidaId);
@@ -154,8 +175,7 @@ public class PartidaService {
         
         turnoService.save(turno);
     }
-    
-    
+        
     private void finalizarRonda(Integer partidaId) {
         Ronda ronda = getRondaActual(partidaId);
 
@@ -193,8 +213,7 @@ public class PartidaService {
 
         turnoService.save(turno);
     }
-    
-    
+         
 	private void terminarPartida(Partida partida) {
 		partida.setFechaFin(LocalDateTime.now());
 		partida.actualizarVotos();
@@ -233,6 +252,7 @@ public class PartidaService {
 		
 		
 	}
+	
 
     List<Partida> getPartidas() {
 		return partidaRepo.findAll();
@@ -282,4 +302,5 @@ public class PartidaService {
             .get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
 
     }
+
 }
