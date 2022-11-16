@@ -242,7 +242,10 @@ public class PartidaController {
         //Redirection
         ModelAndView result = new ModelAndView("/partidas/tablero");
 
-        switch (partidaService.getTurnoActual(partidaId).getEstadoTurno()) {
+        switch (turno.getEstadoTurno()) {
+            case Principio_turno: {
+                break;
+            }
             case Elegir_rol: {
                 if (ronda.getNumRonda() == 2) {
                     result = new ModelAndView();//TODO redirect JSP elegir roles consul
@@ -264,11 +267,15 @@ public class PartidaController {
                     return new ModelAndView();//TODO redirect JSP elegir faccion
                 }
                 break;
-            }            
+            }
+            case Terminar_turno: {
+                partidaService.siguienteTurno(partidaId);
+                break;
+            }
             default:
                 break;
         }
-        //TODO Meter nuevo turno al terminar turno
+        turnoService.continuarTurno(turno.getId());
 
         result.addObject("partida", partidaService.findPartida(partidaId));
         result.addObject("jugador", jugador);
@@ -279,19 +286,7 @@ public class PartidaController {
         return result;
     }
 
-    
-    /*@GetMapping(value = "/juego/{partidaId}/finalRonda")
-    public ModelAndView getFinalRonda(@PathVariable("partidaId") Integer partidaId, Ronda rondaEnPartida, HttpServletResponse response) {
-    	Integer numeroRonda = rondaEnPartida.getNumRonda();
-        try {
-        	partidaService.iniciarRondas(numeroRonda, rondaEnPartida.getPartida(), rondaEnPartida.getTurnos().get(rondaEnPartida.getTurnos().size()-1));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
-    }*/
-            
+                
     //TODO Cambiar todo esto para que sea un solo post
     @GetMapping(value="/juego/{partidaId}/votar/rojo")
     public ModelAndView votacionRojo(@PathVariable("partidaId") Integer partidaId) {

@@ -258,12 +258,6 @@ public class PartidaService {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
 
-    Ronda rondaActual(Integer partidaId) {
-    	Partida p = partidaRepo.findById(partidaId).get();
-    	Ronda r = p.getRondas().get(p.getRondas().size()-1);
-    	return r;
-    }
-
     Turno getTurnoActual(Integer partidaId) {
     	Partida p = partidaRepo.findById(partidaId).get();
     	Ronda r = p.getRondas().get(p.getRondas().size()-1);

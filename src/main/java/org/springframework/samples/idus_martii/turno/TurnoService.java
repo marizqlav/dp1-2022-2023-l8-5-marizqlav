@@ -44,6 +44,7 @@ public class TurnoService {
         save(turno);
     }
 
+    //TODO restriccion un jugador solo puede votar una vez
     public void anadirVotoRojo(int turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
         System.out.println("hola");
@@ -53,7 +54,6 @@ public class TurnoService {
 
         turno.setVotosTraidores(turno.getVotosTraidores() + 1);
         save(turno);
-        System.out.println("holaffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     }
 
     public void anadirVotoAmarillo(int turnoId, Jugador jugador) throws AccessException {
