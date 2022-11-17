@@ -37,7 +37,9 @@
 body{
 margin: 0 auto;
   padding: 0;
+  background-image: url("");
 }
+
 
 table {
    width: 100%;
@@ -262,7 +264,7 @@ width:60px;
 		        <td class="datosJugador">
 			        <span id="nombreJugador">Jugador: <c:out value="${jugador.user.username}"/> </span><br><br>
 			        <span id="tiempoPartida">Tiempo de partida: <c:out value="${temporizador}"/></span><br><br>
-			        <span id="espectadores">Espectadores: 2 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
+			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado"><c:out value="${aviso}"/></span>

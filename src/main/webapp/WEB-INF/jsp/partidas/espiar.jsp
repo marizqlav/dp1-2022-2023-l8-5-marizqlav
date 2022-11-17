@@ -151,7 +151,6 @@ width: 10 px;
 
 #imagenpuntos{
 display: block;
-
 margin-top:10px;
   width:40px;
   margin-left:2px;
@@ -247,11 +246,28 @@ width:60px;
 
 #textoenunciado{
      font-size:70px;
-     right:554px;
+     right:304px;
      bottom:650px;
   display: block;
   position: absolute;
 }
+
+#voto1{
+     font-size:30px;
+     left:440px;
+     bottom:350px;
+  display: block;
+  position: absolute;
+}
+
+#voto2{
+     font-size:30px;
+     left:940px;
+     bottom:350px;
+  display: block;
+  position: absolute;
+}
+
 
 .button:hover {
     background-color: #3e8e41;
@@ -267,11 +283,12 @@ width:60px;
 			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
-	        	<span id="textoenunciado">Enviar voto</span>
-	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
-	        			<a href="/partida/juego/${partida.id}/votar/rojo"><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
-	        			
-	        			<a href="/partida/juego/${partida.id}/votar/verde"><img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" /></a>
+	        	<span id="textoenunciado">Puedes ver uno de los votos</span>
+	        		<c:if test="${ronda.numRonda == 1 && jugador.user.username == turno.predor.user.username}">
+	        			<a href="/partida/juego/${partida.id}/espiar/1"><img src="/resources/images/idus-martii.jpg" width="150px" id="votacionnegativa" /></a>
+	        			<span id="voto1">Voto de <c:out value="${turno.edil1.user.username}"/></span>
+	        			<a href="/partida/juego/${partida.id}/espiar/2"><img src="/resources/images/idus-martii.jpg" width="150px" id="votacionpositiva" /></a>
+	        			<span id="voto2">Voto de <c:out value="${turno.edil2.user.username}"/></span>
 	        		</c:if>
 	        	
 	        	

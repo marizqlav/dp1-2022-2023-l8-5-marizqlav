@@ -24,5 +24,7 @@ public class VotosTurno extends BaseEntity{
 	@ManyToOne(optional = false)
 	Jugador jugador;
 	
-	FaccionesEnumerado tipoVoto;
+	String tipoVoto;
+	String espiado;
+	String cambiado;
 }
