@@ -43,7 +43,83 @@ table {
    width: 100%;
    border-collapse: collapse;
 }
+.botona {
+	position: relative;
+    color: rgba(255,255,255,1);
+    text-decoration: none;
 
+  position: absolute;
+  top: 100px;
+  left:140px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
+.botonb {
+	position: relative;
+    color: rgba(255,255,255,1);
+    text-decoration: none;
+
+  position: absolute;
+  right:340px;
+  top: 100px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
+.botona:hover {
+ text-decoration:none;
+ color:rgba(0,0,0,1);
+}
+.botona:focus {
+  text-decoration:none;
+ color:rgba(0,0,0,1);
+}
+
+.botonb:hover {
+ text-decoration:none;
+ color:rgba(0,0,0,1);
+}
+.botonb:focus {
+  text-decoration:none;
+ color:rgba(0,0,0,1);
+}
 .datosJugador{
    width: 20%;
    height: 148px;
@@ -151,7 +227,6 @@ width: 10 px;
 
 #imagenpuntos{
 display: block;
-
 margin-top:10px;
   width:40px;
   margin-left:2px;
@@ -227,7 +302,7 @@ font-size: 20px;
 width:60px;
 }
 #votacionnegativa{
- margin-left:100px;
+ margin-left:400px;
 }
 #votacionpositiva{
  margin-left:400px;
@@ -247,11 +322,28 @@ width:60px;
 
 #textoenunciado{
      font-size:70px;
-     right:554px;
+     right:304px;
      bottom:650px;
   display: block;
   position: absolute;
 }
+
+#voto1{
+     font-size:30px;
+     left:680px;
+     bottom:350px;
+  display: block;
+  position: absolute;
+}
+
+#voto2{
+     font-size:30px;
+     left:940px;
+     bottom:350px;
+  display: block;
+  position: absolute;
+}
+
 
 .button:hover {
     background-color: #3e8e41;
@@ -267,14 +359,28 @@ width:60px;
 			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
-	        	<span id="textoenunciado">Enviar voto</span>
-	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
-	        			<a href="/partida/juego/${partida.id}/votar/rojo"><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
+	        	<span id="textoenunciado">Puedes ver uno de los votos</span>
+	        		<c:if test="${ronda.numRonda == 1 && jugador.user.username == turno.predor.user.username && votoEdil1.cambiado==null &&votoEdil1.espiado=='Si'}">
+	        			<c:if test="${votoEdil1.tipoVoto=='Negativo'}">
+	        			<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+	        			</c:if>
+	        			<c:if test="${votoEdil1.tipoVoto=='Positivo'}">
+	        			<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
 	        			
-	        			<a href="/partida/juego/${partida.id}/votar/verde"><img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" /></a>
+	        			</c:if>
+	        			<span id="voto1">Voto de <c:out value="${turno.edil1.user.username}"/></span>
 	        		</c:if>
-	        	
-	        	
+	        		<c:if test="${ronda.numRonda == 1 && jugador.user.username == turno.predor.user.username && votoEdil2.cambiado==null && votoEdil2.espiado=='Si'}">
+	        			<c:if test="${votoEdil2.tipoVoto=='Negativo'}">
+	        				<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+	        			</c:if>
+	        			<c:if test="${votoEdil2.tipoVoto=='Positivo'}">
+	        				<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+	        			</c:if>
+	        			<span id="voto1">Voto de <c:out value="${turno.edil2.user.username}"/></span>
+	        		</c:if>
+	        	<a href="/partida/${partida.id}" class="botona">Mantener</a>
+	        	<a href="/partida/juego/${partida.id}/espiar/1/cambiar" class="botonb">Cambiar</a>
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>

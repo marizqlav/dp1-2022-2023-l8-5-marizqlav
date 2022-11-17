@@ -3,19 +3,13 @@ package org.springframework.samples.idus_martii.partida;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
-import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -48,8 +42,6 @@ public class PartidaController {
     private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
-	private final String  VOTACIONES_DISPONIBLES_RONDA1_VIEW="/partidas/votacionesRonda1";
-	private final String  VOTACIONES_DISPONIBLES_RONDA2_VIEW="/partidas/votacionesRonda2";
     PartidaService partidaService;
     JugadorService jugadorService;
     RondaService rondaService;
@@ -223,9 +215,8 @@ public class PartidaController {
     }
     
     @GetMapping(value = "/juego/{partidaId}")
-    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) throws Exception {
+    public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response, @RequestParam(value="mensaje",required = false) String cuerpomensaje) throws Exception {
     	response.addHeader("Refresh", "5");
-
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	User currentUser = (User) authentication.getPrincipal();
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
@@ -237,16 +228,30 @@ public class PartidaController {
     	Partida partida = partidaService.findPartida(partidaId);
     	VotosTurno vototurno = turnoService.conocerVoto(turno.getId(), jugador.getId());
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
-    	if (iniciada == null) {
-    		throw new Exception("Esta partida no ha sido iniciada");
+        Integer votosFavor = partidaService.getVotosFavor(partidaId);
+        Integer votosContra = partidaService.getVotosContra(partidaId);
+        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
+       
+    	if(cuerpomensaje!=null) {
+    		Mensaje nmensaje = new Mensaje();
+            //nmensaje.setHora(LocalTime.now());
+            nmensaje.setJugador(jugador);
+            nmensaje.setPartida(partida);
+            nmensaje.setTexto(cuerpomensaje);
+            mensajeService.save(nmensaje);
     	}
         
+        
+        if (iniciada == null) {
+    		throw new Exception("Esta partida no ha sido iniciada");
+    	}
+        String aviso="";
         //Redirection
         ModelAndView result = new ModelAndView("/partidas/tablero");
         if(turno.getNumTurno()==1 && turno.getEstadoTurno()==EstadoTurno.Elegir_rol){
         	turnoService.continuarTurno(turno.getId());
         }
-        if(turno.getVotosLeales()==2 || turno.getVotosLeales()==2 || (turno.getVotosLeales()==1 && turno.getVotosTraidores()==1)) {
+        if(turno.getVotosLeales()==2 || turno.getVotosTraidores()==2 || (turno.getVotosLeales()==1 && turno.getVotosTraidores()==1)) {
         	turno.setEstadoTurno(EstadoTurno.Cambiar_voto);
         	turnoService.save(turno);
         }
@@ -262,12 +267,20 @@ public class PartidaController {
                 break;
             }
             case Esperar_voto:{
+            	
+            	if(turno.getEstadoTurno()==EstadoTurno.Esperar_voto) {
+            		aviso="Esperando votos";
+            	}
                 if ((jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2())) && vototurno == null) {
                     result = new ModelAndView("redirect:/partida/juego/" + partidaId.toString()+"/votar");//TODO redirect JSP votar      
                 }}
             case Cambiar_voto:{
+            	
+            	if(turno.getEstadoTurno()==EstadoTurno.Cambiar_voto) {
+            		aviso="Esperando al Predor";
+            	}
             	if (jugador.equals(turno.getPredor()) && turno.getEstadoTurno()==EstadoTurno.Cambiar_voto) {
-            		result = new ModelAndView("redirect:/partida/juego/" + partidaId.toString()+"/cambiar");
+            		result = new ModelAndView("redirect:/partida/juego/" + partidaId.toString()+"/espiar");
             	}}
             case Votar_de_nuevo:
                 break;
@@ -295,7 +308,11 @@ public class PartidaController {
         result.addObject("jugador", jugador);
         result.addObject("turno", turno);
         result.addObject("ronda", ronda);
+        result.addObject("faccion", faccion);
+        result.addObject("votosleales", votosFavor);
+        result.addObject("votostraidores", votosContra);
         result.addObject("mensajes", mensajes);
+        result.addObject("aviso", aviso);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         return result;
     }
@@ -303,7 +320,7 @@ public class PartidaController {
     
     
     @GetMapping(value = "/juego/{partidaId}/votar")
-    public ModelAndView GetVotar(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) throws Exception {
+    public ModelAndView GetVotar(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response,@RequestParam(value="mensaje",required = false) String cuerpomensaje) throws Exception {
     	response.addHeader("Refresh", "5");
 
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -314,9 +331,18 @@ public class PartidaController {
         Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
         Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
         Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
-       
         VotosTurno vototurno = turnoService.conocerVoto(turno.getId(), jugador.getId());
+        Integer votosFavor = partidaService.getVotosFavor(partidaId);
+        Integer votosContra = partidaService.getVotosContra(partidaId);
         List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+        if(cuerpomensaje!=null) {
+    		Mensaje nmensaje = new Mensaje();
+            //nmensaje.setHora(LocalTime.now());
+            nmensaje.setJugador(jugador);
+            nmensaje.setPartida(partida);
+            nmensaje.setTexto(cuerpomensaje);
+            mensajeService.save(nmensaje);
+    	}
     	if (iniciada == null) {
     		throw new Exception("Esta partida no ha sido iniciada");
     	}
@@ -333,12 +359,187 @@ public class PartidaController {
         votar.addObject("ronda", ronda);
         votar.addObject("mensajes", mensajes);
         votar.addObject("faccion", faccion);
+        votar.addObject("votosleales", votosFavor);
+        votar.addObject("votostraidores", votosContra);
+        votar.addObject("faccion", faccion);
+        votar.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
+        
+    	 return votar;
+    }
+    @GetMapping(value = "/juego/{partidaId}/espiar")
+    public ModelAndView GetEspiar(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response,@RequestParam(value="mensaje",required = false) String cuerpomensaje) throws Exception {
+    	response.addHeader("Refresh", "5");
+
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	User currentUser = (User) authentication.getPrincipal();
+    	Turno turno = partidaService.getTurnoActual(partidaId);
+    	Ronda ronda = partidaService.getRondaActual(partidaId);
+    	Partida partida = partidaService.findPartida(partidaId);
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
+        VotosTurno vototurno = turnoService.conocerVoto(turno.getId(), jugador.getId());
+        Integer votosFavor = partidaService.getVotosFavor(partidaId);
+        Integer votosContra = partidaService.getVotosContra(partidaId);
+        List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+        if(cuerpomensaje!=null) {
+    		Mensaje nmensaje = new Mensaje();
+            //nmensaje.setHora(LocalTime.now());
+            nmensaje.setJugador(jugador);
+            nmensaje.setPartida(partida);
+            nmensaje.setTexto(cuerpomensaje);
+            mensajeService.save(nmensaje);
+    	}
+    	if (iniciada == null) {
+    		throw new Exception("Esta partida no ha sido iniciada");
+    	}
+    	ModelAndView votar = null;
+    	if(jugador==turno.getPredor()) {
+        	 votar=new ModelAndView("/partidas/espiar");
+        	 }else {
+            	 votar=new ModelAndView("redirect:/partida/juego/" + partida.getId().toString());
+            }
+    	votar.addObject("partida", partidaService.findPartida(partidaId));
+    	votar.addObject("jugador", jugador);
+        votar.addObject("turno", turno);
+        votar.addObject("ronda", ronda);
+        votar.addObject("mensajes", mensajes);
+        votar.addObject("faccion", faccion);
+        votar.addObject("votosleales", votosFavor);
+        votar.addObject("votostraidores", votosContra);
+        votar.addObject("faccion", faccion);
         votar.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         
     	 return votar;
     }
 
+    @GetMapping(value = "/juego/{partidaId}/espiar/1")
+    public ModelAndView GetEspiarEdil1(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response,@RequestParam(value="mensaje",required = false) String cuerpomensaje) throws Exception {
+    	response.addHeader("Refresh", "5");
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	User currentUser = (User) authentication.getPrincipal();
+    	Turno turno = partidaService.getTurnoActual(partidaId);
+    	Ronda ronda = partidaService.getRondaActual(partidaId);
+    	Partida partida = partidaService.findPartida(partidaId);
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
+        VotosTurno vototurno = turnoService.conocerVoto(turno.getId(), jugador.getId());
+        Integer votosFavor = partidaService.getVotosFavor(partidaId);
+        Integer votosContra = partidaService.getVotosContra(partidaId);
+        List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+        VotosTurno votoedil1 = turnoService.conocerVoto(turno.getId(), turno.getEdil1().getId());
+        if(cuerpomensaje!=null) {
+    		Mensaje nmensaje = new Mensaje();
+            //nmensaje.setHora(LocalTime.now());
+            nmensaje.setJugador(jugador);
+            nmensaje.setPartida(partida);
+            nmensaje.setTexto(cuerpomensaje);
+            mensajeService.save(nmensaje);
+    	}
+        
+        	votoedil1.setEspiado("Si");
+        
+    	if (iniciada == null) {
+    		throw new Exception("Esta partida no ha sido iniciada");
+    	}
+    	ModelAndView votar = null;
+    	if(jugador==turno.getPredor() && votoedil1.getCambiado()==null) {
+        	 votar=new ModelAndView("/partidas/espiarEdil");
+        	 votar.addObject("votoEdil1",votoedil1);
+        	 }else {
+            	 votar=new ModelAndView("redirect:/partida/juego/" + partida.getId().toString());
+            }
+    	votar.addObject("partida", partidaService.findPartida(partidaId));
+    	votar.addObject("jugador", jugador);
+        votar.addObject("turno", turno);
+        votar.addObject("ronda", ronda);
+        votar.addObject("mensajes", mensajes);
+        votar.addObject("faccion", faccion);
+        votar.addObject("votosleales", votosFavor);
+        votar.addObject("votostraidores", votosContra);
+        votar.addObject("faccion", faccion);
+        votar.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
+    	 return votar;
+    }
+    
+    @GetMapping(value = "/juego/{partidaId}/espiar/2")
+    public ModelAndView GetEspiarEdil2(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response,@RequestParam(value="mensaje",required = false) String cuerpomensaje) throws Exception {
+    	response.addHeader("Refresh", "5");
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	User currentUser = (User) authentication.getPrincipal();
+    	Turno turno = partidaService.getTurnoActual(partidaId);
+    	Ronda ronda = partidaService.getRondaActual(partidaId);
+    	Partida partida = partidaService.findPartida(partidaId);
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Partida iniciada = partidaService.getPartidaIniciada(partida.getId());
+        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
+        VotosTurno vototurno = turnoService.conocerVoto(turno.getId(), jugador.getId());
+        Integer votosFavor = partidaService.getVotosFavor(partidaId);
+        Integer votosContra = partidaService.getVotosContra(partidaId);
+        List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+        VotosTurno votoedil2 = turnoService.conocerVoto(turno.getId(), turno.getEdil2().getId());
+        if(cuerpomensaje!=null) {
+    		Mensaje nmensaje = new Mensaje();
+            //nmensaje.setHora(LocalTime.now());
+            nmensaje.setJugador(jugador);
+            nmensaje.setPartida(partida);
+            nmensaje.setTexto(cuerpomensaje);
+            mensajeService.save(nmensaje);
+    	}
+        	
+        	votoedil2.setEspiado("Si");
+        
+    	if (iniciada == null) {
+    		throw new Exception("Esta partida no ha sido iniciada");
+    	}
+    	ModelAndView votar = null;
+    	if(jugador==turno.getPredor() && votoedil2.getCambiado()==null) {
+        	 votar=new ModelAndView("/partidas/espiarEdil");
+        	 votar.addObject("votoEdil2",votoedil2);
+        	 }else {
+            	 votar=new ModelAndView("redirect:/partida/juego/" + partida.getId().toString());
+            }
+    	votar.addObject("partida", partidaService.findPartida(partidaId));
+    	votar.addObject("jugador", jugador);
+        votar.addObject("turno", turno);
+        votar.addObject("ronda", ronda);
+        votar.addObject("mensajes", mensajes);
+        votar.addObject("faccion", faccion);
+        votar.addObject("votosleales", votosFavor);
+        votar.addObject("votostraidores", votosContra);
+        votar.addObject("faccion", faccion);
+        votar.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
+    	 return votar;
+    }
+    
+    @GetMapping(value="/juego/{partidaId}/espiar/1/cambiar")
+    public String cambiarvoto(@PathVariable("partidaId") Integer partidaId) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Turno turno = partidaService.getTurnoActual(partidaId);
+        VotosTurno votoedil1 = turnoService.conocerVoto(turno.getId(), turno.getEdil1().getId());
+        try {
+        	if(votoedil1.getTipoVoto()=="Positivo") {
+        		turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Negativo");
+        		turno.setVotosLeales(turno.getVotosLeales()-1);
+        		turno.setVotosTraidores(turno.getVotosTraidores()+1);
+        	}
+        	if(votoedil1.getTipoVoto()=="Negativo") {
+        		turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Positivo");
+        		turno.setVotosLeales(turno.getVotosLeales()+1);
+        		turno.setVotosTraidores(turno.getVotosTraidores()-1);
+        	}
+            
+        } catch(Exception e){
+            System.out.println(e);
+        }
+
+        return "redirect:/partida/juego/"+partidaId.toString(); 
+    	
+    }
                 
     //TODO Cambiar todo esto para que sea un solo post
     @GetMapping(value="/juego/{partidaId}/votar/rojo")
