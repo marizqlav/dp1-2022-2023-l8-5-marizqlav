@@ -1,14 +1,9 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
-import java.util.Optional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.function.Function;
-
-import javax.validation.constraints.Max;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
@@ -300,6 +295,16 @@ public class PartidaService {
     Ronda getRondaActual(Integer partidaId) {
     	return partidaRepo.findById(partidaId).get().getRondas()
             .get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
+
+    }
+    
+    Integer getVotosFavor(Integer partidaId) {
+    	return partidaRepo.getVotosFavor(partidaId).stream().mapToInt(Integer::intValue).sum();
+
+    }
+    
+    Integer getVotosContra(Integer partidaId) {
+    	return partidaRepo.getVotosContra(partidaId).stream().mapToInt(Integer::intValue).sum();
 
     }
 

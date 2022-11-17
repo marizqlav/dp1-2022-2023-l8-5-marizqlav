@@ -134,16 +134,47 @@ width: 10 px;
   top: 436px;
 }
 
+
 #tablapuntos{
-  border:1px solid black;
-  width:205px;
+
+  width:175px;
+  height:240px;
   display: block;
   position: absolute;
+  margin-top:43px;
+  margin-left:15px;
   top: 436px;
 }
 .tablapuntostd{
-  border:1px solid black;
-  width:20px;
+  width:25%;
+}
+
+#imagenpuntos{
+display: block;
+
+margin-top:10px;
+  width:40px;
+  margin-left:2px;
+}
+#imagenpuntos2{
+margin-top:20px;
+  width:40px;
+  margin-left:2px;
+}
+#imagenpuntos3{
+margin-top:27px;
+margin-left:2px;
+  width:40px;
+}
+#imagenpuntos4{
+margin-top:27px;
+margin-left:2px;
+  width:40px;
+}
+#imagenpuntos5{
+margin-top:35px;
+margin-left:2px;
+  width:40px;
 }
 #faccionactual{
      width:205px;
@@ -214,6 +245,14 @@ width:60px;
     float: center;
 }
 
+#textoenunciado{
+     font-size:70px;
+     right:554px;
+     bottom:650px;
+  display: block;
+  position: absolute;
+}
+
 .button:hover {
     background-color: #3e8e41;
 }
@@ -228,6 +267,7 @@ width:60px;
 			        <span id="espectadores">Espectadores: 2 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
+	        	<span id="textoenunciado">Enviar voto</span>
 	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
 	        			<a href="/partida/juego/${partida.id}/votar/rojo"><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
 	        			
@@ -323,7 +363,7 @@ width:60px;
 			    	</div>
 			    	<form>
 			        	<div class="botonmensaje">
-			            	<input type="text" label="Mensaje" placeholder="Escribe un mensaje" name="mensaje"/>
+			            	<input type="text" label="Mensaje" placeholder="Escribe un mensaje" name="mensaje" required/>
 			            	<button class="button" type="submit">Enviar mensaje</button>
 			        	</div>
 			    	</form>
@@ -351,40 +391,179 @@ width:60px;
 				</td>
 				<td class="puntuacion" rowspan="2">
 				<span id="spanmarcador">Marcador</span>
-			
-		      		<img src="/resources/images/carta_sufragio.jpg" id="marcador"/>
-		      			<table id="tablapuntos">
-					<tr>
-						<td>1</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-						<td>1</td>
-					</tr>
-				</table>
+			      	<img src="/resources/images/carta_sufragio.jpg" id="marcador"/>
+			      	<table id="tablapuntos">
+						<tr>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 1}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 1}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 2}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 2}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 3}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 3}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 4}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 4}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+						</tr>
+						<tr>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 5}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 5}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 6}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 6}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 7}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 7}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 8}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 8}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+						</tr>
+						<tr>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 9}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 9}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 10}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 10}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 11}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 11}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 12}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 12}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+						</tr>
+						<tr>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 13}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 13}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 14}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 14}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 15}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 15}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 16}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 16}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+						</tr>
+						<tr>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 17}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 17}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 18}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 18}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 19}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 19}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+							<td class="tablapuntostd">
+							<c:if test="${votostraidores == 20}">
+		        				<img src="/resources/images/redknife.png" id="imagenpuntos"/>
+		        			</c:if>
+							<c:if test="${votosleales == 20}">
+		        				<img src="/resources/images/laurel.png" id="imagenpuntos"/>
+		        			</c:if>
+							</td>
+						</tr>
+					</table>
 		      	</td>		
 	        </tr>
         </tbody>
