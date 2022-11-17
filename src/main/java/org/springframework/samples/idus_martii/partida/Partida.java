@@ -111,7 +111,6 @@ public class Partida extends BaseEntity {
     		else
     			return "Finalizada";
     }
-    
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     Set<Faccion> faccionesJugadoras;

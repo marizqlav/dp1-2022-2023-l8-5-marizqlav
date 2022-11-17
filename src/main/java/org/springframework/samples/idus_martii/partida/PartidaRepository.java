@@ -2,11 +2,8 @@ package org.springframework.samples.idus_martii.partida;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -58,5 +55,10 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     @Query("SELECT j FROM Lobby l JOIN l.jugadores j WHERE j.id = :idjugador AND l.id = :idlobby")
 	Jugador findJugadorInLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
     
+    @Query("SELECT t.votosLeales FROM Turno t WHERE t.ronda.partida.id = :idpartida")
+	List<Integer> getVotosFavor(@Param("idpartida") Integer idpartida);
+    
+    @Query("SELECT t.votosTraidores FROM Turno t WHERE t.ronda.partida.id = :idpartida")
+	List<Integer> getVotosContra(@Param("idpartida") Integer idpartida);
     
 }
