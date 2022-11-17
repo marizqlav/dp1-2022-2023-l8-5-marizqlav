@@ -90,7 +90,7 @@ public class TurnoService {
         }
 
         turno.setVotosLeales(turno.getVotosLeales() + 1);
-        anadirVotoTurno(turno.getId(),jugador.getId());
+        anadirVotoTurno(turno.getId(),jugador.getId(),"Positivo");
         save(turno);
     }
 
@@ -103,7 +103,7 @@ public class TurnoService {
         }
 
         turno.setVotosTraidores(turno.getVotosTraidores() + 1);
-        anadirVotoTurno(turno.getId(),jugador.getId());
+        anadirVotoTurno(turno.getId(),jugador.getId(),"Negativo");
         save(turno);
     }
 
@@ -122,15 +122,15 @@ public class TurnoService {
     	return repo.espiarVoto(turnoId, jugadorId);
     }
     
-    public void cambiarVoto(int turnoId, int jugadorId, FaccionesEnumerado voto){
+    public void cambiarVoto(int turnoId, int jugadorId, String voto){
     	repo.findVotoByturnoAndPlayer(turnoId, jugadorId).setTipoVoto(voto);
     }
     public VotosTurno conocerVoto(int turnoId, int jugadorId){
     	return repo.findVotoByturnoAndPlayer(turnoId, jugadorId);
     }
     
-    public Integer anadirVotoTurno(int turnoId, int jugadorId){
-    	return repo.anadirVotoTurno(turnoId, jugadorId);
+    public void anadirVotoTurno(int turnoId, int jugadorId, String voto){
+    	 repo.anadirVotoTurno(turnoId, jugadorId,voto);
     }
     
 public void asignarRol(String rol, Jugador jugador, Integer turnoId) {
@@ -169,4 +169,9 @@ public void asignarRol(String rol, Jugador jugador, Integer turnoId) {
     	turno.setEdil1(edilesTurnoActual.get(1));
     	save(turno);
     }
+
+public void espiarVotoJugador(int turnoId, int jugadorId){
+	 repo.espiarVotoJugador(turnoId, jugadorId);
+}
+
 }
