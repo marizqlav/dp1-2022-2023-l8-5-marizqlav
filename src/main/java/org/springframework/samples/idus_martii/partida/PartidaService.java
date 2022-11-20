@@ -1,8 +1,13 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
+import java.util.Map;
+import java.awt.Paint;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.Faccion;
@@ -303,9 +308,24 @@ public class PartidaService {
 
     }
     
-    Integer getVotosContra(Integer partidaId) {
+    Integer getVotosContra(Integer partidaId){
     	return partidaRepo.getVotosContra(partidaId).stream().mapToInt(Integer::intValue).sum();
 
     }
-
+    
+    public int getVictoriasJugador(Jugador jugador) {
+		return partidaRepo.findPartidasGanadas(jugador.getId()).size();
+	}
+    
+    public Map<FaccionesEnumerado, Integer> getStats(Jugador jugador){
+    	List<Partida> victorias =  partidaRepo.findPartidasGanadas(jugador.getId());
+    	Map<FaccionesEnumerado, Integer> stats = new HashMap<FaccionesEnumerado, Integer>();
+    	for(FaccionesEnumerado faccion : FaccionesEnumerado.values()) {
+    		stats.put(faccion, 0);
+    	}
+    	for(Partida p : victorias) {
+    		stats.put(p.faccionGanadora, stats.get(p.faccionGanadora) +1);
+    	}
+    	return stats;
+    }
 }
