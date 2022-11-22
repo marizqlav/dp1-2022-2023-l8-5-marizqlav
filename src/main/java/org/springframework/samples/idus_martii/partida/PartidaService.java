@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.awt.Paint;
 import java.lang.reflect.Array;
+import java.sql.Time;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -327,5 +331,33 @@ public class PartidaService {
     		stats.put(p.faccionGanadora, stats.get(p.faccionGanadora) +1);
     	}
     	return stats;
+    }
+    
+    public Map<String, Duration> duracionPartidasJugador(Jugador jugador){
+    	 Map<String, Duration> stats = new HashMap<String, Duration>();
+    	 Duration min = null;
+    	 Duration max = null;
+    	 Duration sum = null;
+    	 for(Partida p : partidaRepo.findAllFinalizadasJugador(jugador.getId())) {
+    		 Duration duration = Duration.between(p.getFechaCreacion(), p.getFechaFin());
+    		 if(sum == null) {
+    			 min = duration;
+    	    	 max = duration;
+    	    	 sum = duration;
+    		 }
+    		 else {
+    			 if(duration.compareTo(min) <0) {
+    				 min = duration;
+    			 }
+    			 else if(duration.compareTo(max) >0) {
+    				 max = duration;
+    			 }
+    			 sum = sum.plus(duration);
+    		 }
+    	 }
+    	 stats.put("max", max);
+    	 stats.put("min", min);
+    	 stats.put("media", sum.dividedBy(partidaRepo.findAllFinalizadasJugador(jugador.getId()).size()));
+    	 return stats;
     }
 }
