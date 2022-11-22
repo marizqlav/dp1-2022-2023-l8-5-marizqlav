@@ -360,4 +360,32 @@ public class PartidaService {
     	 stats.put("media", sum.dividedBy(partidaRepo.findAllFinalizadasJugador(jugador.getId()).size()));
     	 return stats;
     }
+    
+    public Map<String, Integer> promedioJugadoresPartida(Jugador jugador){
+   	 Map<String, Integer> stats = new HashMap<String, Integer>();
+   	 int min = 5;
+   	 int max = 5;
+   	 int sum = 0;
+   	 for(Partida p : partidaRepo.findAllFinalizadasJugador(jugador.getId())) {
+   		 int jugadores = p.getNumeroJugadores();
+   		 if(sum == 0) {
+   			 min = jugadores;
+   	    	 max = jugadores;
+   	    	 sum = jugadores;
+   		 }
+   		 else {
+   			 if(jugadores<min) {
+   				 min = jugadores;
+   			 }
+   			 else if(jugadores>max) {
+   				 max = jugadores;
+   			 }
+   			 sum = sum + jugadores;
+   		 }
+   	 }
+   	 stats.put("max", max);
+   	 stats.put("min", min);
+   	 stats.put("media", sum/partidaRepo.findAllFinalizadasJugador(jugador.getId()).size());
+   	 return stats;
+   }
 }
