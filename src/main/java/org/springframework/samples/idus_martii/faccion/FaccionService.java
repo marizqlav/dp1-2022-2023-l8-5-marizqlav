@@ -44,4 +44,10 @@ public class FaccionService {
 	public List<Faccion> getFaccionesPartida(int id){
 		return repo.getFaccionesPartida(id);
 	}
+	
+	public int getVictoriasJugador(Jugador jugador) {
+		
+		
+		return 0;
+	}
 }

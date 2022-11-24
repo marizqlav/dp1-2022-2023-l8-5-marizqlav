@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 
 @Repository
@@ -61,4 +62,8 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     @Query("SELECT t.votosTraidores FROM Turno t WHERE t.ronda.partida.id = :idpartida")
 	List<Integer> getVotosContra(@Param("idpartida") Integer idpartida);
     
+    
+    @Query("SELECT p FROM Partida p, Faccion f, Jugador j WHERE p.id = f.partida AND f.jugador = j.id "
+    		+ "AND j.id = :idjugador AND p.fechaFin IS NOT NULL AND p.faccionGanadora = f.faccionSelecionada ")
+    List<Partida> findPartidasGanadas(@Param("idjugador") int idjugador);
 }
