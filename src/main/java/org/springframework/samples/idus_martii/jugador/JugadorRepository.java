@@ -35,6 +35,9 @@ public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
 	@Query("SELECT j FROM Jugador j, User u WHERE u.username LIKE :username% AND j.user=u.id")
 	List<Jugador> findJugadorByUsername(@Param("username") String username);
 	
+	@Query(value ="SELECT a.jugador_id, a.jugador FROM amigos a WHERE a.jugador_id = :jugadorId AND a.jugador = :amigo", nativeQuery = true)	
+	<E> E noSonAmigos(@Param("jugadorId") int jugadorId, @Param("amigo")int amigo);
+	
 	
 	
 
