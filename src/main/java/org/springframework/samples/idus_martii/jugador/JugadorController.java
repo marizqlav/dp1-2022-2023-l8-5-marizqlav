@@ -55,6 +55,7 @@ public class JugadorController {
 	        model.addAttribute("User", jugadorService.getUserByJugador(j));
 	        return VIEWS_USUARIO_LISTING;
 	    }*/
+	   
 	
 	 
 	 @Transactional(readOnly = true)
@@ -64,13 +65,16 @@ public class JugadorController {
 		 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		 	ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
 	        result.addObject("jugador", jugador);
+	       
 	        if(authentication!=null)
 	        	if(authentication.isAuthenticated()) {
 	        		User currentUser = (User) authentication.getPrincipal();
 	        		System.out.println(currentUser.getUsername());
-	        		
 	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
 	        		result.addObject("currentPlayer", jugadoractual);
+	        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
+	        		System.out.println(noSonAmigos);
+	        		result.addObject("noSonAmigos", noSonAmigos);
 	        	}
 	        	else
 	        		System.out.println("El usuario no está autentificado");
@@ -82,7 +86,6 @@ public class JugadorController {
 	    public ModelAndView peticionamistad(@PathVariable int idjugador, @PathVariable int idamigo){
 		 	Jugador jugador=jugadorService.getJugadorById(idjugador);
 		 	Jugador amigo=jugadorService.getJugadorById(idamigo);
-		 	
 		 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		 	ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
 	        result.addObject("jugador", amigo);

@@ -63,6 +63,6 @@ public class Jugador extends BaseEntity{
 	@ManyToMany
 	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "jugador"))
-	private Set<Jugador> jugador;
+	private Set<Jugador> setAmigos;
 	
 }

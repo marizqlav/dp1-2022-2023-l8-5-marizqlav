@@ -61,4 +61,13 @@ public class JugadorService {
 		
 	}
 	
+	public Boolean noSonAmigos(int jugadorId, int amigo) {
+		if( !(jugadorRepo.noSonAmigos(jugadorId, amigo) !=null || jugadorRepo.noSonAmigos(amigo, jugadorId) !=null) ) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
+	
 }
