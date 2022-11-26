@@ -1,12 +1,20 @@
 package org.springframework.samples.idus_martii.jugador;
 
+import java.time.LocalTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.samples.idus_martii.faccion.Faccion;
+import org.springframework.samples.idus_martii.mensaje.Mensaje;
+import org.springframework.samples.idus_martii.partida.Partida;
+import org.springframework.samples.idus_martii.ronda.Ronda;
+import org.springframework.samples.idus_martii.turno.Turno;
+import org.springframework.samples.idus_martii.turno.VotosTurno;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -19,6 +27,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -27,7 +36,7 @@ public class JugadorController {
 	private final String  JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
 	private final String  JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
 	private static final String VIEWS_USUARIO_LISTING = "jugadores/userByPlayer";
-	private final String  JUGADOR_ENVIAR_PETICIONES_AMISTAD_VIEW="/jugadores/enviarPeticionAmistad";
+	private final String  PETICIONES_AMISTAD_VIEW="/jugadores/peticionesAmistadList";
 	private final JugadorService jugadorService;
 	
 	@Autowired
@@ -81,6 +90,13 @@ public class JugadorController {
 	        return result;
 	    }
 	 
+	 @Transactional(readOnly = true)
+	    @GetMapping("/jugadores/profile/nombre/{nombre}")
+	    public String irPerfilJugador(@PathVariable("nombre") String nombre){
+		 	Jugador jugador=jugadorService.getByName(nombre);
+	        return "redirect:/jugadores/profile/"+jugador.getId().toString();
+	    }
+	 
 	 	@Transactional()
 	 	@GetMapping("/jugadores/amigos/{idjugador}/{idamigo}")
 	    public ModelAndView peticionamistad(@PathVariable int idjugador, @PathVariable int idamigo){
@@ -95,7 +111,7 @@ public class JugadorController {
 	        		User currentUser = (User) authentication.getPrincipal();
 	        		System.out.println(currentUser.getUsername());
 	        		System.out.println(jugador.getUser().getUsername().toString());
-	        		if(currentUser.getUsername().toString().equals(jugador.getUser().getUsername().toString())) {
+	        		if(currentUser.getUsername().toString().equals(jugador.getUser().getUsername().toString()) && idjugador!=idamigo) {
 	        			jugadorService.anadirAmigo(idjugador, idamigo);
 	        			result.addObject("message", "Se ha enviado la petición de amistad");
 	        		}else
@@ -160,5 +176,53 @@ public class JugadorController {
 				this.jugadorService.save(jugador);
 				return "redirect:/";
 			}
+		}
+		
+		
+		@GetMapping(value = "/jugadores/peticiones")
+	    public ModelAndView peticiones(HttpServletResponse response) {
+	    	response.addHeader("Refresh", "10");
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    	User currentUser = (User) authentication.getPrincipal();
+	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        List<Jugador> peticiones = jugadorService.getpeticionesAmistadJugador(jugador.getId());
+	        ModelAndView result=new ModelAndView(PETICIONES_AMISTAD_VIEW);
+	        result.addObject("peticiones", peticiones);
+	        return result;          
+		}
+		
+		@GetMapping(value = "/jugadores/peticiones/rechazar/{rechazadoId}")
+	    public String rechazar(@PathVariable("rechazadoId") Integer rechazadoId) {
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    	User currentUser = (User) authentication.getPrincipal();
+	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        if(jugadorService.sonAmigos(jugador.getId(), rechazadoId)!=null) {
+	        	jugadorService.rechazarPeticion(jugador.getId(), rechazadoId);
+	        }
+	        return "redirect:/jugadores/peticiones";          
+		}
+		
+		@GetMapping(value = "/jugadores/peticiones/aceptar/{aceptadoId}")
+	    public String aceptar(@PathVariable("aceptadoId") Integer aceptadoId) {
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    	User currentUser = (User) authentication.getPrincipal();
+	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        if(jugadorService.sonAmigos(jugador.getId(), aceptadoId)!=null) {
+	        	jugadorService.anadirAmigo(jugador.getId(),aceptadoId);
+	        }
+	        return "redirect:/jugadores/peticiones";          
+		}
+		
+		@GetMapping(value = "/jugadores/amigos")
+	    public ModelAndView amigos(HttpServletResponse response) {
+	    	response.addHeader("Refresh", "10");
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    	User currentUser = (User) authentication.getPrincipal();
+	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        
+	        List<Jugador> amigos = jugadorService.getAmigos(jugador.getId());
+	        ModelAndView result=new ModelAndView(JUGADORES_LISTING_VIEW);
+	        result.addObject("selections", amigos);
+	        return result;          
 		}
 }
