@@ -38,16 +38,15 @@
 					<span>Buscar jugadores</span>
 				</idus_martii:menuItem>
 
-				<idus_martii:menuItem active="${name eq 'Objetos creados'}" url="/turnos"
-					title="Objetos creados" dropdown="${true}">										
+				<idus_martii:menuItem active="${name eq 'Social'}" url="/jugadores/"
+					title="Social" dropdown="${true}">										
 						<ul class="dropdown-menu">
-							<li class="divider"></li>
 							<li>
-								<a href="<c:url value="/turnos/" />">Lista de turnos</a>		
+								<a href="<c:url value="/jugadores/amigos" />">Mis amigos</a>		
 							</li>
 							<li class="divider"></li>
 							<li>
-								<a href="<c:url value="/rondas/" />">Lista de rondas</a>		
+								<a href="<c:url value="/jugadores/peticiones" />">Peticiones de amistad</a>		
 							</li>
 							<li class="divider"></li>
 							<li>
@@ -57,19 +56,6 @@
 							<li>
 								<a href="<c:url value="/partida/enJuego" />">Lista de partidas en juego</a>		
 							</li>
-							<li class="divider"></li>
-							<li>
-								<a href="<c:url value="/facciones/" />">Lista de facciones</a>		
-							</li>
-							<li class="divider"></li>
-							<li>
-								<a href="<c:url value="/mensajes/" />">Lista de mensajes</a>		
-							</li>
-							<li class="divider"></li>
-							<li>
-								<a href="<c:url value="/jugadores/" />">Lista de Jugadores</a>		
-							</li>
-							
 						</ul>					
 				</idus_martii:menuItem>	
 
@@ -90,16 +76,13 @@
 				
 			</ul>
 
-
-
-
 			<ul class="nav navbar-nav navbar-right">
 				<sec:authorize access="!isAuthenticated()">
 					<li><a href="<c:url value="/login" />">Login</a></li>
 					<li><a href="<c:url value="/users/new" />">Register</a></li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
+					<li class="dropdown"><a href="/jugadores/profile/nombre/${pageContext.request.userPrincipal.name}" class="dropdown-toggle"
 						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span>
 							<strong><sec:authentication property="name" /></strong> <span
 							class="glyphicon glyphicon-chevron-down"></span>
@@ -109,8 +92,8 @@
 								<div class="navbar-login">
 									<div class="row">
 										<div class="col-lg-4">
-											<p class="text-center">
-												<span class="glyphicon glyphicon-user icon-size"></span>
+											<p class="text-center">			
+											<span class="glyphicon glyphicon-user"></span>
 											</p>
 										</div>
 										<div class="col-lg-8">
@@ -126,21 +109,21 @@
 								</div>
 							</li>
 							<li class="divider"></li>
-<!-- 							
+							
                             <li> 
 								<div class="navbar-login navbar-login-session">
 									<div class="row">
 										<div class="col-lg-12">
 											<p>
-												<a href="#" class="btn btn-primary btn-block">My Profile</a>
-												<a href="#" class="btn btn-danger btn-block">Change
-													Password</a>
+												<a href="/jugadores/profile/nombre/${pageContext.request.userPrincipal.name}" class="btn btn-primary btn-block">My Profile</a>
+												<li class="divider"></li>
+												<a href="#" class="btn btn-danger btn-block">Change Password</a>
 											</p>
 										</div>
 									</div>
 								</div>
 							</li>
--->
+
 						</ul></li>
 				</sec:authorize>
 			</ul>

@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.jugador;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -38,7 +39,12 @@ public class JugadorService {
     }
 	
 	public Integer anadirAmigo(int idjugador, int idamigo){
-        return jugadorRepo.anadirAmigo(idjugador, idamigo);
+        return jugadorRepo.anadirAmigo(idjugador, idamigo) ;
+    }
+	
+	public Integer sonAmigos(int idjugador, int idamigo){
+		
+        return jugadorRepo.sonAmigos(idjugador, idamigo) ;
     }
 
 	public Jugador getJugadorById(int id) {
@@ -51,6 +57,31 @@ public class JugadorService {
 	
 	public List<Jugador> getJugadorByUsername(String username) {
 		return this.jugadorRepo.findJugadorByUsername(username);
+	}
+	
+	public List<Jugador> getpeticionesAmistadJugador(Integer idjugador) {
+		List<Integer> jugadoresId = this.jugadorRepo.findPeticionesAmistadJugador(idjugador);
+		List<Jugador> salida = new ArrayList<>();
+		for(Integer jugador:jugadoresId) {
+			if(this.sonAmigos(jugador,idjugador )==null) {
+				salida.add(this.getJugadorById(jugador));
+			}
+			
+		}
+		return salida;
+	}
+	
+	public List<Jugador> getAmigos(Integer idjugador) {
+		List<Integer> jugadoresId = this.jugadorRepo.findPeticionesAmistadJugador(idjugador);
+		List<Jugador> salida = new ArrayList<>();
+		for(Integer jugador:jugadoresId) {
+			if(this.sonAmigos(jugador,idjugador )!=null) {
+				if(this.sonAmigos(idjugador,jugador)!=null)
+				salida.add(this.getJugadorById(jugador));
+			}
+			
+		}
+		return salida;
 	}
 	
 	public void save(Jugador j) {
@@ -68,6 +99,10 @@ public class JugadorService {
 			return false;
 		}
 		
+	}
+	
+	public void rechazarPeticion(int jugadorId, int rechazadoId) {
+		 this.jugadorRepo.rechazarPeticion(jugadorId, rechazadoId);
 	}
 	
 }
