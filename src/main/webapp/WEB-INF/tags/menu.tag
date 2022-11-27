@@ -108,8 +108,8 @@
 									</div>
 								</div>
 							</li>
-							<li class="divider"></li>
-							
+<!--	
+							<li class="divider"></li>						
                             <li> 
 								<div class="navbar-login navbar-login-session">
 									<div class="row">
@@ -123,7 +123,7 @@
 									</div>
 								</div>
 							</li>
-
+-->
 						</ul></li>
 				</sec:authorize>
 			</ul>
