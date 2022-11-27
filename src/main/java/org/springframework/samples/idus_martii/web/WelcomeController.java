@@ -4,16 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.FaccionService;
+import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.samples.idus_martii.mensaje.MensajeService;
 import org.springframework.samples.idus_martii.model.Person;
+import org.springframework.samples.idus_martii.partida.PartidaService;
+import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.TurnoService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class WelcomeController {
-	
-	
+	JugadorService jugadorService;
+	@Autowired
+    public WelcomeController(JugadorService jugadorService) {
+
+        this.jugadorService = jugadorService;
+
+    }
+
 	  @GetMapping({"/","/welcome"})
-	  public String welcome(Map<String, Object> model) {	    
+	  public String welcome(Map<String, Object> model) {	   
 		List<Person> persons = new ArrayList<Person>();
 		Person person = new Person();
 		Person person1 = new Person();
