@@ -28,8 +28,8 @@ INSERT INTO jugadores(id, user) VALUES
         (5, 'albdomrui'),
         (6, 'pabparmen');
         
-INSERT INTO partida(id, faccion_ganadora, numero_jugadores, fecha_creacion, fecha_inicio, fecha_fin, jugador_id)
-        VALUES (1, 'null', 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31', 1);
+INSERT INTO partida(id, faccion_ganadora, limite,votos_leales,votos_traidores ,numero_jugadores, fecha_creacion, fecha_inicio, fecha_fin, jugador_id)
+        VALUES (1, 'Leal', 40,7,8,6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31', 1);
 
 
 
