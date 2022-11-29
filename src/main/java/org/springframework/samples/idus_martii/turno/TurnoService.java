@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,53 +36,6 @@ public class TurnoService {
         repo.save(turno);
     }
 
-    public void continuarTurno(Integer turnoId) {
-        Turno turno = getById(turnoId);
-
-        switch (turno.getEstadoTurno()) {
-            case Principio_turno: {
-                turno.setEstadoTurno(EstadoTurno.Elegir_rol);
-                repo.save(turno);
-                break;
-            }
-            case Elegir_rol: {
-                turno.setEstadoTurno(EstadoTurno.Esperar_voto);
-                repo.save(turno);
-                break;
-            }
-            case Esperar_voto: {
-                turno.setEstadoTurno(EstadoTurno.Cambiar_voto);
-                repo.save(turno);
-                break;
-            }
-            case Cambiar_voto: {
-                turno.setEstadoTurno(EstadoTurno.Votar_de_nuevo);
-                repo.save(turno);
-                break;
-            }
-            case Votar_de_nuevo: {
-                turno.setEstadoTurno(EstadoTurno.Contar_votos);
-                repo.save(turno);
-                break;
-            }
-            case Contar_votos: {
-                turno.setEstadoTurno(EstadoTurno.Elegir_faccion);
-                repo.save(turno);
-                break;
-            }
-            case Elegir_faccion: {
-                turno.setEstadoTurno(EstadoTurno.Terminar_turno);
-                repo.save(turno);
-                break;
-            }
-            case Terminar_turno:
-                break;
-            default:
-                break;
-  
-        }
-    }
-
     public void anadirVotoVerde(int turnoId, Jugador jugador) throws AccessException {
         Turno turno = getById(turnoId);
 
@@ -90,7 +44,7 @@ public class TurnoService {
         }
 
         turno.setVotosLeales(turno.getVotosLeales() + 1);
-        anadirVotoTurno(turno.getId(),jugador.getId(),"Positivo");
+        anadirVotoTurno(turno.getId(), jugador.getId(), "Positivo");
         save(turno);
     }
 
@@ -103,7 +57,7 @@ public class TurnoService {
         }
 
         turno.setVotosTraidores(turno.getVotosTraidores() + 1);
-        anadirVotoTurno(turno.getId(),jugador.getId(),"Negativo");
+        anadirVotoTurno(turno.getId(), jugador.getId(), "Negativo");
         save(turno);
     }
 
@@ -118,18 +72,18 @@ public class TurnoService {
         save(turno);
     }
     
-    public FaccionesEnumerado espiarVotos(int turnoId, int jugadorId){
+    public FaccionesEnumerado espiarVotos(Integer turnoId, Integer jugadorId){
     	return repo.espiarVoto(turnoId, jugadorId);
     }
     
-    public void cambiarVoto(int turnoId, int jugadorId, String voto){
+    public void cambiarVoto(Integer turnoId, Integer jugadorId, String voto){
     	repo.findVotoByturnoAndPlayer(turnoId, jugadorId).setTipoVoto(voto);
     }
-    public VotosTurno conocerVoto(int turnoId, int jugadorId){
+    public VotosTurno conocerVoto(Integer turnoId, Integer jugadorId){
     	return repo.findVotoByturnoAndPlayer(turnoId, jugadorId);
     }
     
-    public void anadirVotoTurno(int turnoId, int jugadorId, String voto){
+    public void anadirVotoTurno(Integer turnoId, Integer jugadorId, String voto){
     	 repo.anadirVotoTurno(turnoId, jugadorId,voto);
     }
     

@@ -41,7 +41,7 @@
     <c:if test="${jugadores.size()==partida.numeroJugadores}">
 	<a class="btn btn-default" href='<spring:url value="/partida/juego/${partida.id}/iniciar" htmlEscape="true"/>' >Comenzar partida</a>
 	</c:if>
-    <a class="btn btn-default" href='<spring:url value="/partida/juego/${partida.id}/cancelar" htmlEscape="true"/>' >Cancelar partida</a>
+    <a class="btn btn-default" href='<spring:url value="/partida/${partida.id}/cancelar" htmlEscape="true"/>' >Cancelar partida</a>
 	 </c:if>
 
    
