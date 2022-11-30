@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -54,6 +55,7 @@ public class Turno extends BaseEntity {
 	@JoinColumn(name = "ronda_id")
 	private Ronda ronda;
 	
+	@Transient
 	private EstadoTurno estadoTurno;
 
 	public Integer getNumTurno() {
