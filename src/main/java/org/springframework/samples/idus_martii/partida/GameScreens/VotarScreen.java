@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida.GameScreens;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.samples.idus_martii.turno.Turno;
@@ -16,7 +17,7 @@ public class VotarScreen implements GameScreen {
     private TurnoService turnoService;
 
     @Autowired
-    VotarScreen(PartidaService partidaService, TurnoService turnoService) {
+    VotarScreen(@Lazy PartidaService partidaService, @Lazy TurnoService turnoService) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
     }

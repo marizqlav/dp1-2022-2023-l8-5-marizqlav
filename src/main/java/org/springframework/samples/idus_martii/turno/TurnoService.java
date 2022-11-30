@@ -118,7 +118,7 @@ public class TurnoService {
     }
 
     
-    public void asignarRol(String rol, Jugador jugador, Integer turnoId) {
+    /*public void asignarRol(String rol, Jugador jugador, Integer turnoId) { //TODO revisar
     	
     	Turno turno = getById(turnoId);
     	int anterior = repo.findById(turnoId).get().getNumTurno()-1;
@@ -153,6 +153,6 @@ public class TurnoService {
     	turno.setEdil1(edilesTurnoActual.get(0));
     	turno.setEdil1(edilesTurnoActual.get(1));
     	save(turno);
-    }
+    }*/
 
 }

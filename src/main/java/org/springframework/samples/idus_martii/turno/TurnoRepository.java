@@ -21,8 +21,4 @@ public interface TurnoRepository extends CrudRepository<Turno, Integer>{
 	@Modifying
 	@Query(value = "INSERT INTO votos_turno(turno_id,jugador_id,tipo_Voto) VALUES (:turnoId,:jugadorId,:voto)", nativeQuery = true)
 	void anadirVotoTurno(@Param("turnoId") Integer turnoId, @Param("jugadorId") Integer jugadorId, @Param("voto") String voto);
-    
-    @Query("SELECT t FROM Turno t WHERE t.numTurno=:i")
-    Turno turnoPorNumero(@Param("i") Integer i);
-
 }

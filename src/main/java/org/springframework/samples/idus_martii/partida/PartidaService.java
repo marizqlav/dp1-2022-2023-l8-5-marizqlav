@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
@@ -48,7 +49,7 @@ public class PartidaService {
 
     @Autowired
     public PartidaService(PartidaRepository partidaRepo, TurnoService turnoService, RondaService rondaService, 
-        FaccionService faccionService, EstablecerRolesEstado establecerRolesEstado) {
+        FaccionService faccionService, @Lazy EstablecerRolesEstado establecerRolesEstado) {
         this.partidaRepo = partidaRepo;
         this.turnoService = turnoService;
         this.rondaService = rondaService;
