@@ -349,6 +349,8 @@ width:60px;
     background-color: #3e8e41;
 }
 </style>
+
+
 <idus_martii:layout pageName="tablero">
     <table id="tableroTable">
         <tbody>

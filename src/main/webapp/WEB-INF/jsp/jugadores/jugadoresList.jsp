@@ -11,9 +11,8 @@
     <table id="jugadoresTable" class="table table-striped">
         <thead>
         <tr>
+        	<th></th>
             <th>Nombre de usuario</th>
-            <th></th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -22,7 +21,7 @@
              	<td>                    
                   <c:if test="${jugador.user.photo == ''}">Sin foto de perfil</c:if>
                   <c:if test="${jugador.user.photo != ''}">
-                  	<img src="${jugador.user.photo}" width="100px" height="100px"  />
+                  	<a href="/jugadores/profile/${jugador.id}"><img src="${jugador.user.photo}" width="100px" height="100px"  /></a>  
                   </c:if>
                 </td>
                 <td>                    
@@ -32,5 +31,4 @@
         </c:forEach>
         </tbody>
     </table>
-	<a class="btn btn-default" href="/rondas/new">Crear nuevo jugador</a>
 </idus_martii:layout>

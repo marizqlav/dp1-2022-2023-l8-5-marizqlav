@@ -35,7 +35,18 @@ public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
 	@Query("SELECT j FROM Jugador j, User u WHERE u.username LIKE :username% AND j.user=u.id")
 	List<Jugador> findJugadorByUsername(@Param("username") String username);
 	
+	@Query(value ="SELECT a.jugador_id, a.jugador FROM amigos a WHERE a.jugador_id = :jugadorId AND a.jugador = :amigo", nativeQuery = true)	
+	<E> E noSonAmigos(@Param("jugadorId") int jugadorId, @Param("amigo")int amigo);
 	
+	@Query(value ="SELECT a.jugador_id FROM amigos a WHERE a.jugador = :jugadorId", nativeQuery = true)	
+	List<Integer> findPeticionesAmistadJugador(@Param("jugadorId") int jugadorId);
 	
+	@Query(value ="SELECT a.jugador_id FROM amigos a WHERE a.jugador = :jugadorId AND a.jugador_id = :amigoId", nativeQuery = true)	
+	Integer sonAmigos(@Param("jugadorId") int jugadorId,@Param("amigoId") int amigoId);
+	
+	@Transactional
+	@Modifying
+    @Query(value ="DELETE FROM amigos a where a.jugador=:jugadorId and a.jugador_id = :rechazadoId",nativeQuery = true)
+    void rechazarPeticion(@Param("jugadorId") int jugadorId,@Param("rechazadoId") int rechazadoId);
 
 }
