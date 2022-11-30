@@ -62,7 +62,6 @@
         	<th></th>
             <th>Creador</th>
             <th>Número de jugadores</th>
-            <th>Estado</th>
 
         </tr>
         </thead>
@@ -77,9 +76,6 @@
                 </td>
                 <td>                    
                       <c:out value="${partida.numeroJugadores}"/>                                        
-                </td>
-                <td>                    
-                      <c:out value="${partida.estadoPartida}"/>                                        
                 </td>
             </tr>
         </c:forEach>
