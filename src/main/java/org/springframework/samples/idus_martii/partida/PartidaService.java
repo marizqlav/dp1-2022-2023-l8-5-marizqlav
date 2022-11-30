@@ -14,19 +14,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.partida.Exceptions.CancelException;
+import org.springframework.samples.idus_martii.partida.Exceptions.CreationException;
+import org.springframework.samples.idus_martii.partida.Exceptions.InitiationException;
+import org.springframework.samples.idus_martii.partida.Exceptions.LobbyException;
+import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
-import org.springframework.samples.idus_martii.turno.EstadoTurno;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
+import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
+import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PartidaService {
+
+    private final Integer MAX_PLAYERS_NUM = 8;
+    private final Integer MIN_PLAYERS_NUM = 5;
     
     private PartidaRepository partidaRepo;
 
@@ -34,287 +45,107 @@ public class PartidaService {
     private TurnoService turnoService;
     private FaccionService faccionService;
 
+    private EstablecerRolesEstado establecerRolesEstado;
+
     @Autowired
     public PartidaService(PartidaRepository partidaRepo, TurnoService turnoService, RondaService rondaService, 
-        FaccionService faccionService) {
+        FaccionService faccionService, @Lazy EstablecerRolesEstado establecerRolesEstado) {
         this.partidaRepo = partidaRepo;
         this.turnoService = turnoService;
         this.rondaService = rondaService;
         this.faccionService = faccionService;
+
+        this.establecerRolesEstado = establecerRolesEstado;
     }
 
-    public void save(Partida partida) {
-        partidaRepo.save(partida);
-    }
-    
-    public void cancelarPartida(int id){
-    	partidaRepo.deleteById(id);
-    }
     
     public Partida findPartida(Integer id) {
         return partidaRepo.findById(id).get();
     }
-
+    
     public List<Jugador> findJugadores(Integer partidaId) {
         return partidaRepo.findJugadores(partidaId);
     }
     
-    public void IniciarPartida(Integer id, Lobby lobby) throws InitiationException {
-
-        Partida partida = findPartida(id);
-
-        //Restricciones
-        if (partida.getFechaInicio() != null) {
-            throw new InitiationException("No se puede iniciar una partida ya iniciada");
-        } else if (lobby.getJugadores().size() > 8) {
-            throw new InitiationException("Demasiados jugadores");
-        } else if (lobby.getJugadores().size() < 5) {
-            throw new InitiationException("No hay suficientes jugadores");
-        }
-
-    	partida.setFechaInicio(LocalDateTime.now());
-
-        List<Jugador> jugadores = lobby.getJugadores();
-
-        Ronda rondaInicial = new Ronda();
-        rondaInicial.setNumRonda(1);
-        rondaInicial.setPartida(partida);
-        partida.getRondas().add(rondaInicial);
-       
-        Turno turnoInicial = new Turno();
-        turnoInicial.setEstadoTurno(EstadoTurno.Elegir_rol);
-        turnoInicial.setNumTurno(1);
-        turnoInicial.setRonda(rondaInicial);
-        rondaInicial.getTurnos().add(turnoInicial);
-        
-        Function<Integer, Integer> addNumber = x -> (x >= jugadores.size() - 1) ? 0 : x + 1;
-
-        Integer n = (int) Math.floor((Math.random() * (partida.getNumeroJugadores())));
-
-        turnoInicial.setConsul(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setPredor(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil1(jugadores.get(n));
-        n = addNumber.apply(n);
-
-        turnoInicial.setEdil2(jugadores.get(n));
-        
-        rondaService.save(rondaInicial);
-        turnoService.save(turnoInicial);
-
-        List<FaccionesEnumerado> faccionesBag = new ArrayList<>();
-        for (int i = 0; i < 2; i++) { faccionesBag.add(FaccionesEnumerado.Mercader); }
-        for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Leal); }
-        for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Traidor); }
-
-        for (Jugador jugador : jugadores) {
-
-            Faccion faccion = new Faccion();
-            faccion.setJugador(jugador);
-            faccion.setPartida(partida);
-            faccion.setFaccionSelecionada(null);
-            
-            Integer r1 = (int) Math.floor(Math.random() * faccionesBag.size());
-            FaccionesEnumerado f1 = faccionesBag.get(r1);
-            faccionesBag.remove(f1);
-            faccion.setFaccionPosible1(f1);
-
-            Integer r2 = (int) Math.floor(Math.random() * faccionesBag.size());
-            FaccionesEnumerado f2 = faccionesBag.get(r2);
-            faccionesBag.remove(f2);
-            faccion.setFaccionPosible2(f2);
-
-            faccionService.save(faccion);
-        }
-
-        save(partida);
-    }
-    
-    public void rotarConsul(Integer partidaId) {
-    	if(findPartida(partidaId).getRondas().get(-1).getNumRonda() == 2) {
-        	List<Jugador> listaJugadores = partidaRepo.findJugadores(partidaId);
-        	List<Jugador> listaJugadores2 = partidaRepo.findJugadores(partidaId);
-
-            Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
-            
-            Turno turno = getTurnoActual(partidaId);
-
-            Integer posicionConsul = listaJugadores.indexOf(turno.getConsul());
-            Integer n =  posicionConsul + 1;
-
-            turno.setConsul(listaJugadores.get(n));
-            listaJugadores2.remove(n);
-            
-            n=addNumber.apply(n);
-            turnoService.save(turno);
-    	}
-    }
-
-    
-    public void rotarRoles(Integer partidaId) {
-    	
-    	List<Jugador> listaJugadores = partidaRepo.findJugadores(partidaId);
-        
-        Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
-        
-        Turno turno = getTurnoActual(partidaId);
-
-        Integer posicionConsul = listaJugadores.indexOf(turno.getConsul());
-        Integer n =  posicionConsul + 1;
-
-        turno.setConsul(listaJugadores.get(n));
-        n = addNumber.apply(n);
-
-        turno.setPredor(listaJugadores.get(n));
-        n = addNumber.apply(n);
-
-        turno.setEdil1(listaJugadores.get(n));
-        n = addNumber.apply(n);
-
-        turno.setEdil2(listaJugadores.get(n));
-        n = addNumber.apply(n);
-        
-        turnoService.save(turno);
-    }
-        
-    private void finalizarRonda(Integer partidaId) {
-        Ronda ronda = getRondaActual(partidaId);
-
-    	if (ronda.getNumRonda() == 1) {
-    		iniciarRonda(ronda.getPartida().getId());
-    	} else {
-    		terminarPartida(ronda.getPartida());
-    	}
-    }
-    
-    
-    public void siguienteTurno(Integer partidaId) {
-        Turno turno = getTurnoActual(partidaId);
-
-        if (turno.getNumTurno() == findJugadores(partidaId).size()) {
-            finalizarRonda(partidaId);
-        }
-        iniciarTurno(partidaId);
-    }
-
-    private void iniciarRonda(Integer partidaId) { //Use instead of iniciarTurno for new Ronda
-		Partida partida = findPartida(partidaId);
-
-		Ronda ronda = new Ronda();
-        ronda.setNumRonda(getRondaActual(partidaId).getNumRonda() + 1);
-        ronda.setPartida(partida);
-        
-        rondaService.save(ronda);
-	}
-
-    public void iniciarTurno(Integer partidaId) {
-        Turno turno = new Turno();
-        turno.setNumTurno(getTurnoActual(partidaId).getNumTurno() + 1);
-        turno.setRonda(getRondaActual(partidaId));
-
-        turnoService.save(turno);
-    }
-         
-	private void terminarPartida(Partida partida) {
-		partida.setFechaFin(LocalDateTime.now());
-		partida.actualizarVotos();
-		int votosTotalesLeal = partida.getVotosLeales();
-		int votosTotalesTraidor =  partida.getVotosTraidores();
-		
-		if(Math.max(votosTotalesLeal, votosTotalesTraidor)>partida.limite ) {
-			int contadorLeales= 0;
-			int contadorTraidores= 0;
-			
-			for(Faccion f: faccionService.getFaccionesPartida(partida.getId())) {
-				if (f.getFaccionSelecionada() == FaccionesEnumerado.Leal) {
-					contadorLeales= contadorLeales+1;
-				} else if(f.getFaccionSelecionada() == FaccionesEnumerado.Traidor){
-					contadorTraidores = contadorTraidores+1;
-				}
-			}
-			if(contadorLeales == 0 || contadorTraidores == 0) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-			} else if(votosTotalesLeal>votosTotalesTraidor) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
-			} else if(votosTotalesLeal<votosTotalesTraidor){
-				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
-			} else {
-				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-			}
-		} else {
-			if(Math.abs(votosTotalesLeal-votosTotalesTraidor) <= 1) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-			} else if(votosTotalesLeal>votosTotalesTraidor) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
-			} else {
-				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
-			}
-		}
-		
-		
-	}
-	
-
     List<Partida> getPartidas() {
-		return partidaRepo.findAll();
-	}
+        return partidaRepo.findAll();
+    }
     
     List<Partida> getPartidasEnJuego() {
-		return partidaRepo.findAllEnJuego();
-	}
+        return partidaRepo.findAllEnJuego();
+    }
 
-    Partida getPartidaIniciada(int idpartida) {
-		return partidaRepo.findPartidaIniciada(idpartida);
-	}
+    List<Partida> getPartidasFinalizadasJugador(Integer idJugador) {
+        return partidaRepo.findAllFinalizadasJugador(idJugador);
+    }
 
-    List<Partida> getPartidasFinalizadasJugador(int idjugador) {
-		return partidaRepo.findAllFinalizadasJugador(idjugador);
-	}
+    public void crearPartida(Partida partida, Jugador jugador) throws CreationException {
+        if (jugadorPartidaEnCurso(jugador.getId()) != null) {
+            throw new CreationException("No se puede crear una partida si el jugador tiene una partida sin terminar");
+        }
+        partida.setFechaCreacion(LocalDateTime.now());
+        partida.setJugador(jugador);
 
-    Lobby getLobby(int idpartida) {
+        createLobby(partida.getId());
+
+        partidaRepo.save(partida);
+    }
+    
+    public void cancelarPartida(Integer id) throws CancelException {
+        if (findPartida(id).iniciada()) {
+            throw new CancelException("No se puede cancelar una partida iniciada");
+            //This ride only stops in an emergency. Crying is not an emergency.
+        }
+        partidaRepo.deleteById(id);
+    }
+
+    Lobby getLobby(Integer idpartida) {
 		return partidaRepo.getLobby(idpartida);
 	}
     
-    Integer anadirLobby(int idlobby, int idpartida) {
-		return partidaRepo.anadirLobby(idlobby, idpartida);
+    Integer createLobby(Integer idpartida) {
+		return partidaRepo.createLobby(idpartida, idpartida);
 	}
     
-    Integer anadirJugadorLobby(int idjugador, int idlobby) {
-		return partidaRepo.anadirJugadorLobby(idjugador, idlobby);
+    Integer addJugadorLobby(Integer idjugador, Integer idlobby) throws LobbyException {
+        if (findJugadorInLobby(idjugador, idlobby) == null) {
+            return partidaRepo.addJugadorLobby(idjugador, idlobby);
+        } else {
+            throw new LobbyException("El jugador ya está en el lobby");
+        }
 	}
     
-    Jugador findJugadorInLobby(int idjugador, int idlobby) {
+    Jugador findJugadorInLobby(Integer idjugador, Integer idlobby) {
 		return partidaRepo.findJugadorInLobby(idjugador, idlobby);
 	}
+
+    boolean checkLobbyFull(Integer partidaId) throws LobbyException {
+        Partida partida = findPartida(partidaId);
+        if (partida == null) {
+            throw new LobbyException("Esta partida no existe");
+        }
+
+        if (partida.iniciada() || findJugadores(partidaId).size() == getLobby(partidaId).getJugadores().size()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
-    Partida jugadorPartidaEnCurso(int idjugador) {
+    Partida jugadorPartidaEnCurso(Integer idjugador) {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
 
-    Turno getTurnoActual(Integer partidaId) {
+    public Turno getTurnoActual(Integer partidaId) {
     	Partida p = partidaRepo.findById(partidaId).get();
     	Ronda r = p.getRondas().get(p.getRondas().size()-1);
     	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
     	return t;
     }
     
-    Ronda getRondaActual(Integer partidaId) {
+    public Ronda getRondaActual(Integer partidaId) {
     	return partidaRepo.findById(partidaId).get().getRondas()
             .get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
-
-    }
-    
-    Integer getVotosFavor(Integer partidaId) {
-    	return partidaRepo.getVotosFavor(partidaId).stream().mapToInt(Integer::intValue).sum();
-
-    }
-    
-    Integer getVotosContra(Integer partidaId){
-    	return partidaRepo.getVotosContra(partidaId).stream().mapToInt(Integer::intValue).sum();
-
     }
     
     public int getVictoriasJugador(Jugador jugador) {
@@ -333,7 +164,7 @@ public class PartidaService {
     	return stats;
     }
     
-    public Map<String, Duration> duracionPartidasJugador(Jugador jugador){
+    public Map<String, Duration> duracionPartidasJugador(Jugador jugador) {
     	 Map<String, Duration> stats = new HashMap<String, Duration>();
     	 Duration min = null;
     	 Duration max = null;
@@ -388,4 +219,122 @@ public class PartidaService {
    	 stats.put("media", sum/partidaRepo.findAllFinalizadasJugador(jugador.getId()).size());
    	 return stats;
    }
+
+    public void iniciarPartida(Integer partidaId, Integer lobbyId) throws InitiationException {
+
+        Partida partida = findPartida(partidaId);
+        Lobby lobby = getLobby(lobbyId);
+
+        //Restricciones
+        if (partida.iniciada() == true) {
+            throw new InitiationException("No se puede iniciar una partida ya iniciada");
+
+        } else if (lobby.getJugadores().size() > MAX_PLAYERS_NUM) {
+            throw new InitiationException("Demasiados jugadores");
+
+        } else if (lobby.getJugadores().size() < MIN_PLAYERS_NUM) {
+            throw new InitiationException("No hay suficientes jugadores");
+        }
+
+    	partida.setFechaInicio(LocalDateTime.now());
+
+        List<Jugador> jugadores = lobby.getJugadores();
+
+        Ronda rondaInicial = new Ronda();
+        rondaInicial.setPartida(partida);
+        partida.getRondas().add(rondaInicial);
+       
+        Turno turnoInicial = new Turno();
+        turnoInicial.setEstadoTurno(establecerRolesEstado);
+        turnoInicial.setRonda(rondaInicial);
+        rondaInicial.getTurnos().add(turnoInicial);
+        
+        partidaRepo.save(partida);
+        rondaService.save(rondaInicial);
+        turnoService.save(turnoInicial);
+
+        List<FaccionesEnumerado> faccionesBag = new ArrayList<>();
+        for (int i = 0; i < 2; i++) { faccionesBag.add(FaccionesEnumerado.Mercader); }
+        for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Leal); }
+        for (int i = 0; i < jugadores.size() - 1; i++) { faccionesBag.add(FaccionesEnumerado.Traidor); }
+
+        for (Jugador jugador : jugadores) {
+
+            Faccion faccion = new Faccion();
+            faccion.setJugador(jugador);
+            faccion.setPartida(partida);
+            faccion.setFaccionSelecionada(null);
+            
+            Integer r1 = (int) Math.floor(Math.random() * faccionesBag.size());
+            FaccionesEnumerado f1 = faccionesBag.get(r1);
+            faccionesBag.remove(f1);
+            faccion.setFaccionPosible1(f1);
+
+            Integer r2 = (int) Math.floor(Math.random() * faccionesBag.size());
+            FaccionesEnumerado f2 = faccionesBag.get(r2);
+            faccionesBag.remove(f2);
+            faccion.setFaccionPosible2(f2);
+
+            faccionService.save(faccion);
+        }
+
+        partidaRepo.save(partida);
+    }
+
+    public void handleTurn(Integer partidaId) throws NotFoundException {
+        Partida partida = findPartida(partidaId);
+
+        if (partida == null || !partida.iniciada()) {
+            throw new NotFoundException("No se encontró ninguna partida activa");
+        }
+
+        Turno turno = getTurnoActual(partidaId);
+        turno.getEstadoTurno().takeAction(turno);
+
+        EstadoTurno next = turno.getEstadoTurno().getNextState(turno);
+        if (next != null) {
+            turno.setEstadoTurno(next);
+        }
+    }
+    
+    public GameScreen getCurrentGameScreen(Integer partidaId) {
+        Turno turno = getTurnoActual(partidaId);
+        return turno.getEstadoTurno().getGameScreen();
+    }
+             
+	public void terminarPartida(Partida partida) {
+		partida.setFechaFin(LocalDateTime.now());
+		int votosTotalesLeal = partida.getVotosLeales();
+		int votosTotalesTraidor =  partida.getVotosTraidores();
+		
+		if (Math.max(votosTotalesLeal, votosTotalesTraidor) > partida.getLimite() ) {
+			int contadorLeales = 0;
+			int contadorTraidores = 0;
+			
+			for (Faccion f: faccionService.getFaccionesPartida(partida.getId())) {
+				if (f.getFaccionSelecionada() == FaccionesEnumerado.Leal) {
+					contadorLeales= contadorLeales + 1;
+				} else if (f.getFaccionSelecionada() == FaccionesEnumerado.Traidor){
+					contadorTraidores = contadorTraidores + 1;
+				}
+			}
+			if(contadorLeales == 0 || contadorTraidores == 0) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+			} else if (votosTotalesLeal > votosTotalesTraidor) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
+			} else if (votosTotalesLeal < votosTotalesTraidor){
+				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
+			} else {
+				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+			}
+		} else {
+			if (Math.abs(votosTotalesLeal - votosTotalesTraidor) <= 1) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
+			} else if (votosTotalesLeal > votosTotalesTraidor) {
+				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
+			} else {
+				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
+			}
+		}		
+	}
 }

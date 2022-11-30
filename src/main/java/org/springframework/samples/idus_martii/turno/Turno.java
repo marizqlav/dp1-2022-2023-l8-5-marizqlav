@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.model.BaseEntity;
 import org.springframework.samples.idus_martii.ronda.Ronda;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,11 +25,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "turno")
 public class Turno extends BaseEntity {
-	
-	@NotNull
-	@Column(name = "turno_partida")
-	private Integer numTurno;
-    
+	    
 	@ManyToOne
     private Jugador consul;
 
@@ -56,9 +55,16 @@ public class Turno extends BaseEntity {
 	@JoinColumn(name = "ronda_id")
 	private Ronda ronda;
 	
-	
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private EstadoTurno estadoTurno = EstadoTurno.Principio_turno;
+	@Transient
+	private EstadoTurno estadoTurno;
+
+	public Integer getNumTurno() {
+		for (int i = 1; i < ronda.getTurnos().size(); i++) {
+			if (ronda.getTurnos().get(i).getId() == this.getId()) {
+				return i;
+			}
+		}
+		return null;
+	}
 	
 }
