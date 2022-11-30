@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class UserController {
 
-	private static final String VIEWS_OWNER_CREATE_FORM = "users/createOwnerForm";
 	private static final String VIEWS_JUGADOR_CREATE_FORM = "users/createJugadorForm";
 	private final JugadorService jugadorService;
 
