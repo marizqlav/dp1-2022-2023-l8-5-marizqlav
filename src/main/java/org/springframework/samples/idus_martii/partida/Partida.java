@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,13 +22,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-
+import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.partida.Exceptions.DatesException;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.turno.Turno;
 
@@ -40,85 +42,27 @@ import lombok.Setter;
 @Table(name = "partida")
 public class Partida extends BaseEntity {
 
-
+	@NotNull
     @Min(5)
     @Max(8)
     private Integer numeroJugadores;
 
-    
 	@Enumerated(EnumType.STRING)
     FaccionesEnumerado faccionGanadora;
-
 
     private LocalDateTime fechaCreacion;
 
     private LocalDateTime fechaInicio;
 
     private LocalDateTime fechaFin;
-    
-    @Column(name = "votos_leales")
-   	int votosLeales;
-   	
-   	@Column(name = "votos_traidores")
-   	int votosTraidores;
-   	
-   	@Column(name = "limite")
-   	int limite;
-    
-    public Integer votosLeal(Turno t) {
-    	return t.getVotosLeales() + votosLeal(t);
-    }
-    
-    public Integer votosTraidores(Turno t) {
-    	return t.getVotosTraidores() + votosTraidores(t);
-    }
-
-
-    public String getDuration() {
-    	if(this.fechaFin==null)
-    		return "No finalizada";
-    	else
-    		return Duration.between(fechaInicio, fechaFin).toString().substring(2).replace("M", " minutos ").replace("S", " segundos ");
-    }
-    
-    public String getFechaCreacionParseada() {
-    	if(this.fechaCreacion==null)
-    		return "No creada";
-    	else
-    		return this.fechaCreacion.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaCreacion.toString().length()-7);
-    }
-    
-    public String getFechaInicioParseada() {
-    	if(this.fechaInicio==null)
-    		return "No iniciada";
-    	else
-    		return this.fechaInicio.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaCreacion.toString().length()-7);
-    }
-    
-    public String getFechaFinParseada() {
-    	if(this.fechaFin==null)
-    		return "No finalizada";
-    	else
-    		return this.fechaFin.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaCreacion.toString().length()-7);
-    }
-    public String getEstadoPartida() {
-    	if(this.fechaInicio==null)
-    		return "Esperando jugadores";
-    	else
-    		if(this.fechaInicio!=null && this.fechaFin==null)
-    			return "En juego";
-    		else
-    			return "Finalizada";
-    }
-    
-
+        
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     Set<Faccion> faccionesJugadoras;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "partida")
-    List<Ronda> rondas = new ArrayList();
+    List<Ronda> rondas;
     
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida") //TODO mappedBy
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     List<Mensaje> mensajes;
 
     @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
@@ -132,9 +76,49 @@ public class Partida extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "jugador_id"))
     Set<Jugador> espectadores;
     
+	public Duration getDuration() throws DatesException {
+    	if (this.fechaFin == null)
+    		throw new DatesException("Partida no terminada");
+    	else
+    		return Duration.between(fechaInicio, fechaFin);
+    }
     
-    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
-    Lobby lobby;
+	public boolean iniciada() {
+		return fechaInicio != null;
+	}
 
-    
+    public Integer getVotosLeales() {
+        Integer n = 0;
+        for (Ronda r : getRondas()) {
+            for (Turno t : r.getTurnos()) {
+                n += t.getVotosLeales();
+            }
+        }
+        return n;
+    }
+
+    public Integer getVotosTraidores() {
+        Integer n = 0;
+        for (Ronda r : getRondas()) {
+            for (Turno t : r.getTurnos()) {
+                n += t.getVotosTraidores();
+            }
+        }
+        return n;
+    }
+
+    public Integer getLimite() {
+        if (getNumeroJugadores() == 5) {
+            return 13;
+        } else
+        if (getNumeroJugadores() == 6) {
+            return 15;
+        } else
+        if (getNumeroJugadores() == 7) {
+            return 17;
+        } else
+        {
+            return 20;
+        }
+    }
 }

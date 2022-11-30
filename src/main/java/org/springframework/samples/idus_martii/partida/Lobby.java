@@ -32,5 +32,4 @@ public class Lobby extends BaseEntity {
     @OneToOne(cascade = CascadeType.REMOVE)
 	private Partida partida;
     
-   
 }

@@ -30,8 +30,7 @@
 					<a href="/jugadores/profile/${jugador.id}" target="_blank"><c:out value="${jugador.user.username}"/></a>
                 </td>
 
-            </tr>
-           
+            </tr>    
         </c:forEach>
         </tbody>
     </table>
@@ -39,10 +38,10 @@
 
  
     <c:if test="${partida.jugador.user.username == pageContext.request.userPrincipal.name}">
-    <a class="btn btn-default" href='<spring:url value="/partida/juego/${partida.id}/cancelar" htmlEscape="true"/>' >Cancelar partida</a>
     <c:if test="${jugadores.size()==partida.numeroJugadores}">
 	<a class="btn btn-default" href='<spring:url value="/partida/juego/${partida.id}/iniciar" htmlEscape="true"/>' >Comenzar partida</a>
 	</c:if>
+    <a class="btn btn-default" href='<spring:url value="/partida/${partida.id}/cancelar" htmlEscape="true"/>' >Cancelar partida</a>
 	 </c:if>
 
    

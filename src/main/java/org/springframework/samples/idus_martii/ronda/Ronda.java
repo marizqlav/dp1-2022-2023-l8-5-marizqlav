@@ -31,11 +31,15 @@ public class Ronda extends BaseEntity {
 	@ManyToOne(cascade = CascadeType.REMOVE)
     Partida partida;
 	
-	@Column(name = "num_ronda")
-	@Min(1)
-	@Max(2)
-	Integer numRonda;
-
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "ronda")
 	List<Turno> turnos = new ArrayList();
+	
+	public Integer getNumRonda() {
+		for (int i = 1; i < partida.getRondas().size(); i++) {
+			if (partida.getRondas().get(i).getId() == this.getId()) {
+				return i;
+			}
+		}
+		return null;
+	}
 }
