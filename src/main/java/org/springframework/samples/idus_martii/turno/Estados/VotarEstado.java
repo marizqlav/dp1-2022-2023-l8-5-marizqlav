@@ -17,27 +17,28 @@ public class VotarEstado implements EstadoTurno {
 
     private VotarScreen votarScreen;
 
-    private CambiarVotosEstado cambiarVotosEstado;
+    private EspiarEstado espiarEstado;
 
     @Autowired
-    VotarEstado(PartidaService partidaService, TurnoService turnoService, VotarScreen votarScreen, CambiarVotosEstado cambiarVotosEstado) {
+    VotarEstado(PartidaService partidaService, TurnoService turnoService, VotarScreen votarScreen, EspiarEstado espiarEstado) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
 
         this.votarScreen = votarScreen;
 
-        this.cambiarVotosEstado = cambiarVotosEstado;
+        this.espiarEstado = espiarEstado;
     }
 
     @Override
     public void takeAction(Turno context) {        
+        
     }
 
     @Override
     public EstadoTurno getNextState(Turno turno) {
 
         if (turno.getVotosLeales() == 2 || turno.getVotosTraidores() == 2 || (turno.getVotosLeales() == 1 && turno.getVotosTraidores() == 1)) {
-        	return cambiarVotosEstado;
+        	return espiarEstado;
         }
         return null;
     }

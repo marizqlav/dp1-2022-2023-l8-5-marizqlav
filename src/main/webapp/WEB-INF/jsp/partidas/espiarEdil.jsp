@@ -360,21 +360,21 @@ width:60px;
 		        </td>
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado">Puedes ver uno de los votos</span>
-	        		<c:if test="${ronda.numRonda == 1 && jugador.user.username == turno.predor.user.username && votoEdil1.cambiado==null &&votoEdil1.espiado=='Si'}">
-	        			<c:if test="${votoEdil1.tipoVoto=='Negativo'}">
+	        		<c:if test="${votoEdil1.cambiado == false && votoEdil1.espiado == true}">
+	        			<c:if test="${votoEdil1.tipoVoto == 'Negativo'}">
 	        			<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
 	        			</c:if>
-	        			<c:if test="${votoEdil1.tipoVoto=='Positivo'}">
+	        			<c:if test="${votoEdil1.tipoVoto == 'Positivo'}">
 	        			<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
 	        			
 	        			</c:if>
 	        			<span id="voto1">Voto de <c:out value="${turno.edil1.user.username}"/></span>
 	        		</c:if>
-	        		<c:if test="${ronda.numRonda == 1 && jugador.user.username == turno.predor.user.username && votoEdil2.cambiado==null && votoEdil2.espiado=='Si'}">
-	        			<c:if test="${votoEdil2.tipoVoto=='Negativo'}">
+	        		<c:if test="${votoEdil2.cambiado == false && votoEdil2.espiado == true}">
+	        			<c:if test="${votoEdil2.tipoVoto == 'Negativo'}">
 	        				<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
 	        			</c:if>
-	        			<c:if test="${votoEdil2.tipoVoto=='Positivo'}">
+	        			<c:if test="${votoEdil2.tipoVoto == 'Positivo'}">
 	        				<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
 	        			</c:if>
 	        			<span id="voto1">Voto de <c:out value="${turno.edil2.user.username}"/></span>

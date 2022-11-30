@@ -25,6 +25,6 @@ public class VotosTurno extends BaseEntity{
 	Jugador jugador;
 	
 	String tipoVoto; //TODO esto debería ser un enumerado
-	Boolean espiado;
-	Boolean cambiado;
+	Boolean espiado = false;
+	Boolean cambiado = false;
 }

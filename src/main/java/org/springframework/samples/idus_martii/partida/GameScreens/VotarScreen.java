@@ -29,7 +29,7 @@ public class VotarScreen implements GameScreen {
     @Override
     public ModelAndView getView(Integer partidaId, Jugador jugadorConectado) {
         Turno turno = partidaService.getTurnoActual(partidaId);
-        VotosTurno votoTurno = turnoService.conocerVoto(turno.getId(), jugadorConectado.getId());
+        VotosTurno votoTurno = turnoService.findVoto(turno.getId(), jugadorConectado.getId());
 
         if ((jugadorConectado.equals(turno.getEdil1()) || jugadorConectado.equals(turno.getEdil2())) && votoTurno == null) {
             return new ModelAndView("partidas/votar"); //TODO mirar cambiar por el jsp en vez del redirect
