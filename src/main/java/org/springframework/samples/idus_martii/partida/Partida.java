@@ -76,6 +76,9 @@ public class Partida extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "jugador_id"))
     Set<Jugador> espectadores;
     
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
+	private Lobby lobby;
+    
 	public Duration getDuration() throws DatesException {
     	if (this.fechaFin == null)
     		throw new DatesException("Partida no terminada");
