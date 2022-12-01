@@ -75,9 +75,9 @@ public class PartidaRepositoryTest {
 //	Lobby getLobby(@Param("idpartida") int idpartida);
 	@Test
 	public void testGetLobby() {
-		Lobby lobby=partidaRepository.getLobby(1);
-//		assertNotNull(lobby);
-//		assertFalse(lobby.isNew());
+		Lobby lobbyPartida=partidaRepository.getLobby(1);
+		assertNotNull(lobbyPartida);
+		assertFalse(lobbyPartida.isNew());
 
 	}
 	
@@ -87,37 +87,20 @@ public class PartidaRepositoryTest {
 //	Jugador findJugadorInLobby(@Param("idjugador") Integer idjugador,@Param("idlobby") Integer idlobby);
     
 	public void testFindJugadorInLobby() {
-		Jugador jugador=partidaRepository.findJugadorInLobby(1, 1);
-//		assertNotNull(lobby);
-//		assertFalse(lobby.isNew());
+		Jugador jugadorInLobby=partidaRepository.findJugadorInLobby(1, 1);
+		assertNotNull(jugadorInLobby);
+		assertFalse(jugadorInLobby.isNew());
 
 	}
-	
-//    @Query("SELECT t.votosLeales FROM Turno t WHERE t.ronda.partida.id = :idpartida")
-//	List<Integer> getVotosFavor(@Param("idpartida") Integer idpartida);
-	@Test
-	public void testGetVotosFavor() {
-		List<Integer> totalVotosAFavor=partidaRepository.getVotosFavor(1);
-		assertNotNull(totalVotosAFavor);
-		assertFalse(totalVotosAFavor.isEmpty());
-	}
 
-	@Test
-	public void testGetVotosContra() {
-		List<Integer> totalVotosAContra=partidaRepository.getVotosContra(1);
-		assertNotNull(totalVotosAContra);
-		assertFalse(totalVotosAContra.isEmpty());
-	}
-
-	//    @Query("SELECT p FROM Partida p, Faccion f, Jugador j WHERE p.id = f.partida AND f.jugador = j.id "
+//    @Query("SELECT p FROM Partida p, Faccion f, Jugador j WHERE p.id = f.partida AND f.jugador = j.id "
 //    		+ "AND j.id = :idjugador AND p.fechaFin IS NOT NULL AND p.faccionGanadora = f.faccionSelecionada ")
 //    List<Partida> findPartidasGanadas(@Param("idjugador") int idjugador);
-	//Como no hay partidas partidas se tiene q poner q es True q esta vacia la lista
 	@Test
 	public void testFindPartidasGanadas() {
 		List<Partida> listaPartidasGanadas=partidaRepository.findPartidasGanadas(1);
 		assertNotNull(listaPartidasGanadas);
-		assertTrue(listaPartidasGanadas.isEmpty());
+		assertFalse(listaPartidasGanadas.isEmpty());
 	}
 	
 }
