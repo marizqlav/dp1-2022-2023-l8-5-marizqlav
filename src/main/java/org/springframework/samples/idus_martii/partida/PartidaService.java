@@ -290,11 +290,9 @@ public class PartidaService {
 
         Turno turno = getTurnoActual(partidaId);
 
-        System.out.println("aaaaaaaaaaaa");
         EstadoTurno estado = estadoTurnoConverter.convert(turno.getEstadoTurno());
-        System.out.println("bbbbbbbbbbbb");
+
         estado.takeAction(turno);
-        System.out.println("ccccccccccccccc");
 
         turno.setEstadoTurno(estado.getNextState(turno));
         turnoService.save(turno);
