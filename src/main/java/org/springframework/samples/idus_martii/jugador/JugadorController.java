@@ -80,10 +80,13 @@ public class JugadorController {
 	        		User currentUser = (User) authentication.getPrincipal();
 	        		System.out.println(currentUser.getUsername());
 	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
-	        		result.addObject("currentPlayer", jugadoractual);
-	        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
-	        		System.out.println(noSonAmigos);
-	        		result.addObject("noSonAmigos", noSonAmigos);
+	        		result.addObject("privilegios",currentUser.getAuthorities());
+	        		if(jugadoractual!=null) {
+	        			result.addObject("currentPlayer", jugadoractual);
+		        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
+		        		System.out.println(noSonAmigos);
+		        		result.addObject("noSonAmigos", noSonAmigos);
+	        		}
 	        	}
 	        	else
 	        		System.out.println("El usuario no está autentificado");
@@ -225,4 +228,13 @@ public class JugadorController {
 	        result.addObject("selections", amigos);
 	        return result;          
 		}
+		
+		   @Transactional()
+		    @GetMapping("/jugadores/eliminar/{jugadorId}")
+		    public ModelAndView deleteTurno(@PathVariable int jugadorId){
+		        jugadorService.deleteJugadorById(jugadorId);        
+		        ModelAndView result= new ModelAndView("redirect:/");
+		        result.addObject("message", "El jugador se ha eliminado correctamente");
+		        return result;
+		    }
 }
