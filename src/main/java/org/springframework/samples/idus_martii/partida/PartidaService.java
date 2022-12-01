@@ -30,6 +30,8 @@ import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverter;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoEnum;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -45,17 +47,17 @@ public class PartidaService {
     private TurnoService turnoService;
     private FaccionService faccionService;
 
-    private EstablecerRolesEstado establecerRolesEstado;
+    private EstadoTurnoConverter estadoTurnoConverter;
 
     @Autowired
     public PartidaService(PartidaRepository partidaRepo, TurnoService turnoService, RondaService rondaService, 
-        FaccionService faccionService, @Lazy EstablecerRolesEstado establecerRolesEstado) {
+        FaccionService faccionService, @Lazy EstadoTurnoConverter estadoTurnoConverter) {
         this.partidaRepo = partidaRepo;
         this.turnoService = turnoService;
         this.rondaService = rondaService;
         this.faccionService = faccionService;
 
-        this.establecerRolesEstado = establecerRolesEstado;
+        this.estadoTurnoConverter = estadoTurnoConverter;
     }
 
     
@@ -244,7 +246,7 @@ public class PartidaService {
         rondaInicial.setPartida(partida);
        
         Turno turnoInicial = new Turno();
-        turnoInicial.setEstadoTurno(establecerRolesEstado);
+        turnoInicial.setEstadoTurno(EstadoTurnoEnum.EstablecerRoles);
         turnoInicial.setRonda(rondaInicial);
         
         partidaRepo.save(partida);
@@ -287,17 +289,20 @@ public class PartidaService {
         }
 
         Turno turno = getTurnoActual(partidaId);
-        turno.getEstadoTurno().takeAction(turno);
 
-        EstadoTurno next = turno.getEstadoTurno().getNextState(turno);
-        if (next != null) {
-            turno.setEstadoTurno(next);
-        }
+        System.out.println("aaaaaaaaaaaa");
+        EstadoTurno estado = estadoTurnoConverter.convert(turno.getEstadoTurno());
+        System.out.println("bbbbbbbbbbbb");
+        estado.takeAction(turno);
+        System.out.println("ccccccccccccccc");
+
+        turno.setEstadoTurno(estado.getNextState(turno));
+        turnoService.save(turno);
     }
     
     public GameScreen getCurrentGameScreen(Integer partidaId) {
         Turno turno = getTurnoActual(partidaId);
-        return turno.getEstadoTurno().getGameScreen();
+        return estadoTurnoConverter.convert(turno.getEstadoTurno()).getGameScreen();
     }
              
 	public void terminarPartida(Partida partida) {

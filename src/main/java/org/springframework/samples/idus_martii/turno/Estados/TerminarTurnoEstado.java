@@ -18,17 +18,13 @@ public class TerminarTurnoEstado implements EstadoTurno {
     RondaService rondaService;
     TurnoService turnoService;
 
-    EstablecerRolesEstado establecerRolesEstado;
-
     DefaultScreen defaultScreen;
 
     @Autowired
-    TerminarTurnoEstado(PartidaService partidaService, RondaService rondaService, TurnoService turnoService, EstablecerRolesEstado establecerRolesEstado, DefaultScreen defaultScreen) {
+    TerminarTurnoEstado(PartidaService partidaService, RondaService rondaService, TurnoService turnoService, DefaultScreen defaultScreen) {
         this.partidaService = partidaService;
         this.rondaService = rondaService;
         this.turnoService = turnoService;
-
-        this.establecerRolesEstado = establecerRolesEstado;
 
         this.defaultScreen = defaultScreen;
     }
@@ -75,9 +71,9 @@ public class TerminarTurnoEstado implements EstadoTurno {
 	}
 
     @Override
-    public EstadoTurno getNextState(Turno context) {
+    public EstadoTurnoEnum getNextState(Turno context) {
         if (context.getRonda().getNumRonda() == 1) { //TODO Comprobar final ronda
-            return establecerRolesEstado;
+            return EstadoTurnoEnum.EstablecerRoles;
         } else {
             return null; //TODO devolver el otro estado
         }

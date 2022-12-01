@@ -16,6 +16,7 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.model.BaseEntity;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoEnum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -55,13 +56,12 @@ public class Turno extends BaseEntity {
 	@JoinColumn(name = "ronda_id")
 	private Ronda ronda;
 	
-	@Transient
-	private EstadoTurno estadoTurno;
+	private EstadoTurnoEnum estadoTurno;
 
 	public Integer getNumTurno() {
-		for (int i = 1; i < ronda.getTurnos().size(); i++) {
+		for (int i = 0; i < ronda.getTurnos().size(); i++) {
 			if (ronda.getTurnos().get(i).getId() == this.getId()) {
-				return i;
+				return i + 1;
 			}
 		}
 		return null;

@@ -35,9 +35,9 @@ public class Ronda extends BaseEntity {
 	List<Turno> turnos = new ArrayList();
 	
 	public Integer getNumRonda() {
-		for (int i = 1; i < partida.getRondas().size(); i++) {
+		for (int i = 0; i < partida.getRondas().size(); i++) {
 			if (partida.getRondas().get(i).getId() == this.getId()) {
-				return i;
+				return i + 1;
 			}
 		}
 		return null;
