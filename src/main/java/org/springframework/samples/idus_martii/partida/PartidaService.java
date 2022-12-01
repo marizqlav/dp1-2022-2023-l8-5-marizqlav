@@ -242,12 +242,10 @@ public class PartidaService {
 
         Ronda rondaInicial = new Ronda();
         rondaInicial.setPartida(partida);
-        partida.getRondas().add(rondaInicial);
        
         Turno turnoInicial = new Turno();
         turnoInicial.setEstadoTurno(establecerRolesEstado);
         turnoInicial.setRonda(rondaInicial);
-        rondaInicial.getTurnos().add(turnoInicial);
         
         partidaRepo.save(partida);
         rondaService.save(rondaInicial);
