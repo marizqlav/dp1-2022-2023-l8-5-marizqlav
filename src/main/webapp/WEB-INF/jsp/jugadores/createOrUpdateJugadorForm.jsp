@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <idus_martii:layout pageName="jugadores">
     <h2>
-        <c:if test="${jugador['new']}">New </c:if> Jugador
+        <c:if test="${jugador['new']}">New </c:if> Jugffffador
     </h2>
     <form:form modelAttribute="jugador" class="form-horizontal" id="add-jugador-form">
         <div class="form-group has-feedback">

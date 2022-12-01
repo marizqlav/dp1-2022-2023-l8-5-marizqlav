@@ -55,9 +55,6 @@ public class Jugador extends BaseEntity{
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
-	
-    //@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "jugador")
-    //private Set<Partida> partidasCreadas;
 
 	
 	@ManyToMany

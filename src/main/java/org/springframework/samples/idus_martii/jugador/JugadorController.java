@@ -76,21 +76,24 @@ public class JugadorController {
 		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		 ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
 	     result.addObject("jugador", jugador);
-	       
-	     if(authentication!=null)
-	    	 if(authentication.isAuthenticated()) {
-	        	User currentUser = (User) authentication.getPrincipal();
-	        	System.out.println(currentUser.getUsername());
-	        	Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
-	        	if(jugadoractual!=null) {
-		        	result.addObject("currentPlayer", jugadoractual);
-		        	Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
-		        	System.out.println(noSonAmigos);
-		        	result.addObject("noSonAmigos", noSonAmigos);
-		        	if(jugadoractual.getId() == jugador.getId()) {
-		        		Boolean esTuPerfil=true;
-		        		result.addObject("esTuPerfil", esTuPerfil);
-		        	}
+
+	        if(authentication!=null) {
+	        	if(authentication.isAuthenticated()) {
+	        		User currentUser = (User) authentication.getPrincipal();
+	        		System.out.println(currentUser.getUsername());
+	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
+	        		result.addObject("privilegios",currentUser.getAuthorities());
+	        		if(jugadoractual!=null) {
+	        			result.addObject("currentPlayer", jugadoractual);
+		        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
+		        		System.out.println(noSonAmigos);
+		        		result.addObject("noSonAmigos", noSonAmigos);
+		        		if(jugadoractual.getId() == jugador.getId()) {
+			        		Boolean esTuPerfil=true;
+			        		result.addObject("esTuPerfil", esTuPerfil);
+			        	}
+	        		}
+
 	        	}
 	        }
 	        else
@@ -234,6 +237,7 @@ public class JugadorController {
 	        return result;          
 		}
 		
+
 		
 
 	    @Transactional(readOnly = true)
@@ -259,4 +263,14 @@ public class JugadorController {
 	        result.addObject("message", "El jugador se ha actualizado correctamente");
 	        return result; 
 	    }
+
+		   @Transactional()
+		    @GetMapping("/jugadores/eliminar/{jugadorId}")
+		    public ModelAndView deleteTurno(@PathVariable int jugadorId){
+		        jugadorService.deleteJugadorById(jugadorId);        
+		        ModelAndView result= new ModelAndView("redirect:/");
+		        result.addObject("message", "El jugador se ha eliminado correctamente");
+		        return result;
+		    }
+
 }

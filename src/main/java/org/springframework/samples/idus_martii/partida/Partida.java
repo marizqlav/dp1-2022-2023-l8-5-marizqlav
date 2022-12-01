@@ -76,6 +76,9 @@ public class Partida extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "jugador_id"))
     Set<Jugador> espectadores;
     
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
+	private Lobby lobby;
+    
 	public Duration getDuration() throws DatesException {
     	if (this.fechaFin == null)
     		throw new DatesException("Partida no terminada");
@@ -108,17 +111,6 @@ public class Partida extends BaseEntity {
     }
 
     public Integer getLimite() {
-        if (getNumeroJugadores() == 5) {
-            return 13;
-        } else
-        if (getNumeroJugadores() == 6) {
-            return 15;
-        } else
-        if (getNumeroJugadores() == 7) {
-            return 17;
-        } else
-        {
-            return 20;
-        }
+    	return 2*getNumeroJugadores() + 3 + getNumeroJugadores()/8;
     }
 }

@@ -147,7 +147,7 @@ public class PartidaController {
             result.addObject("message", "No se puede cancelar la partida");
             return result;
         }
-        ModelAndView result = new ModelAndView("redirect:/");
+        ModelAndView result = new ModelAndView("welcome");
         result.addObject("message", "Se ha cancelado la partida correctamente");
         return result;
     }
@@ -208,7 +208,7 @@ public class PartidaController {
     	Turno turno = partidaService.getTurnoActual(partidaId);
     	Ronda ronda = partidaService.getRondaActual(partidaId);
     	Partida partida = partidaService.findPartida(partidaId);
-        
+
         try {
             partidaService.handleTurn(partidaId);
         } catch (NotFoundException e) {
@@ -216,7 +216,7 @@ public class PartidaController {
             res.addObject("message", "No se encontró ninguna partida");
             return res;
         }
-        
+
         GameScreen gameScreen = partidaService.getCurrentGameScreen(partidaId);
         ModelAndView result = gameScreen.getView(partidaId, jugador);
         String aviso = gameScreen.getAviso();
