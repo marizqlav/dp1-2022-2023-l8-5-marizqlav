@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class JugadorController {
+	
 	private static final String VIEWS_JUGADOR_CREATE_FORM = "jugadores/createOrUpdateJugadorForm";
 	private final String  JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
 	private final String  JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
@@ -68,25 +70,31 @@ public class JugadorController {
 	
 	 
 	 @Transactional(readOnly = true)
-	    @GetMapping("/jugadores/profile/{id}")
-	    public ModelAndView showPerfilJugador(@PathVariable int id){
-		 	Jugador jugador=jugadorService.getJugadorById(id);
-		 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		 	ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
-	        result.addObject("jugador", jugador);
+	 @GetMapping("/jugadores/profile/{id}")
+	 public ModelAndView showPerfilJugador(@PathVariable int id){
+		 Jugador jugador=jugadorService.getJugadorById(id);
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
+	     result.addObject("jugador", jugador);
 	       
-	        if(authentication!=null)
-	        	if(authentication.isAuthenticated()) {
-	        		User currentUser = (User) authentication.getPrincipal();
-	        		System.out.println(currentUser.getUsername());
-	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
-	        		result.addObject("currentPlayer", jugadoractual);
-	        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
-	        		System.out.println(noSonAmigos);
-	        		result.addObject("noSonAmigos", noSonAmigos);
+	     if(authentication!=null)
+	    	 if(authentication.isAuthenticated()) {
+	        	User currentUser = (User) authentication.getPrincipal();
+	        	System.out.println(currentUser.getUsername());
+	        	Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
+	        	if(jugadoractual!=null) {
+		        	result.addObject("currentPlayer", jugadoractual);
+		        	Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
+		        	System.out.println(noSonAmigos);
+		        	result.addObject("noSonAmigos", noSonAmigos);
+		        	if(jugadoractual.getId() == jugador.getId()) {
+		        		Boolean esTuPerfil=true;
+		        		result.addObject("esTuPerfil", esTuPerfil);
+		        	}
 	        	}
-	        	else
-	        		System.out.println("El usuario no está autentificado");
+	        }
+	        else
+	        	System.out.println("El usuario no está autentificado");
 	        return result;
 	    }
 	 
@@ -225,4 +233,30 @@ public class JugadorController {
 	        result.addObject("selections", amigos);
 	        return result;          
 		}
+		
+		
+
+	    @Transactional(readOnly = true)
+	    @GetMapping("/jugadores/profile/{id}/edit")
+	    public ModelAndView editJugador(@PathVariable int id){
+	        Jugador jugador =jugadorService.getJugadorById(id);        
+	        ModelAndView result=new ModelAndView(VIEWS_JUGADOR_CREATE_FORM);
+	        result.addObject("jugador", jugador);
+	        return result;
+	    }
+	    @Transactional
+	    @PostMapping("/jugadores/profile/{id}/edit")
+	    public ModelAndView saveJugador(@PathVariable int id,@Valid Jugador jugador, BindingResult br){
+
+	        if(br.hasErrors()){
+	            return new ModelAndView(VIEWS_JUGADOR_CREATE_FORM,br.getModel());            
+	        }
+
+	        Jugador jugadorEditar=jugadorService.getJugadorById(id);
+	        BeanUtils.copyProperties(jugador,jugadorEditar,"id");
+	        jugadorService.save(jugadorEditar);
+	        ModelAndView result=showPerfilJugador(id);
+	        result.addObject("message", "El jugador se ha actualizado correctamente");
+	        return result; 
+	    }
 }

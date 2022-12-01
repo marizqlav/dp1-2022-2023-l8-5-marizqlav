@@ -16,6 +16,7 @@
             <th>Nombre de usuario</th>
             <th>Nombre</th>
             <th>Apellidos</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -35,6 +36,12 @@
                 </td>
                 <td>                    
                     ${jugador.user.surname}                                      
+                </td>
+                <td> 
+                	<c:if test="${esTuPerfil}">
+                    <a href="/jugadores/profile/${jugador.id}/edit"> 
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></c:if>                     
+                          
                 </td>
             </tr>
    

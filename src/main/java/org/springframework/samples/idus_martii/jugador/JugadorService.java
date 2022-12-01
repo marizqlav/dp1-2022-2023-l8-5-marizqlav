@@ -105,4 +105,7 @@ public class JugadorService {
 		 this.jugadorRepo.rechazarPeticion(jugadorId, rechazadoId);
 	}
 	
+	
+	
+	
 }
