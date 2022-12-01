@@ -105,4 +105,10 @@ public class JugadorService {
 		 this.jugadorRepo.rechazarPeticion(jugadorId, rechazadoId);
 	}
 	
+	
+
+    public void deleteJugadorById(int id){
+        this.jugadorRepo.deleteById(id);
+    }
+	
 }
