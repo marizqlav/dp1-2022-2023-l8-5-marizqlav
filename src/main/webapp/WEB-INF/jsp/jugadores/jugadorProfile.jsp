@@ -62,7 +62,9 @@
             <th>Nombre de usuario</th>
             <th>Nombre</th>
             <th>Apellidos</th>
-            
+
+            <th></th>
+
         </tr>
         </thead>
         <tbody>
@@ -83,9 +85,18 @@
                 <td>                    
                     ${jugador.user.surname}                                      
                 </td>
+
+                <td> 
+                	<c:if test="${esTuPerfil}">
+                    <a href="/jugadores/profile/${jugador.id}/edit"> 
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></c:if>                     
+                          
+                </td>
+
                 <c:if test="${privilegios == '[admin]'}">
            		 <td><a href="/jugadores/eliminar/${jugador.id}" class="botonb">Eliminar usuario</a>  </td>
             	</c:if>
+
             </tr>
    
         </tbody>

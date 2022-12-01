@@ -13,7 +13,8 @@
     </h2>
     <form:form modelAttribute="jugador" class="form-horizontal" id="add-jugador-form">
         <div class="form-group has-feedback">
-            <idus_martii:inputField label="Username" name="user.username"/>
+        	
+			<idus_martii:inputUsername label="Username" name="user.username"></idus_martii:inputUsername>
             <idus_martii:inputField label="Name" name="user.name"/>
             <idus_martii:inputField label="Surname" name="user.surname"/>
             <idus_martii:inputField label="Photo" name="user.photo"/>
