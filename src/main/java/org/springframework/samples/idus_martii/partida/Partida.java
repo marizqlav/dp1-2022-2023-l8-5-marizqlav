@@ -111,17 +111,6 @@ public class Partida extends BaseEntity {
     }
 
     public Integer getLimite() {
-        if (getNumeroJugadores() == 5) {
-            return 13;
-        } else
-        if (getNumeroJugadores() == 6) {
-            return 15;
-        } else
-        if (getNumeroJugadores() == 7) {
-            return 17;
-        } else
-        {
-            return 20;
-        }
+        return 2*getNumeroJugadores() + 3 + getNumeroJugadores()/8;
     }
 }
