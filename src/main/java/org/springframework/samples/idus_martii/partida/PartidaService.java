@@ -85,10 +85,10 @@ public class PartidaService {
         }
         partida.setFechaCreacion(LocalDateTime.now());
         partida.setJugador(jugador);
-
+        partidaRepo.save(partida);
         createLobby(partida.getId());
 
-        partidaRepo.save(partida);
+       
     }
     
     public void cancelarPartida(Integer id) throws CancelException {
