@@ -147,7 +147,7 @@ public class PartidaController {
             result.addObject("message", "No se puede cancelar la partida");
             return result;
         }
-        ModelAndView result = new ModelAndView("redirect:/");
+        ModelAndView result = new ModelAndView("welcome");
         result.addObject("message", "Se ha cancelado la partida correctamente");
         return result;
     }
