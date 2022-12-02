@@ -11,6 +11,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.samples.idus_martii.user.User;
 
 @DataJpaTest
@@ -24,6 +26,9 @@ public class JugadorRepositoryTest {
 		assertNotNull(jugadorPorNombre);
 		assertFalse(jugadorPorNombre.isNew());
 	}
+//	@Query(value = "INSERT INTO amigos(jugador_id,jugador) VALUES (:idjugador,:idamigo)", nativeQuery = true)
+//	Integer anadirAmigo(@Param("idjugador") int idjugador, @Param("idamigo") int idamigo);
+
 
 	@Test
 	public void testFindAllJugadores() {
@@ -45,10 +50,20 @@ public class JugadorRepositoryTest {
 		assertNotNull(jugadorPorUsername);
 		assertFalse(jugadorPorUsername.isEmpty());
 	}
+		
+	@Test
+	public void testNoSonAmigos() {
+		Boolean noSeConocen=jugadorRepository.noSonAmigos(1, 2) !=null || jugadorRepository.noSonAmigos(2, 1) !=null;
+		assertNotNull(noSeConocen);
+		assertTrue(noSeConocen);	
+	}
 	
-	//No tengo ni idea
-//	@Query(value ="SELECT a.jugador_id, a.jugador FROM amigos a WHERE a.jugador_id = :jugadorId AND a.jugador = :amigo", nativeQuery = true)	
-//	<E> E noSonAmigos(@Param("jugadorId") int jugadorId, @Param("amigo")int amigo);
+	@Test
+	public void testAnadirAmigo() {
+		Integer amigoAnadido=jugadorRepository.anadirAmigo(1, 4);
+		assertNotNull(amigoAnadido);
+		assertEquals(amigoAnadido, 1);
+	}
 	
 	@Test
 	public void testFindPeticionesAmistadJugador() {
@@ -63,4 +78,8 @@ public class JugadorRepositoryTest {
 		assertNotNull(sonAmigos);
 		assertEquals(sonAmigos, 2);
 	}
+	
+//    @Query(value ="DELETE FROM amigos a where a.jugador=:jugadorId and a.jugador_id = :rechazadoId",nativeQuery = true)
+//    void rechazarPeticion(@Param("jugadorId") int jugadorId,@Param("rechazadoId") int rechazadoId);
+
 }

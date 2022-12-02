@@ -16,15 +16,6 @@ public class TurnoRepositoryTest {
 	@Autowired
 	TurnoRepository turnoRepository;
 	
-//    @Query("SELECT v.tipoVoto FROM VotosTurno v WHERE v.turno.id=:turno_id AND v.jugador.id=:jugador_id")
-//    FaccionesEnumerado espiarVoto(@Param("turno_id") int turno_id,@Param("jugador_id") int jugador_id);
-    //Devuelve null porque no se ha realizado ningun espia
-	@Test
-	public void testEspiarVoto() {
-		FaccionesEnumerado voto=turnoRepository.espiarVoto(4, 2);
-//		assertNotNull(voto);
-//		assertEquals(voto, "Traidor");
-	}
 	
 //    @Query("SELECT v FROM VotosTurno v WHERE v.turno.id=:turno_id AND v.jugador.id=:jugador_id")
 //    VotosTurno findVotoByturnoAndPlayer(@Param("turno_id") int turno_id,@Param("jugador_id") int jugador_id);

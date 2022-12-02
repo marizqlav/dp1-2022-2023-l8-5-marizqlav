@@ -18,16 +18,12 @@ public class EstablecerRolesEstado implements EstadoTurno {
     private PartidaService partidaService;
     private TurnoService turnoService;
 
-    private VotarEstado votarEstado;
-
     private GameScreen gameScreen;
 
     @Autowired
-    EstablecerRolesEstado(PartidaService partidaService, TurnoService turnoService, VotarEstado votarEstado, DefaultScreen gameScreen) {
+    EstablecerRolesEstado(PartidaService partidaService, TurnoService turnoService, DefaultScreen gameScreen) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
-
-        this.votarEstado = votarEstado;
 
         this.gameScreen = gameScreen;
     }
@@ -46,7 +42,6 @@ public class EstablecerRolesEstado implements EstadoTurno {
     }
 
     public void setRolesConsecutivos(Integer partidaId, Integer posicionConsul) {
-    	
     	List<Jugador> listaJugadores = partidaService.findJugadores(partidaId);
         
         Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
@@ -71,8 +66,8 @@ public class EstablecerRolesEstado implements EstadoTurno {
     }
 
     @Override
-    public EstadoTurno getNextState(Turno context) {
-        return votarEstado;
+    public EstadoTurnoEnum getNextState(Turno context) {
+        return EstadoTurnoEnum.Votar;
     }
 
     @Override
