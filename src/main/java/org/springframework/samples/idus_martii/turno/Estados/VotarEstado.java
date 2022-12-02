@@ -12,21 +12,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class VotarEstado implements EstadoTurno {
 
-    private PartidaService partidaService;
-    private TurnoService turnoService;
-
     private VotarScreen votarScreen;
 
-    private EspiarEstado espiarEstado;
-
     @Autowired
-    VotarEstado(PartidaService partidaService, TurnoService turnoService, VotarScreen votarScreen, EspiarEstado espiarEstado) {
-        this.partidaService = partidaService;
-        this.turnoService = turnoService;
+    VotarEstado(VotarScreen votarScreen) {
 
         this.votarScreen = votarScreen;
-
-        this.espiarEstado = espiarEstado;
     }
 
     @Override
@@ -35,12 +26,12 @@ public class VotarEstado implements EstadoTurno {
     }
 
     @Override
-    public EstadoTurno getNextState(Turno turno) {
+    public EstadoTurnoEnum getNextState(Turno turno) {
 
         if (turno.getVotosLeales() == 2 || turno.getVotosTraidores() == 2 || (turno.getVotosLeales() == 1 && turno.getVotosTraidores() == 1)) {
-        	return espiarEstado;
+        	return EstadoTurnoEnum.Espiar;
         }
-        return null;
+        return EstadoTurnoEnum.Votar;
     }
 
     @Override
