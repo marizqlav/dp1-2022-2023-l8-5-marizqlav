@@ -22,6 +22,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -55,6 +57,7 @@ public class UserController {
 	public String initCreationForm(Map<String, Object> model) {
 		Jugador jugador = new Jugador();
 		model.put("jugador", jugador);
+		
 		//TODO
 		return VIEWS_JUGADOR_CREATE_FORM;
 	}
