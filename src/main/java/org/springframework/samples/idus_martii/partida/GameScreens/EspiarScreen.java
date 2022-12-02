@@ -43,6 +43,6 @@ public class EspiarScreen implements GameScreen {
             return result;
         }
 
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+        return new ModelAndView("/partidas/tablero");
     }
 }

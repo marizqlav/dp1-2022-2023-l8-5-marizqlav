@@ -33,6 +33,6 @@ public class ElegirFaccionScreen implements GameScreen {
             return new ModelAndView();//TODO redirect JSP elegir faccion
         }
 
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+        return new ModelAndView("/partidas/tablero");
     }
 }
