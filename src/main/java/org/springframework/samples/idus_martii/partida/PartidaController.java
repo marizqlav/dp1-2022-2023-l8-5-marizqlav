@@ -203,7 +203,7 @@ public class PartidaController {
 
         Jugador jugador = getJugadorConectado();
 
-        List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+        //List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
 
     	Turno turno = partidaService.getTurnoActual(partidaId);
     	Ronda ronda = partidaService.getRondaActual(partidaId);
@@ -212,7 +212,7 @@ public class PartidaController {
         try {
             partidaService.handleTurn(partidaId);
         } catch (NotFoundException e) {
-            ModelAndView res = new ModelAndView("redirect:/");
+            ModelAndView res = new ModelAndView("welcome");
             res.addObject("message", "No se encontró ninguna partida");
             return res;
         }
@@ -232,7 +232,7 @@ public class PartidaController {
         result.addObject("faccion", faccion);
         result.addObject("votosleales", votosFavor);
         result.addObject("votostraidores", votosContra);
-        result.addObject("mensajes", mensajes);
+        //result.addObject("mensajes", mensajes);
         result.addObject("aviso", aviso);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         return result;
