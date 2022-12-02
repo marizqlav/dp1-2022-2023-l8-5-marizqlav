@@ -50,6 +50,10 @@ public class FaccionRepositoryTest {
 		faccionRepository.setFaccionSelecionada(1, 1, "Traidor");
 	}
 	
+//	@Query(value = "UPDATE faccion SET faccion_selecionada = :faccionSelecionada WHERE partida_id = :partidaid AND jugador_id= :jugadorid", nativeQuery = true)
+//	void setFaccionSelecionada(@Param("jugadorid") int jugadorid, @Param("partidaid") int partidaid, @Param("faccionSelecionada") String faccionSelecionada);
+
+	
 }
 
 
