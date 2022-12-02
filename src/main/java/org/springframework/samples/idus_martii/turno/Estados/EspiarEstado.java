@@ -24,8 +24,7 @@ public class EspiarEstado implements EstadoTurno {
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
-        // TODO Auto-generated method stub
-        return null;
+        return EstadoTurnoEnum.Espiar;
     }
 
     @Override
