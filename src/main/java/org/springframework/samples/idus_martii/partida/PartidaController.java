@@ -220,7 +220,7 @@ public class PartidaController {
         GameScreen gameScreen = partidaService.getCurrentGameScreen(partidaId);
         ModelAndView result = gameScreen.getView(partidaId, jugador);
         String aviso = gameScreen.getAviso();
-                
+        
         Integer votosFavor = partida.getVotosLeales();
         Integer votosContra = partida.getVotosTraidores();
         Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
@@ -236,7 +236,7 @@ public class PartidaController {
         result.addObject("aviso", aviso);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         return result;
-    }    
+    }
 
     //TODO esto debería ser reducido a una sola url con un post
     @GetMapping(value = "/juego/{partidaId}/espiar/1")
@@ -255,7 +255,7 @@ public class PartidaController {
     public ModelAndView GetEspiarEdil2(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
                 
         try {
-            turnoService.espiarVoto1(partidaId);
+            turnoService.espiarVoto2(partidaId);
         } catch (NotFoundException e) {
 
         }
