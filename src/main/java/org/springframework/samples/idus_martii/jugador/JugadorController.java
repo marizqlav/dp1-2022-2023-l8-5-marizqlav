@@ -76,13 +76,11 @@ public class JugadorController {
 		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		 ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
 	     result.addObject("jugador", jugador);
-
 	        if(authentication!=null) {
 	        	if(authentication.isAuthenticated()) {
 	        		User currentUser = (User) authentication.getPrincipal();
 	        		System.out.println(currentUser.getUsername());
 	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
-	        		result.addObject("privilegios",currentUser.getAuthorities());
 	        		if(jugadoractual!=null) {
 	        			result.addObject("currentPlayer", jugadoractual);
 		        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
