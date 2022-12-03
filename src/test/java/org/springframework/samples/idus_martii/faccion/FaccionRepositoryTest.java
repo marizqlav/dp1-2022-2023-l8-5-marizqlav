@@ -7,14 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 
 @DataJpaTest
@@ -48,6 +43,7 @@ public class FaccionRepositoryTest {
 	@Test
 	public void testSetFaccionSelecionada() {
 		faccionRepository.setFaccionSelecionada(1, 1, "Traidor");
+		assertNotNull(faccionRepository.getFaccionJugadorPartida(1, 1));
 	}	
 }
 
