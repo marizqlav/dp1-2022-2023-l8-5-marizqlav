@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 
 @Repository
@@ -28,6 +29,12 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     
     @Query("SELECT p FROM Partida p, Faccion f, Jugador j WHERE p.id = f.partida AND f.jugador = j.id AND j.id = :idjugador AND p.fechaFin IS NOT NULL ")
     List<Partida> findAllFinalizadasJugador(@Param("idjugador") Integer idjugador); //TODO esto se puede hacer con JOINs
+    
+    @Query("SELECT p FROM Partida p WHERE p.fechaFin IS NOT NULL ")
+    List<Partida> findAllFinalizadas();
+    
+    @Query("SELECT f FROM Faccion f WHERE f.partida.id = :id")
+	List<Faccion> findJugadoresPartida(@Param("id") Integer id);
     
     @Modifying
     @Query("DELETE FROM Lobby l where l.partida=:partidaId")

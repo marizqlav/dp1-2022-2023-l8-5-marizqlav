@@ -6,12 +6,13 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <idus_martii:layout pageName="partidas">
-    <h2>Partidas Jugadas</h2>
+    <h2>Partidas finalizadas</h2>
 <p><c:out value="${now}"/></p>
     <table id="turnosTable" class="table table-striped">
         <thead>
         <tr>
             <th>Id</th>
+            <th>Creador</th>
             <th>Facción Ganadora</th>
             <th>Número de jugadores</th>
             <th>Fecha de creación</th>
@@ -24,7 +25,10 @@
         <c:forEach items="${partidas}" var="partida">
             <tr>
                 <td>
-                    <c:out value="${partida.id}"/>
+                   <a href="/partida/${partida.id}/detalles" target="_blank"><c:out value="${partida.id}"/></a>
+                </td>
+                <td>                    
+                      <a href="/jugadores/profile/${partida.jugador.id}" target="_blank"><c:out value="${partida.jugador.user.username}"/></a>                                      
                 </td>
                  <td>                    
                       <c:out value="${partida.faccionGanadora}"/>                                        

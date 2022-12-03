@@ -89,6 +89,13 @@ public class Partida extends BaseEntity {
 	public boolean iniciada() {
 		return fechaInicio != null;
 	}
+	
+	  public String getFechaInicioParseada() {
+	    	if(this.fechaInicio==null)
+	    		return "En lobby";
+	    	else
+	    		return this.fechaInicio.toString().replace("T", " ").replace("-", "/").substring(0,this.fechaInicio.toString().length()-7);
+	    }
 
     public Integer getVotosLeales() {
         Integer n = 0;
