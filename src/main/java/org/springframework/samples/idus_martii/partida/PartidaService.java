@@ -80,7 +80,15 @@ public class PartidaService {
     List<Partida> getPartidasFinalizadasJugador(Integer idJugador) {
         return partidaRepo.findAllFinalizadasJugador(idJugador);
     }
+    
+    List<Partida> getAllPartidasFinalizadas() {
+        return partidaRepo.findAllFinalizadas();
+    }
 
+    public List<Faccion> getJugadoresPartida(int id) {
+  		return this.partidaRepo.findJugadoresPartida(id);
+  	}
+    
     public void crearPartida(Partida partida, Jugador jugador) throws CreationException {
         if (jugadorPartidaEnCurso(jugador.getId()) != null) {
             throw new CreationException("No se puede crear una partida si el jugador tiene una partida sin terminar");

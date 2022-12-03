@@ -5,7 +5,8 @@
 <%@ taglib prefix="idus_martii" tagdir="/WEB-INF/tags" %>
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <idus_martii:layout pageName="jugadores">
     <h2>Jugadores</h2>
@@ -33,4 +34,7 @@
         </c:forEach>
         </tbody>
     </table>
+      <sec:authorize access="hasAuthority('admin')">
+		<a class="btn btn-default" href='<spring:url value="/users/new" htmlEscape="true"/>'>Añadir Jugador</a>
+	</sec:authorize>
 </idus_martii:layout>

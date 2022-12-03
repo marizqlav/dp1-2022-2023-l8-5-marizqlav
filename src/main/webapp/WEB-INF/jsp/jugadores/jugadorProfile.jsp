@@ -5,6 +5,8 @@
 <%@ taglib prefix="idus_martii" tagdir="/WEB-INF/tags" %>
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <idus_martii:layout pageName="jugadores">
 	<style>
 	
@@ -62,8 +64,8 @@
             <th>Nombre de usuario</th>
             <th>Nombre</th>
             <th>Apellidos</th>
+			<th></th>
 
-            <th></th>
 
         </tr>
         </thead>
@@ -87,15 +89,16 @@
                 </td>
 
                 <td> 
-                	<c:if test="${esTuPerfil}">
-                    <a href="/jugadores/profile/${jugador.id}/edit"> 
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></c:if>                     
-                          
+                	<c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
+                    	<a href="/jugadores/profile/${jugador.id}/edit"> 
+                        	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    	</a>
+                    </c:if>                     
+                <sec:authorize access="hasAuthority('admin')">
+					<a href="/jugadores/eliminar/${jugador.id}" class="botonb">Eliminar usuario</a>
+				</sec:authorize>
                 </td>
-
-                <c:if test="${privilegios == '[admin]'}">
-           		 <td><a href="/jugadores/eliminar/${jugador.id}" class="botonb">Eliminar usuario</a>  </td>
-            	</c:if>
+            	
 
             </tr>
    

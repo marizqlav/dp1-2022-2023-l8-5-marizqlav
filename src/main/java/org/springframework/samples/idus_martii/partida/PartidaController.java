@@ -49,6 +49,7 @@ public class PartidaController {
 	private final String PARTIDAS_LISTING_VIEW_FINALIZADAS ="/partidas/partidasList";
     private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
+	private final String  PARTIDA_DETAIL_VIEW="/partidas/partidaDetail";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
 
     private final String MENU_REFRESH_TIME="5";
@@ -78,6 +79,22 @@ public class PartidaController {
         return jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
     }
     
+    private User getUsuarioConectado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        return currentUser;
+    }
+    
+    @Transactional(readOnly = true)
+	 @GetMapping("/{id}/detalles")
+	 public ModelAndView showDetallesPartida(@PathVariable int id){
+    	ModelAndView result=new ModelAndView(PARTIDA_DETAIL_VIEW);
+    	result.addObject("partida", partidaService.findPartida(id));
+    	result.addObject("datospartida", partidaService.getJugadoresPartida(id));
+	        return result;
+	    }
+    
     @Transactional(readOnly = true)
     @GetMapping("/disponibles")
     public ModelAndView showPartidasDisponibles(HttpServletResponse response){
@@ -95,8 +112,12 @@ public class PartidaController {
         response.addHeader("Refresh", MENU_REFRESH_TIME);
 
         ModelAndView result = new ModelAndView(PARTIDAS_LISTING_VIEW_FINALIZADAS);
-
+        System.out.println(getUsuarioConectado().getAuthorities().toString());
+        if(getUsuarioConectado().getAuthorities().toString().equals("[admin]")) {
+        	result.addObject("partidas", partidaService.getAllPartidasFinalizadas());
+        }else {
         result.addObject("partidas", partidaService.getPartidasFinalizadasJugador(getJugadorConectado().getId()));
+        }
         return result;
     }
 
@@ -109,12 +130,20 @@ public class PartidaController {
         result.addObject("partidas", partidaService.getPartidasEnJuego());
         return result;
     }
-
+	
 	@GetMapping(value = "/new")
-	public ModelAndView initCreationForm(Map<String, Object> model) {		
-        Partida partida = new Partida();
-        model.put("partida", partida);
-        return new ModelAndView(VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM);
+	public String initCreationForm(Map<String, Object> model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Partida existe = partidaService.jugadorPartidaEnCurso(jugador.getId());
+        if(existe == null) {
+			Partida partida = new Partida();
+			model.put("partida", partida);
+			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+		}else {
+			 return "redirect:/partida/" + existe.getId().toString();
+		}
 	}
 	
 	
@@ -143,7 +172,6 @@ public class PartidaController {
             partidaService.cancelarPartida(partidaId);
         } catch (CancelException e) {
             ModelAndView result = new ModelAndView("redirect:/");
-    
             result.addObject("message", "No se puede cancelar la partida");
             return result;
         }

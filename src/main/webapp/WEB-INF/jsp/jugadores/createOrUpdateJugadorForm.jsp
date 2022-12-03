@@ -25,10 +25,10 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <c:choose>
                     <c:when test="${jugador['new']}">
-                        <button class="btn btn-default" type="submit">Add Jugador</button>
+                        <button class="btn btn-default" type="submit">Añadir Jugador</button>
                     </c:when>
                     <c:otherwise>
-                        <button class="btn btn-default" type="submit">Update Jugador</button>
+                        <button class="btn btn-default" type="submit">Actaulizar Jugador</button>
                     </c:otherwise>
                 </c:choose>
             </div>
