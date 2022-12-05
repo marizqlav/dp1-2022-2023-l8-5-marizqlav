@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.expression.AccessException;
+import org.springframework.samples.idus_martii.faccion.FaccionesConverter;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
+import org.springframework.samples.idus_martii.turno.VotosTurno;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +21,13 @@ public class TurnoService {
 
     TurnoRepository repo;
     PartidaService partidaService;
+    FaccionesConverter faccionesConverter;
 
     @Autowired
-    public TurnoService(TurnoRepository repo, @Lazy PartidaService partidaService){
+    public TurnoService(TurnoRepository repo, @Lazy PartidaService partidaService, FaccionesConverter faccionesConverter){
         this.repo = repo;
         this.partidaService = partidaService;
+        this.faccionesConverter = faccionesConverter;
     }
 
     List<Turno> getTurnos(){
@@ -43,24 +47,25 @@ public class TurnoService {
     }
 
     //TODO restriccion un jugador solo puede votar una vez
-    public void anadirVoto(Integer partidaId, Jugador jugador, String color) throws AccessException {
+    public void anadirVoto(Integer partidaId, Jugador jugador, String strVoto) throws AccessException {
         Turno turno = partidaService.getTurnoActual(partidaId);
         
         if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
             throw new AccessException("Solo pueden votar los ediles");
         }
 
-        if (color == "rojo") {
+        FaccionesEnumerado voto = faccionesConverter.convert(strVoto);
+        if (voto == FaccionesEnumerado.Traidor) {
             turno.setVotosTraidores(turno.getVotosTraidores() + 1);
             anadirVotoTurno(turno.getId(), jugador.getId(), "Negativo");
             save(turno);
         } else
-        if (color == "verde") {
+        if (voto == FaccionesEnumerado.Leal) {
             turno.setVotosLeales(turno.getVotosLeales() + 1);
             anadirVotoTurno(turno.getId(), jugador.getId(), "Positivo");
             save(turno);    
         } else
-        if (color == "amarillo") {
+        if (voto == FaccionesEnumerado.Mercader) {
             turno.setVotosNeutrales(turno.getVotosNeutrales() + 1);
             save(turno);    
         }

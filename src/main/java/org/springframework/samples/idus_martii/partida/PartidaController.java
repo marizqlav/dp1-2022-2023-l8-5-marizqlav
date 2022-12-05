@@ -63,7 +63,8 @@ public class PartidaController {
     MensajeService mensajeService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService, FaccionService faccionService, MensajeService mensajeService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, 
+        TurnoService turnoService, FaccionService faccionService, MensajeService mensajeService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
         this.rondaService = rondaService;
