@@ -314,17 +314,23 @@ public class PartidaController {
     	
     }
                 
-    //TODO Cambiar todo esto para que sea un solo post
-    //TODO Además igual habría que meterlo en los estados. O no. No sé.
-    @GetMapping(value="/juego/{partidaId}/votar/rojo")
-    public String votacionRoja(@PathVariable("partidaId") Integer partidaId) {
+    @GetMapping(value="/juego/{partidaId}/votar")
+    public String votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
 
         Jugador jugador = getJugadorConectado();
         
         Turno turno = partidaService.getTurnoActual(partidaId);
 
         try {
-            turnoService.anadirVotoRojo(turno.getId(), jugador); 
+            if (color == "rojo") {
+                turnoService.anadirVotoRojo(turno.getId(), jugador);
+            } else 
+            if (color == "verde") {
+                turnoService.anadirVotoVerde(turno.getId(), jugador);
+            } else
+            if (color == "amarillo") {
+                turnoService.anadirVotoAmarillo(turno.getId(), jugador);
+            }
         } catch(AccessException e){
 
         }
@@ -332,42 +338,4 @@ public class PartidaController {
         return "redirect:/partida/juego/" + partidaId.toString(); 
     	
     }
-    
-    @GetMapping(value="/juego/{partidaId}/votar/verde")
-    public String votacionVerde(@PathVariable("partidaId") Integer partidaId) {
-
-        Jugador jugador = getJugadorConectado();
-        
-        Turno turno = partidaService.getTurnoActual(partidaId);
-
-        try {
-            turnoService.anadirVotoVerde(turno.getId(), jugador); 
-        } catch(AccessException e){
-
-        }
-
-        return "redirect:/partida/juego/"+partidaId.toString(); 
-    	
-    }
-
-    @GetMapping(value="/juego/{partidaId}/votar/amarillo")
-    public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-
-        Turno turno = partidaService.getTurnoActual(partidaId);
-
-        try {
-            turnoService.anadirVotoAmarillo(turno.getId(), jugador); 
-        }catch(Exception e){
-            System.out.println(e);
-        }
-
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());    	
-    
-    }
-    
-
 }
