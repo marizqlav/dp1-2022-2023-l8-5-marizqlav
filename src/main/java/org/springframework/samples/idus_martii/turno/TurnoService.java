@@ -42,42 +42,30 @@ public class TurnoService {
         repo.save(turno);
     }
 
-    public void anadirVotoVerde(int turnoId, Jugador jugador) throws AccessException {
-        Turno turno = getById(turnoId);
-
-        if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
-            throw new AccessException("Solo pueden votar los ediles");
-        }
-
-        turno.setVotosLeales(turno.getVotosLeales() + 1);
-        anadirVotoTurno(turno.getId(), jugador.getId(), "Positivo");
-        save(turno);
-    }
-
     //TODO restriccion un jugador solo puede votar una vez
-    public void anadirVotoRojo(Integer turnoId, Jugador jugador) throws AccessException {
-        Turno turno = getById(turnoId);
-        System.out.println("hola");
-        if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
-            throw new AccessException("Solo pueden votar los ediles");
-        }
-
-        turno.setVotosTraidores(turno.getVotosTraidores() + 1);
-        anadirVotoTurno(turno.getId(), jugador.getId(), "Negativo");
-        save(turno);
-    }
-
-    public void anadirVotoAmarillo(Integer turnoId, Jugador jugador) throws AccessException {
-        Turno turno = getById(turnoId);
-
-        if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
-            throw new AccessException("Solo pueden votar los ediles");
-        }
-
-        turno.setVotosNeutrales(turno.getVotosNeutrales() + 1);
-        save(turno);
-    }
+    public void anadirVoto(Integer partidaId, Jugador jugador, String color) throws AccessException {
+        Turno turno = partidaService.getTurnoActual(partidaId);
         
+        if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
+            throw new AccessException("Solo pueden votar los ediles");
+        }
+
+        if (color == "rojo") {
+            turno.setVotosTraidores(turno.getVotosTraidores() + 1);
+            anadirVotoTurno(turno.getId(), jugador.getId(), "Negativo");
+            save(turno);
+        } else
+        if (color == "verde") {
+            turno.setVotosLeales(turno.getVotosLeales() + 1);
+            anadirVotoTurno(turno.getId(), jugador.getId(), "Positivo");
+            save(turno);    
+        } else
+        if (color == "amarillo") {
+            turno.setVotosNeutrales(turno.getVotosNeutrales() + 1);
+            save(turno);    
+        }
+    }
+
     public void cambiarVoto(Integer turnoId, Integer jugadorId, String voto){
     	repo.findVotoByturnoAndPlayer(turnoId, jugadorId).setTipoVoto(voto);
     }
@@ -91,32 +79,22 @@ public class TurnoService {
     }
 
     //TODO esto debería reducirse a un solo espiar con enumerados o algo
-    public void espiarVoto1(Integer partidaId) throws NotFoundException {
-    	Partida partida = partidaService.findPartida(partidaId);
+    public void espiarVoto(Integer partidaId, Jugador jugador, String voto) throws AccessException {
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        if (partida == null || !partida.iniciada()) {
-    		throw new NotFoundException("Esta partida no ha sido iniciada");
-    	}
+        if (jugador != turno.getPredor()) {
+            throw new AccessException("Esta partida no ha sido iniciada");
+        }
         
-        VotosTurno votoEdil1 = findVoto(turno.getId(), turno.getEdil1().getId());
-
-        votoEdil1.setEspiado(true);
+        if (voto == "1") {
+            VotosTurno votoEdil1 = findVoto(turno.getId(), turno.getEdil1().getId());
+            votoEdil1.setEspiado(true);
+        } else
+        if (voto == "2") {
+            VotosTurno votoEdil2 = findVoto(turno.getId(), turno.getEdil2().getId());
+            votoEdil2.setEspiado(true);
+        }
     }
-
-    public void espiarVoto2(Integer partidaId) throws NotFoundException {
-    	Partida partida = partidaService.findPartida(partidaId);
-        Turno turno = partidaService.getTurnoActual(partidaId);
-
-        if (partida == null || !partida.iniciada()) {
-    		throw new NotFoundException("Esta partida no ha sido iniciada");
-    	}
-        
-        VotosTurno votoEdil2 = findVoto(turno.getId(), turno.getEdil2().getId());
-
-        votoEdil2.setEspiado(true);
-    }
-
     
     /*public void asignarRol(String rol, Jugador jugador, Integer turnoId) { //TODO revisar
     	

@@ -382,7 +382,7 @@ width:60px;
 	        			<span id="voto1">Voto de <c:out value="${turno.edil2.user.username}"/></span>
 	        		</c:if>
 	        	<a href="/partida/${partida.id}" class="botona">Mantener</a>
-	        	<a href="/partida/juego/${partida.id}/espiar/1/cambiar" class="botonb">Cambiar</a>
+	        	<a href="/partida/juego/${partida.id}/espiar/cambiar" class="botonb">Cambiar</a>
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>
