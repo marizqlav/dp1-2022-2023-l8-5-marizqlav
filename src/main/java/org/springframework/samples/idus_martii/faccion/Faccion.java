@@ -34,10 +34,10 @@ public class Faccion extends BaseEntity{
 	private FaccionesEnumerado faccionSelecionada;
 
 	@JoinColumn(name = "partida_id")
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     Partida partida;
 
-	@ManyToOne(optional=false)
+	@ManyToOne(cascade = CascadeType.PERSIST, optional=false)
 	@JoinColumn(name = "jugador_id")
 	private Jugador jugador;
 	

@@ -6,15 +6,15 @@
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <petclinic:layout pageName="achievements">
-    <h2>Achievements</h2>
+    <h2>Logros</h2>
 
     <table id="achievementsTable" class="table table-striped">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>BadgeImage</th>
-            <th>Threshold</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Icono</th>
+            <th>Umbral</th>
             <th></th>
             <th></th>
         </tr>
@@ -40,7 +40,7 @@
 				
 				<td> 
                     <a href="/statistics/achievements/${achievement.id}/edit"> 
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>                            
+                    	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>                            
                     </a>       
                 </td>
                 <td> 
@@ -56,6 +56,6 @@
         </tbody>
     </table>
     
-      <a class="btn btn-default" href="/statistics/achievements/new">Create new achievement</a>
+      <a class="btn btn-default" href="/statistics/achievements/new">Crear nuevo logro</a>
 
 </petclinic:layout>
