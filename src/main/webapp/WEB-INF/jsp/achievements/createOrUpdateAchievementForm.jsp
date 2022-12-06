@@ -15,25 +15,25 @@
     </jsp:attribute>
     <jsp:body>
         <h2>
-            <c:if test="${achievement['new']}">New </c:if> Pet
+            <c:if test="${achievement['new']}">Nuevo </c:if> logro
         </h2>
         <form:form modelAttribute="achievement"
                    class="form-horizontal">
             <input type="hidden" name="id" value="${achievement.id}"/>
             <div class="form-group has-feedback">                
-                <petclinic:inputField label="Name" name="name"/>
-                <petclinic:inputField label="Description" name="description"/>
-                <petclinic:inputField label="Badge" name="badgeImage"/>
-                <petclinic:inputField label="Threshold" name="threshold"/>
+                <petclinic:inputField label="Título" name="name"/>
+                <petclinic:inputField label="Descripción" name="description"/>
+                <petclinic:inputField label="Icono" name="badgeImage"/>
+                <petclinic:inputField label="Umbral" name="threshold"/>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <c:choose>
                         <c:when test="${achievement['new']}">
-                            <button class="btn btn-default" type="submit">Add Achievement</button>
+                            <button class="btn btn-default" type="submit">Añadir logro</button>
                         </c:when>
                         <c:otherwise>
-                            <button class="btn btn-default" type="submit">Update Achievement</button>
+                            <button class="btn btn-default" type="submit">Actualizar logro</button>
                         </c:otherwise>
                     </c:choose>
                 </div>

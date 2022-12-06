@@ -36,6 +36,7 @@ public class JugadorController {
 	
 	private static final String VIEWS_JUGADOR_CREATE_FORM = "jugadores/createOrUpdateJugadorForm";
 	private final String  JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
+	private final String  JUGADORES_AMIGOS_VIEW="/jugadores/jugadoresAmigosList";
 	private final String  JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
 	private static final String VIEWS_USUARIO_LISTING = "jugadores/userByPlayer";
 	private final String  PETICIONES_AMISTAD_VIEW="/jugadores/peticionesAmistadList";
@@ -201,25 +202,29 @@ public class JugadorController {
 		}
 		
 		@GetMapping(value = "/jugadores/peticiones/rechazar/{rechazadoId}")
-	    public String rechazar(@PathVariable("rechazadoId") Integer rechazadoId) {
+	    public ModelAndView rechazar(@PathVariable("rechazadoId") Integer rechazadoId) {
 	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    	User currentUser = (User) authentication.getPrincipal();
 	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        ModelAndView result=new ModelAndView(PETICIONES_AMISTAD_VIEW);
 	        if(jugadorService.sonAmigos(jugador.getId(), rechazadoId)!=null) {
 	        	jugadorService.rechazarPeticion(jugador.getId(), rechazadoId);
+	        	result.addObject("message", "Solicitud de amistad rechazada");
 	        }
-	        return "redirect:/jugadores/peticiones";          
+	        return result;          
 		}
 		
 		@GetMapping(value = "/jugadores/peticiones/aceptar/{aceptadoId}")
-	    public String aceptar(@PathVariable("aceptadoId") Integer aceptadoId) {
+	    public ModelAndView aceptar(@PathVariable("aceptadoId") Integer aceptadoId) {
 	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    	User currentUser = (User) authentication.getPrincipal();
 	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        ModelAndView result=new ModelAndView(PETICIONES_AMISTAD_VIEW);
 	        if(jugadorService.sonAmigos(jugador.getId(), aceptadoId)!=null) {
 	        	jugadorService.anadirAmigo(jugador.getId(),aceptadoId);
+	        	result.addObject("message", "Solicitud de amistad aceptada");
 	        }
-	        return "redirect:/jugadores/peticiones";          
+	        return result;          
 		}
 		
 		@GetMapping(value = "/jugadores/amigos")
@@ -230,13 +235,23 @@ public class JugadorController {
 	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
 	        
 	        List<Jugador> amigos = jugadorService.getAmigos(jugador.getId());
-	        ModelAndView result=new ModelAndView(JUGADORES_LISTING_VIEW);
+	        ModelAndView result=new ModelAndView(JUGADORES_AMIGOS_VIEW);
 	        result.addObject("selections", amigos);
 	        return result;          
 		}
 		
 
-		
+		 @Transactional()
+		    @GetMapping("/jugadores/amigos/eliminar/{jugadorId}")
+		    public ModelAndView deleteAmigo(@PathVariable int jugadorId){
+			 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		    	User currentUser = (User) authentication.getPrincipal();
+		        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+		        jugadorService.deleteAmigo(jugador.getId(),jugadorId);        
+		        ModelAndView result= new ModelAndView(JUGADORES_AMIGOS_VIEW);
+		        result.addObject("message", "Amigo eliminado correctamente");
+		        return result;
+		    }
 
 	    @Transactional(readOnly = true)
 	    @GetMapping("/jugadores/profile/{id}/edit")
@@ -266,7 +281,7 @@ public class JugadorController {
 		    @GetMapping("/jugadores/eliminar/{jugadorId}")
 		    public ModelAndView deleteTurno(@PathVariable int jugadorId){
 		        jugadorService.deleteJugadorById(jugadorId);        
-		        ModelAndView result= new ModelAndView("redirect:/");
+		        ModelAndView result= new ModelAndView("welcome");
 		        result.addObject("message", "El jugador se ha eliminado correctamente");
 		        return result;
 		    }
