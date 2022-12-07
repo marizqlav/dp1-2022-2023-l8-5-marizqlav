@@ -283,14 +283,17 @@ public class PartidaController {
 
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        if (turnoService.findVoto(partidaId, turno.getEdil1().getId()).getEspiado()) {
+        try {
+            if (turnoService.findVoto(partidaId, turno.getEdil1().getId()).getEspiado()) {
+                
+                turnoService.cambiarVoto(turno.getId(), getJugadorConectado(), turno.getEdil1().getId(), voto);
+            } else
+            if (turnoService.findVoto(partidaId, turno.getEdil2().getId()).getEspiado()) {
+                
+                turnoService.cambiarVoto(turno.getId(), getJugadorConectado(), turno.getEdil2().getId(), voto);
+            }
+        } catch (AccessException e) { }
 
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), voto);
-        } else
-        if (turnoService.findVoto(partidaId, turno.getEdil2().getId()).getEspiado()) {
-
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil2().getId(), voto);
-        }
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
