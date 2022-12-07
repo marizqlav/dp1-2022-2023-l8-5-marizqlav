@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -63,7 +64,8 @@ public class PartidaController {
     MensajeService mensajeService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService, FaccionService faccionService, MensajeService mensajeService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, 
+        TurnoService turnoService, FaccionService faccionService, MensajeService mensajeService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
         this.rondaService = rondaService;
@@ -251,7 +253,7 @@ public class PartidaController {
         
         Integer votosFavor = partida.getVotosLeales();
         Integer votosContra = partida.getVotosTraidores();
-        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
+        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(), partidaId);
         
         result.addObject("partida", partidaService.findPartida(partidaId));
         result.addObject("jugador", jugador);
@@ -266,108 +268,41 @@ public class PartidaController {
         return result;
     }
 
-    //TODO esto debería ser reducido a una sola url con un post
-    @GetMapping(value = "/juego/{partidaId}/espiar/1")
-    public ModelAndView GetEspiarEdil1(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
-                
-        try {
-            turnoService.espiarVoto1(partidaId);
-        } catch (NotFoundException e) {
-
-        }
+    @GetMapping(value = "/juego/{partidaId}/espiar")
+    public ModelAndView GetEspiarEdil(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
         
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
-    }
-
-    @GetMapping(value = "/juego/{partidaId}/espiar/2")
-    public ModelAndView GetEspiarEdil2(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
-                
         try {
-            turnoService.espiarVoto2(partidaId);
-        } catch (NotFoundException e) {
-
-        }
+            turnoService.espiarVoto(partidaId, getJugadorConectado(), voto);
+        } catch (AccessException e) { }
         
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
-    //TODO esto debería ser con enumerados
-    @GetMapping(value="/juego/{partidaId}/espiar/1/cambiar")
-    public String cambiarvoto(@PathVariable("partidaId") Integer partidaId) {
+    @GetMapping(value="/juego/{partidaId}/espiar/cambiar")
+    public ModelAndView cambiarvoto(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
 
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        VotosTurno votoEdil1 = turnoService.findVoto(turno.getId(), turno.getEdil1().getId());
+        if (turnoService.findVoto(partidaId, turno.getEdil1().getId()).getEspiado()) {
 
-        if (votoEdil1.getTipoVoto() == "Positivo") {
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Negativo");
-            turno.setVotosLeales(turno.getVotosLeales() - 1);
-            turno.setVotosTraidores(turno.getVotosTraidores() + 1);
+            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), voto);
         } else
-        if (votoEdil1.getTipoVoto() == "Negativo") {
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Positivo");
-            turno.setVotosLeales(turno.getVotosLeales() + 1);
-            turno.setVotosTraidores(turno.getVotosTraidores() - 1);
-        }
+        if (turnoService.findVoto(partidaId, turno.getEdil2().getId()).getEspiado()) {
 
-        return "redirect:/partida/juego/" + partidaId.toString(); 
-    	
+            turnoService.cambiarVoto(turno.getId(), turno.getEdil2().getId(), voto);
+        }
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
-                
-    //TODO Cambiar todo esto para que sea un solo post
-    //TODO Además igual habría que meterlo en los estados. O no. No sé.
-    @GetMapping(value="/juego/{partidaId}/votar/rojo")
-    public String votacionRoja(@PathVariable("partidaId") Integer partidaId) {
+    
+    @GetMapping(value="/juego/{partidaId}/votar")
+    public ModelAndView votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
 
         Jugador jugador = getJugadorConectado();
-        
-        Turno turno = partidaService.getTurnoActual(partidaId);
 
         try {
-            turnoService.anadirVotoRojo(turno.getId(), jugador); 
-        } catch(AccessException e){
+            turnoService.anadirVoto(partidaId, jugador, color);
+        } catch(AccessException e) { }
 
-        }
-
-        return "redirect:/partida/juego/" + partidaId.toString(); 
-    	
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
-    
-    @GetMapping(value="/juego/{partidaId}/votar/verde")
-    public String votacionVerde(@PathVariable("partidaId") Integer partidaId) {
-
-        Jugador jugador = getJugadorConectado();
-        
-        Turno turno = partidaService.getTurnoActual(partidaId);
-
-        try {
-            turnoService.anadirVotoVerde(turno.getId(), jugador); 
-        } catch(AccessException e){
-
-        }
-
-        return "redirect:/partida/juego/"+partidaId.toString(); 
-    	
-    }
-
-    @GetMapping(value="/juego/{partidaId}/votar/amarillo")
-    public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-
-        Turno turno = partidaService.getTurnoActual(partidaId);
-
-        try {
-            turnoService.anadirVotoAmarillo(turno.getId(), jugador); 
-        }catch(Exception e){
-            System.out.println(e);
-        }
-
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());    	
-    
-    }
-    
-
 }

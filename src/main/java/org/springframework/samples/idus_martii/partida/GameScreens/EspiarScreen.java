@@ -35,12 +35,21 @@ public class EspiarScreen implements GameScreen {
             VotosTurno votoEdil1 = turnoService.findVoto(turno.getId(), turno.getEdil1().getId());
             VotosTurno votoEdil2 = turnoService.findVoto(turno.getId(), turno.getEdil2().getId());
 
-            ModelAndView result = new ModelAndView("/partidas/espiar");
+            if (votoEdil1.getEspiado() || votoEdil2.getEspiado()) {
+                ModelAndView result = new ModelAndView("/partidas/cambiar");
+                result.addObject("votoEdil", votoEdil1);
 
-            result.addObject("votoEdil1", votoEdil1);
-            result.addObject("votoEdil2", votoEdil2);
-
-            return result;
+                String segundaRonda = "false";
+                if (turno.getRonda().getNumRonda() == 2) {
+                    segundaRonda = "true";
+                }
+                result.addObject("segundaRonda", segundaRonda);
+                
+                return result;
+            } else
+            {
+                return new ModelAndView("/partidas/espiar");
+            }
         }
 
         return new ModelAndView("/partidas/tablero");
