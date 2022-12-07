@@ -27,8 +27,6 @@ public class Achievement extends NamedEntity{
 	@Min(0)
 	private double threshold;
 	
-	
-	
 	public String getActualDescription(){
         return description.replace("<THRESHOLD>",String.valueOf(threshold));
     }

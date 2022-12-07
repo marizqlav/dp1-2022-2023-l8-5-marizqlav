@@ -99,7 +99,7 @@
 }
 </style>
 
- 	<sec:authorize access="!hasAuthority('admin')">
+ 	<sec:authorize access="hasAuthority('player')">
 		<a href="/partida/new" class="botona">Crear Partida</a>
 		<a href="/partida/disponibles" class="botona">Unirse a Partida</a>
 	</sec:authorize>
