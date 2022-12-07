@@ -23,7 +23,7 @@ INSERT INTO authorities(id,username,authority) VALUES (7,'admin','admin');
 INSERT INTO jugadores(id, user) VALUES 
         (1, 'Ale'),
         (2, 'ismherram'),
-        (3, 'marizqlav'),	
+        (3, 'marizqlav'),
         (4, 'marolmmar1'),
         (5, 'albdomrui'),
         (6, 'pabparmen');

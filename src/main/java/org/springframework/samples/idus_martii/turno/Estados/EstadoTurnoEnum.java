@@ -4,5 +4,8 @@ public enum EstadoTurnoEnum {
     EstablecerRoles,
     Votar,
     Espiar,
+    CambiarVoto,
+    DescubiertoAmarillo,
+    Recuento,
     TerminarTurno;
 }
