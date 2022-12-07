@@ -31,13 +31,14 @@
 					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 					<span>Pagina principal</span>
 				</idus_martii:menuItem>
-
+				
+<sec:authorize access="isAuthenticated()">
 				<idus_martii:menuItem active="${name eq 'jugadores'}" url="/jugadores/find"
 					title="Buscar jugadores">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Buscar jugadores</span>
 				</idus_martii:menuItem>
-
+<sec:authorize access="hasAuthority('player')">
 				<idus_martii:menuItem active="${name eq 'Social'}" url="/jugadores/"
 					title="Social" dropdown="${true}">										
 						<ul class="dropdown-menu">
@@ -58,22 +59,20 @@
 							</li>
 						</ul>					
 				</idus_martii:menuItem>	
-
-		
-				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements"
-					title="Logros" dropdown="${true}">										
-						<ul class="dropdown-menu">
-							<li>
-								<a href="<c:url value="/statistics/achievements/" />">Lista de logros</a>		
-							</li>
-							<li class="divider"></li>
-							<li>								
-								<a href="<c:url value="/statistics/achievements/" />">Mis logros <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>		
-
-							</li>
-						</ul>					
-				</idus_martii:menuItem>	
-				
+				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/myachivements"
+					title="Logros">
+					<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+					<span>Logros</span>
+				</idus_martii:menuItem>
+</sec:authorize>
+<sec:authorize access="hasAuthority('admin')">
+				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/"
+					title="Logros">
+					<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+					<span>Logros</span>
+				</idus_martii:menuItem>
+</sec:authorize>
+</sec:authorize>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">

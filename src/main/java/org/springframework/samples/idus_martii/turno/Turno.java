@@ -12,6 +12,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.model.BaseEntity;
 import org.springframework.samples.idus_martii.ronda.Ronda;
@@ -28,15 +30,19 @@ import lombok.Setter;
 public class Turno extends BaseEntity {
 	    
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
     private Jugador consul;
 
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
     private Jugador predor;
 
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Jugador edil1;
 
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
     private Jugador edil2;
 
 	@Min(0)
