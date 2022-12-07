@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -268,7 +269,7 @@ public class PartidaController {
     }
 
     @GetMapping(value = "/juego/{partidaId}/espiar")
-    public ModelAndView GetEspiarEdil1(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
+    public ModelAndView GetEspiarEdil(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
         
         try {
             turnoService.espiarVoto(partidaId, getJugadorConectado(), voto);
@@ -277,31 +278,24 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
-    //TODO esto debería ser con enumerados
     @GetMapping(value="/juego/{partidaId}/espiar/cambiar")
-    public String cambiarvoto(@PathVariable("partidaId") Integer partidaId) {
+    public ModelAndView cambiarvoto(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
 
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        VotosTurno votoEdil1 = turnoService.findVoto(turno.getId(), turno.getEdil1().getId());
+        if (turnoService.findVoto(partidaId, turno.getEdil1().getId()).getEspiado()) {
 
-        if (votoEdil1.getTipoVoto() == "Positivo") {
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Negativo");
-            turno.setVotosLeales(turno.getVotosLeales() - 1);
-            turno.setVotosTraidores(turno.getVotosTraidores() + 1);
+            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), voto);
         } else
-        if (votoEdil1.getTipoVoto() == "Negativo") {
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Positivo");
-            turno.setVotosLeales(turno.getVotosLeales() + 1);
-            turno.setVotosTraidores(turno.getVotosTraidores() - 1);
-        }
+        if (turnoService.findVoto(partidaId, turno.getEdil2().getId()).getEspiado()) {
 
-        return "redirect:/partida/juego/" + partidaId.toString(); 
-    	
+            turnoService.cambiarVoto(turno.getId(), turno.getEdil2().getId(), voto);
+        }
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
-                
+    
     @GetMapping(value="/juego/{partidaId}/votar")
-    public String votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
+    public ModelAndView votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
 
         Jugador jugador = getJugadorConectado();
 
@@ -309,6 +303,6 @@ public class PartidaController {
             turnoService.anadirVoto(partidaId, jugador, color);
         } catch(AccessException e) { }
 
-        return "redirect:/partida/juego/" + partidaId.toString(); 
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
 }

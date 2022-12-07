@@ -7,7 +7,6 @@ import javax.persistence.Table;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.model.BaseEntity;
-import org.springframework.samples.idus_martii.turno.Turno;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +24,7 @@ public class VotosTurno extends BaseEntity{
 	@ManyToOne(optional = false)
 	Jugador jugador;
 	
-	String tipoVoto; //TODO esto debería ser un enumerado
+	FaccionesEnumerado tipoVoto;
 	Boolean espiado = false;
-	Boolean cambiado = false;
+	FaccionesEnumerado votoOriginal = null; //Si se ha cambiado por el Edil
 }
