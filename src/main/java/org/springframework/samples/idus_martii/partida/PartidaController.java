@@ -293,7 +293,7 @@ public class PartidaController {
                 turnoService.cambiarVoto(turno.getId(), getJugadorConectado(), turno.getEdil2().getId(), voto);
             }
         } catch (AccessException e) { }
-
+        
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     

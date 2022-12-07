@@ -56,18 +56,15 @@ public class TurnoService {
 
         FaccionesEnumerado voto = faccionesConverter.convert(strVoto);
         if (voto == FaccionesEnumerado.Traidor) {
-            turno.setVotosTraidores(turno.getVotosTraidores() + 1);
             anadirVotoTurno(turno.getId(), jugador.getId(), "Negativo");
             save(turno);
         } else
         if (voto == FaccionesEnumerado.Leal) {
-            turno.setVotosLeales(turno.getVotosLeales() + 1);
             anadirVotoTurno(turno.getId(), jugador.getId(), "Positivo");
             save(turno);    
         } else
         if (voto == FaccionesEnumerado.Mercader) {
-            turno.setVotosNeutrales(turno.getVotosNeutrales() + 1);
-            save(turno);    
+            save(turno);
         }
     }
 
@@ -91,26 +88,6 @@ public class TurnoService {
         
         v.setVotoOriginal(v.getTipoVoto());
         v.setTipoVoto(faccionesConverter.convert(voto));
-
-        if (v.getVotoOriginal() == FaccionesEnumerado.Leal) {
-            turno.setVotosLeales(turno.getVotosLeales() - 1);
-        } else
-        if (v.getVotoOriginal() == FaccionesEnumerado.Traidor) {
-            turno.setVotosTraidores(turno.getVotosTraidores() - 1);
-        } else
-        if (v.getVotoOriginal() == FaccionesEnumerado.Mercader) {
-            turno.setVotosNeutrales(turno.getVotosNeutrales() - 1);
-        }
-
-        if (v.getTipoVoto() == FaccionesEnumerado.Leal) {
-            turno.setVotosLeales(turno.getVotosLeales() + 1);
-        } else
-        if (v.getTipoVoto() == FaccionesEnumerado.Traidor) {
-            turno.setVotosTraidores(turno.getVotosTraidores() + 1);
-        } else
-        if (v.getTipoVoto() == FaccionesEnumerado.Mercader) {
-            turno.setVotosNeutrales(turno.getVotosNeutrales() + 1);
-        }
     }
     
     public VotosTurno findVoto(Integer turnoId, Integer jugadorId){
