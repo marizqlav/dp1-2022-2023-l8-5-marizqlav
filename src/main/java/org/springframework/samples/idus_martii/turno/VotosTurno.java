@@ -24,7 +24,7 @@ public class VotosTurno extends BaseEntity{
 	@ManyToOne(optional = false)
 	Jugador jugador;
 	
-	String tipoVoto; //TODO esto debería ser un enumerado
+	FaccionesEnumerado tipoVoto;
 	Boolean espiado = false;
-	Boolean cambiado = false;
+	FaccionesEnumerado votoOriginal = null; //Si se ha cambiado por el Edil
 }

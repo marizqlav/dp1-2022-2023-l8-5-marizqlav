@@ -285,9 +285,9 @@ width:60px;
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado">Puedes ver uno de los votos</span>
 	        		<c:if test="${ronda.numRonda == 1 && jugador.user.username == turno.predor.user.username}">
-	        			<a href="/partida/juego/${partida.id}/espiar/1"><img src="/resources/images/idus-martii.jpg" width="150px" id="votacionnegativa" /></a>
+	        			<a href="/partida/juego/${partida.id}/espiar?voto=1"><img src="/resources/images/idus-martii.jpg" width="150px" id="votacionnegativa" /></a>
 	        			<span id="voto1">Voto de <c:out value="${turno.edil1.user.username}"/></span>
-	        			<a href="/partida/juego/${partida.id}/espiar/2"><img src="/resources/images/idus-martii.jpg" width="150px" id="votacionpositiva" /></a>
+	        			<a href="/partida/juego/${partida.id}/espiar?voto=2"><img src="/resources/images/idus-martii.jpg" width="150px" id="votacionpositiva" /></a>
 	        			<span id="voto2">Voto de <c:out value="${turno.edil2.user.username}"/></span>
 	        		</c:if>
 	        	
