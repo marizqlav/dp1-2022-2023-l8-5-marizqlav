@@ -2,6 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="/resources/images/laurel.png" />
 <head>
@@ -361,28 +362,47 @@ width:60px;
 			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
-	        	<span id="textoenunciado">Puedes ver uno de los votos</span>
-	        		<c:if test="${votoEdil1.cambiado == false && votoEdil1.espiado == true}">
-	        			<c:if test="${votoEdil1.tipoVoto == 'Negativo'}">
-	        			<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
-	        			</c:if>
-	        			<c:if test="${votoEdil1.tipoVoto == 'Positivo'}">
-	        			<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
-	        			
-	        			</c:if>
-	        			<span id="voto1">Voto de <c:out value="${turno.edil1.user.username}"/></span>
-	        		</c:if>
-	        		<c:if test="${votoEdil2.cambiado == false && votoEdil2.espiado == true}">
-	        			<c:if test="${votoEdil2.tipoVoto == 'Negativo'}">
-	        				<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
-	        			</c:if>
-	        			<c:if test="${votoEdil2.tipoVoto == 'Positivo'}">
-	        				<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
-	        			</c:if>
-	        			<span id="voto1">Voto de <c:out value="${turno.edil2.user.username}"/></span>
-	        		</c:if>
+	        	<span id="textoenunciado">Este es el voto espiado</span>
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
+					<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+					</c:if>
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
+					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+					</c:if>
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
+					<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+					</c:if>
+
+					<span id="voto1">Voto de <c:out value="${votoEdil.jugador.user.username}"/></span>
 	        	<a href="/partida/${partida.id}" class="botona">Mantener</a>
-	        	<a href="/partida/juego/${partida.id}/espiar/1/cambiar" class="botonb">Cambiar</a>
+				<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
+					<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=traidor" class="botonb">Cambiar a traidor</a>
+					<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+				</c:if>
+				<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
+					<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
+					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+				</c:if>
+				<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
+					<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
+					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+				</c:if>
+				<c:if test="${segundaRonda == 'true'}">
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
+						<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=mercader" class="botonb">Cambiar a mercader</a>
+						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+					</c:if>
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
+						<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=mercader" class="botonb">Cambiar a mercader</a>
+						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+					</c:if>
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
+						<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=traidor" class="botonb">Cambiar a traidor</a>
+						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+						</c:if>	
+				</c:if>
+
+					
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>
