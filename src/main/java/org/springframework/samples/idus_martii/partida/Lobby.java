@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import javax.persistence.OneToOne;
@@ -26,10 +28,13 @@ import lombok.Setter;
 @Table(name = "lobby")
 public class Lobby extends BaseEntity {
 
-	@ManyToMany
-	private List<Jugador> jugadores = new ArrayList();
-
-    @OneToOne(cascade = CascadeType.REMOVE)
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "lobby_jugadores",
+    joinColumns = { @JoinColumn(name = "lobby_id") },
+    inverseJoinColumns = { @JoinColumn(name = "jugadores_id") })
+	private List<Jugador> jugadores = new ArrayList<Jugador>();
+	
+    @OneToOne(cascade = CascadeType.PERSIST)
 	private Partida partida;
     
 }

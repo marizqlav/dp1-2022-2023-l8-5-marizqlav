@@ -93,9 +93,17 @@
                     	<a href="/jugadores/profile/${jugador.id}/edit"> 
                         	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     	</a>
-                    </c:if>                     
+                    </c:if>      
+                    <script>
+					function myFunction() {
+					  let text = "¿Estás seguro de que deseas eliminar este usuario?";
+					  if (confirm(text) == true) {
+					    window.location.replace("/jugadores/eliminar/${jugador.id}")
+					  }
+					}
+					</script>               
                 <sec:authorize access="hasAuthority('admin')">
-					<a href="/jugadores/eliminar/${jugador.id}" class="botonb">Eliminar usuario</a>
+					<a onclick="myFunction()"  class="botonb">Eliminar usuario</a>
 				</sec:authorize>
                 </td>
             	

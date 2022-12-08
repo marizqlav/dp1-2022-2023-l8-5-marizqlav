@@ -62,4 +62,3 @@ INSERT INTO jugador_achievement VALUES(1,1);
 
 INSERT INTO amigos VALUES(2,1), (1,2);
 
-
