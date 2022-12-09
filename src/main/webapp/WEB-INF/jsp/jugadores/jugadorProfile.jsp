@@ -64,7 +64,11 @@
             <th>Nombre de usuario</th>
             <th>Nombre</th>
             <th>Apellidos</th>
+            <c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
+                  <th>Correo</th>
+            </c:if>    
 			<th></th>
+				
 
 
         </tr>
@@ -87,6 +91,12 @@
                 <td>                    
                     ${jugador.user.surname}                                      
                 </td>
+               
+                <c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
+                <td>                
+                   	${jugador.user.email}
+                </td> </c:if>
+                		
 
                 <td> 
                 	<c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >

@@ -11,7 +11,7 @@ INSERT INTO authorities(id,username,authority) VALUES (3,'marizqlav','player');
 INSERT INTO users(username,name,surname,photo,password,enabled) VALUES ('marolmmar1', 'Marcos', 'Olmedo','https://i.imgur.com/IO6NJMu.jpeg' ,'word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (4,'marolmmar1','player');
 
-INSERT INTO users(username, name, surname, photo,password,enabled) VALUES ('albdomrui','Alberto','Domínguez-Adame','https://bit.ly/3WR8YkV','word',TRUE);
+INSERT INTO users(username, name, surname, photo, email,password,enabled) VALUES ('albdomrui','Alberto','Domínguez-Adame','https://bit.ly/3WR8YkV','correo@correo.com','word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (5,'albdomrui','player');
 
 INSERT INTO users(username, name, surname, photo, password, enabled) VALUES ('pabparmen','Pablo','Parra','https://i.imgur.com/GaheCcb.jpeg','word',TRUE);
