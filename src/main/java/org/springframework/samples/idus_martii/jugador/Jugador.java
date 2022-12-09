@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.jugador;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -18,6 +19,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.partida.Lobby;
 import org.springframework.samples.idus_martii.statistics.Achievement;
 import org.springframework.samples.idus_martii.user.User;
 import lombok.Getter;
@@ -48,9 +50,9 @@ public class Jugador extends BaseEntity{
 		 this.user.setUsername(username) ;
 	}
 	
-	@ManyToMany(cascade= CascadeType.REMOVE)
+	@ManyToMany(cascade= CascadeType.PERSIST)
 	@JoinTable(name = "jugador_achievement", joinColumns = @JoinColumn(name="jugador_id"),
-	inverseJoinColumns = @JoinColumn(name = "achievement"))
+	inverseJoinColumns = @JoinColumn(name = "achievement_id"))
 	private Set<Achievement> achievement;
 	
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "jugador")
@@ -61,4 +63,6 @@ public class Jugador extends BaseEntity{
 	inverseJoinColumns = @JoinColumn(name = "jugador"))
 	private Set<Jugador> setAmigos;
 	
+	@ManyToMany(mappedBy="jugadores",cascade= CascadeType.REMOVE)
+	private Set<Lobby> lobbys;
 }
