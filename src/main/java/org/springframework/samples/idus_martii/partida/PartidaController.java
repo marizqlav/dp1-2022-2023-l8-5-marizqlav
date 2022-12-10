@@ -278,25 +278,27 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
-    @GetMapping(value="/juego/{partidaId}/espiar/cambiar")
+    @GetMapping(value="/juego/{partidaId}/cambiar")
     public ModelAndView cambiarvoto(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
 
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        if (turnoService.findVoto(partidaId, turno.getEdil1().getId()).getEspiado()) {
-
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), voto);
-        } else
-        if (turnoService.findVoto(partidaId, turno.getEdil2().getId()).getEspiado()) {
-
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil2().getId(), voto);
-        }
+        try {
+            if (turnoService.findVoto(turno.getId(), turno.getEdil1().getId()).getEspiado()) {
+                turnoService.cambiarVoto(turno.getId(), getJugadorConectado(), turno.getEdil1().getId(), voto);
+            } else
+            if (turnoService.findVoto(turno.getId(), turno.getEdil2().getId()).getEspiado()) {
+                
+                turnoService.cambiarVoto(turno.getId(), getJugadorConectado(), turno.getEdil2().getId(), voto);
+            }
+        } catch (AccessException e) { }
+        
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
     @GetMapping(value="/juego/{partidaId}/votar")
     public ModelAndView votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
-
+        
         Jugador jugador = getJugadorConectado();
 
         try {

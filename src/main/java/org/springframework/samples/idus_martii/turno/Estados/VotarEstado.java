@@ -14,10 +14,14 @@ public class VotarEstado implements EstadoTurno {
 
     private VotarScreen votarScreen;
 
+    private TurnoService turnoService;
+
     @Autowired
-    VotarEstado(VotarScreen votarScreen) {
+    VotarEstado(VotarScreen votarScreen, TurnoService turnoService) {
 
         this.votarScreen = votarScreen;
+
+        this.turnoService = turnoService;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class VotarEstado implements EstadoTurno {
     @Override
     public EstadoTurnoEnum getNextState(Turno turno) {
 
-        if (turno.getVotosLeales() == 2 || turno.getVotosTraidores() == 2 || (turno.getVotosLeales() == 1 && turno.getVotosTraidores() == 1)) {
+        if (turnoService.findVoto(turno.getId(), turno.getEdil1().getId()) != null && turnoService.findVoto(turno.getId(), turno.getEdil2().getId()) != null) {
         	return EstadoTurnoEnum.Espiar;
         }
         return EstadoTurnoEnum.Votar;

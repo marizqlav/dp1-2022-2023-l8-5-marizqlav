@@ -62,7 +62,7 @@ public class Turno extends BaseEntity {
 	@JoinColumn(name = "ronda_id")
 	private Ronda ronda;
 	
-	private EstadoTurnoEnum estadoTurno;
+	private EstadoTurnoEnum estadoTurno = EstadoTurnoEnum.EmpezarTurno;
 
 	public Integer getNumTurno() {
 		for (int i = 0; i < ronda.getTurnos().size(); i++) {
