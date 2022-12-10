@@ -50,7 +50,7 @@ public class RecuentoScreen implements GameScreen {
         result.addObject("votoEdil1", v1);
         result.addObject("votoEdil2", v2);
 
-        return null;
+        return result;
     }
     
 }

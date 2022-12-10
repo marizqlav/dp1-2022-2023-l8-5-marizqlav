@@ -17,6 +17,9 @@ public class RecuentoEstado implements EstadoTurno {
 
     private TurnoService turnoService;
 
+    private Integer counter = 0;
+    private final Integer COUNT_LIMIT = 10;
+
     @Autowired
     RecuentoEstado(@Lazy TurnoService turnoService, RecuentoScreen recuentoScreen) {
         this.turnoService = turnoService;
@@ -25,33 +28,43 @@ public class RecuentoEstado implements EstadoTurno {
     }
 
     @Override
-    public void takeAction(Turno context) {
-        VotosTurno v1 = turnoService.findVoto(context.getId(), context.getEdil1().getId());
-        VotosTurno v2 = turnoService.findVoto(context.getId(), context.getEdil2().getId());
+    public void takeAction(Turno turno) {
+        counter += 1;
+        if (counter != 0) {
+            return;
+        }
+
+        VotosTurno v1 = turnoService.findVoto(turno.getId(), turno.getEdil1().getId());
+        VotosTurno v2 = turnoService.findVoto(turno.getId(), turno.getEdil2().getId());
 
         if (v1.getTipoVoto() == FaccionesEnumerado.Leal) {
-            context.setVotosLeales(1);
+            turno.setVotosLeales(1);
         } else 
         if (v1.getTipoVoto() == FaccionesEnumerado.Traidor) {
-            context.setVotosTraidores(1);
+            turno.setVotosTraidores(1);
         } else 
         if (v1.getTipoVoto() == FaccionesEnumerado.Mercader) {
-            context.setVotosNeutrales(1);
+            turno.setVotosNeutrales(1);
         }
 
         if (v2.getTipoVoto() == FaccionesEnumerado.Leal) {
-            context.setVotosLeales(context.getVotosLeales() + 1);
+            turno.setVotosLeales(turno.getVotosLeales() + 1);
         } else 
         if (v2.getTipoVoto() == FaccionesEnumerado.Traidor) {
-            context.setVotosTraidores(context.getVotosTraidores() + 1);
+            turno.setVotosTraidores(turno.getVotosTraidores() + 1);
         } else 
         if (v2.getTipoVoto() == FaccionesEnumerado.Mercader) {
-            context.setVotosNeutrales(context.getVotosNeutrales() + 1);
+            turno.setVotosNeutrales(turno.getVotosNeutrales() + 1);
         }
+
+        turnoService.save(turno);
     }
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
+        if (counter > COUNT_LIMIT) {
+            return EstadoTurnoEnum.TerminarTurno;
+        }
         return EstadoTurnoEnum.Recuento;
     }
 

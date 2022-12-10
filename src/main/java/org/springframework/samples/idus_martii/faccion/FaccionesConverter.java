@@ -10,13 +10,13 @@ public class FaccionesConverter implements Converter<String, FaccionesEnumerado>
     @Override
     @Nullable
     public FaccionesEnumerado convert(String source) {
-        if (source == "leal" || source == "verde" || source == "Leal" || source == "Verde") {
+        if (source.equals("leal") || source.equals("verde") || source.equals("Leal") || source.equals("Verde")) {
             return FaccionesEnumerado.Leal;
         } else
-        if (source == "traidor" || source == "rojo" || source == "Traidor" || source == "Rojo") {
+        if (source.equals("traidor") || source.equals("rojo") || source.equals("Traidor") || source.equals("Rojo")) {
             return FaccionesEnumerado.Traidor;
         } else
-        if (source == "mercader" || source == "amarillo" || source == "Mercader" || source == "Amarillo") {
+        if (source.equals("mercader") || source.equals("amarillo") || source.equals("Mercader") || source.equals("Amarillo")) {
             return FaccionesEnumerado.Mercader;
         } else {
             return null;

@@ -2,31 +2,41 @@ package org.springframework.samples.idus_martii.turno.Estados;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EstadoTurnoConverter implements Converter<EstadoTurnoEnum, EstadoTurno> {
 
+    EmpezarTurnoEstado empezarTurnoEstado;
     EstablecerRolesEstado establecerRolesEstado;
     VotarEstado votarEstado;
     EspiarEstado espiarEstado;
     CambiarVotoEstado cambiarVotoEstado;
     TerminarTurnoEstado terminarTurnoEstado;
+    DescubiertoAmarilloEstado descubiertoAmarilloEstado;
+    RecuentoEstado recuentoEstado;
     
     @Autowired
     EstadoTurnoConverter(EstablecerRolesEstado establecerRolesEstado, VotarEstado votarEstado, EspiarEstado espiarEstado,
-        CambiarVotoEstado cambiarVotoEstado, TerminarTurnoEstado terminarTurnoEstado) {
+        CambiarVotoEstado cambiarVotoEstado, TerminarTurnoEstado terminarTurnoEstado, DescubiertoAmarilloEstado descubiertoAmarilloEstado,
+        RecuentoEstado recuentoEstado, EmpezarTurnoEstado empezarTurnoEstado) {
+            
+        this.empezarTurnoEstado = empezarTurnoEstado;
         this.establecerRolesEstado = establecerRolesEstado;
         this.votarEstado = votarEstado;
         this.espiarEstado = espiarEstado;
         this.cambiarVotoEstado = cambiarVotoEstado;
+        this.descubiertoAmarilloEstado = descubiertoAmarilloEstado;
+        this.recuentoEstado = recuentoEstado;
         this.terminarTurnoEstado = terminarTurnoEstado;
     }
 
     @Override
     public EstadoTurno convert(EstadoTurnoEnum source) {
         switch (source) {
+            case EmpezarTurno: {
+                return empezarTurnoEstado;
+            }
             case EstablecerRoles: {
                 return establecerRolesEstado;
             }
@@ -38,6 +48,12 @@ public class EstadoTurnoConverter implements Converter<EstadoTurnoEnum, EstadoTu
             }
             case CambiarVoto: {
                 return cambiarVotoEstado;
+            }
+            case DescubiertoAmarillo: {
+                return descubiertoAmarilloEstado;
+            }
+            case Recuento: {
+                return recuentoEstado;
             }
             case TerminarTurno: {
                 return terminarTurnoEstado;

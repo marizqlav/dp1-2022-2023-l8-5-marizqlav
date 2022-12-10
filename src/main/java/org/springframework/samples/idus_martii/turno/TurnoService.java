@@ -20,14 +20,16 @@ import org.springframework.stereotype.Service;
 public class TurnoService {
 
     TurnoRepository repo;
+    VotosTurnoRepository repoVotosTurno;
     PartidaService partidaService;
     FaccionesConverter faccionesConverter;
 
     @Autowired
-    public TurnoService(TurnoRepository repo, @Lazy PartidaService partidaService, FaccionesConverter faccionesConverter){
+    public TurnoService(TurnoRepository repo, @Lazy PartidaService partidaService, FaccionesConverter faccionesConverter, VotosTurnoRepository repoVotosTurno){
         this.repo = repo;
         this.partidaService = partidaService;
         this.faccionesConverter = faccionesConverter;
+        this.repoVotosTurno = repoVotosTurno;
     }
 
     List<Turno> getTurnos(){
@@ -54,48 +56,46 @@ public class TurnoService {
             throw new AccessException("Solo pueden votar los ediles");
         }
 
-        FaccionesEnumerado voto = faccionesConverter.convert(strVoto);
-        if (voto == FaccionesEnumerado.Traidor) {
-            anadirVotoTurno(turno.getId(), jugador.getId(), "Negativo");
-            save(turno);
-        } else
-        if (voto == FaccionesEnumerado.Leal) {
-            anadirVotoTurno(turno.getId(), jugador.getId(), "Positivo");
-            save(turno);    
-        } else
-        if (voto == FaccionesEnumerado.Mercader) {
-            save(turno);
-        }
+        anadirVotoTurno(turno, jugador, faccionesConverter.convert(strVoto));
+
+        save(turno);
     }
 
     public void cambiarVoto(Integer turnoId, Jugador jugador, Integer edilId, String voto) throws AccessException {
         Turno turno = repo.findById(turnoId).get();
-        VotosTurno v = repo.findVotoByturnoAndPlayer(turnoId, edilId);
+        VotosTurno v = findVoto(turnoId, edilId);
 
-        if (!jugador.equals(turno.getPredor()) || 
-            !(findVoto(turnoId, jugador.getId()) != null && findVoto(turnoId, jugador.getId()).getTipoVoto() == FaccionesEnumerado.Mercader)) {
+        if (!(jugador.equals(turno.getPredor()) || 
+            (findVoto(turnoId, jugador.getId()) != null && findVoto(turnoId, jugador.getId()).getTipoVoto() == FaccionesEnumerado.Mercader))) {
 
             throw new AccessException("Solo pueden cambiar los votos los Predores o los Ediles con voto amarillo");
         }
 
         if (!v.getEspiado()) {
-            throw new AccessException("Solo pueden cambiar votos espiados");
+            throw new AccessException("Solo se pueden cambiar votos espiados");
         }
 
         if (v.getVotoOriginal() != null) {
             throw new AccessException("No se puede cambiar un voto ya cambiado");
         }
-        
+
         v.setVotoOriginal(v.getTipoVoto());
+
         v.setTipoVoto(faccionesConverter.convert(voto));
+
+        repoVotosTurno.save(v);
     }
     
     public VotosTurno findVoto(Integer turnoId, Integer jugadorId){
     	return repo.findVotoByturnoAndPlayer(turnoId, jugadorId);
     }
     
-    public void anadirVotoTurno(Integer turnoId, Integer jugadorId, String voto){
-    	repo.anadirVotoTurno(turnoId, jugadorId,voto);
+    public void anadirVotoTurno(Turno turno, Jugador jugador, FaccionesEnumerado voto) {
+        VotosTurno votosTurno = new VotosTurno();
+        votosTurno.turno = turno;
+        votosTurno.jugador = jugador;
+        votosTurno.tipoVoto = voto;
+    	repoVotosTurno.save(votosTurno);
     }
 
     public void espiarVoto(Integer partidaId, Jugador jugador, String voto) throws AccessException {
@@ -112,11 +112,13 @@ public class TurnoService {
             throw new AccessException("Solo puedes espiar una vez por turno");
         }
 
-        if (voto == "1") {
+        if (voto.equals("1")) {
             votoEdil1.setEspiado(true);
+            repoVotosTurno.save(votoEdil1);
         } else
-        if (voto == "2") {
+        if (voto.equals("2")) {
             votoEdil2.setEspiado(true);
+            repoVotosTurno.save(votoEdil2);
         }
     }
     

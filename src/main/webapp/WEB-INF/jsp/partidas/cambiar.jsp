@@ -44,14 +44,31 @@ table {
    width: 100%;
    border-collapse: collapse;
 }
+.mantener {
+	position: absolute;
+	top: 130px;
+	left: 30px;
+
+}
+.cambiar1 {
+	position: absolute;
+	top: 130px;
+	left: 280px;
+
+}
+.cambiar2 {
+	position: absolute;
+	top: 130px;
+	left: 530px;
+
+}
 .botona {
-	position: relative;
     color: rgba(255,255,255,1);
     text-decoration: none;
 
-  position: absolute;
-  top: 100px;
-  left:140px;
+  	position: absolute;
+	top: 80px;
+	left: 270px;
     background-color: rgba(50,205,50,1);
     font-family: 'Yanone Kaffeesatz';
     font-weight: 700;
@@ -75,13 +92,41 @@ table {
 	transition: all .1s ease;
 }
 .botonb {
-	position: relative;
     color: rgba(255,255,255,1);
     text-decoration: none;
 
-  position: absolute;
-  right:340px;
-  top: 100px;
+	position: absolute;
+	top: 80px;
+	left: 280px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
+.botonc {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
+
+	position: absolute;
+	top: 80px;
+	left: 3000px;
     background-color: rgba(50,205,50,1);
     font-family: 'Yanone Kaffeesatz';
     font-weight: 700;
@@ -322,19 +367,19 @@ width:60px;
 }
 
 #textoenunciado{
-     font-size:70px;
-     right:304px;
-     bottom:650px;
-  display: block;
-  position: absolute;
+    font-size:70px;
+    left: 500px;
+    top: 0px;
+  	display: block;
+  	position: absolute;
 }
 
 #voto1{
-     font-size:30px;
-     left:680px;
-     bottom:350px;
-  display: block;
-  position: absolute;
+    font-size: 30px;
+    left: 680px;
+    top: 80px;
+  	display: block;
+  	position: absolute;
 }
 
 #voto2{
@@ -363,43 +408,48 @@ width:60px;
 		        </td>
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado">Este es el voto espiado</span>
-					<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
-					<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
-					</c:if>
-					<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
-					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
-					</c:if>
-					<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
-					<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
-					</c:if>
+				<span id="voto1">Voto de <c:out value="${votoEdil.jugador.user.username}"/></span>
 
-					<span id="voto1">Voto de <c:out value="${votoEdil.jugador.user.username}"/></span>
-	        	<a href="/partida/${partida.id}" class="botona">Mantener</a>
-				<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
-					<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=traidor" class="botonb">Cambiar a traidor</a>
-					<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
-				</c:if>
-				<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
-					<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
-					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
-				</c:if>
-				<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
-					<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
-					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
-				</c:if>
-				<c:if test="${segundaRonda == 'true'}">
+				<div class="mantener">
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
+						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+						<a href="/partida/juego/${partida.id}/cambiar?voto=traidor" class="botona">Mantener</a>
+					</c:if>
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
-						<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=mercader" class="botonb">Cambiar a mercader</a>
-						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+						<a href="/partida/juego/${partida.id}/cambiar?voto=leal" class="botona">Mantener</a>
+					</c:if>
+				</div>
+
+				<div class="cambiar1">
+					<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
+						<a href="/partida/juego/${partida.id}/cambiar?voto=traidor" class="botonb">Cambiar a traidor</a>
+						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
 					</c:if>
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
-						<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=mercader" class="botonb">Cambiar a mercader</a>
-						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+						<a href="/partida/juego/${partida.id}/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
+						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
 					</c:if>
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
-						<a href="/partida/juego/${partida.id}/espiar/cambiar?voto=traidor" class="botonb">Cambiar a traidor</a>
-						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+						<a href="/partida/juego/${partida.id}/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
+						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+					</c:if>
+				</div>
+				<c:if test="${segundaRonda == 'true'}">
+					<div class="cambiar2">
+						<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
+							<a href="/partida/juego/${partida.id}/cambiar?voto=mercader" class="botonc">Cambiar a mercader</a>
+							<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+						</c:if>
+						<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
+							<a href="/partida/juego/${partida.id}/cambiar?voto=mercader" class="botonc">Cambiar a mercader</a>
+							<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+						</c:if>
+						<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
+							<a href="/partida/juego/${partida.id}/cambiar?voto=traidor" class="botonc">Cambiar a traidor</a>
+							<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
 						</c:if>	
+					</div>
 				</c:if>
 
 					

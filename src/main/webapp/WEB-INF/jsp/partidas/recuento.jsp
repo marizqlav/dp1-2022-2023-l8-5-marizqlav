@@ -330,19 +330,19 @@ width:60px;
 }
 
 #voto1{
-     font-size:30px;
-     left:680px;
-     bottom:350px;
-  display: block;
-  position: absolute;
+	font-size:30px;
+	left:80px;
+	bottom:350px;
+	display: block;
+	position: absolute;
 }
 
 #voto2{
-     font-size:30px;
-     left:940px;
-     bottom:350px;
-  display: block;
-  position: absolute;
+	font-size:30px;
+	left:640px;
+	bottom:350px;
+	display: block;
+	position: absolute;
 }
 
 
@@ -363,25 +363,29 @@ width:60px;
 		        </td>
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado">Votos de este turno (sin ordenar)</span>
+				<div id="voto1">
 					<c:if test="${votoEdil1.tipoVoto.toString() == 'Traidor'}">
-					<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
 					</c:if>
 					<c:if test="${votoEdil1.tipoVoto.toString() == 'Leal'}">
-					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
 					</c:if>
 					<c:if test="${votoEdil1.tipoVoto.toString() == 'Mercader'}">
-					<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
 					</c:if>
-                    
+				</div>
+				
+				<div id="voto2">
 					<c:if test="${votoEdil2.tipoVoto.toString() == 'Traidor'}">
-					<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
 					</c:if>
 					<c:if test="${votoEdil2.tipoVoto.toString() == 'Leal'}">
-					<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
 					</c:if>
 					<c:if test="${votoEdil2.tipoVoto.toString() == 'Mercader'}">
-					<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
+						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
 					</c:if>
+				</div>
                 
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
