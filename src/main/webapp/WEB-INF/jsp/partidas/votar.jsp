@@ -269,9 +269,9 @@ width:60px;
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado">Enviar voto</span>
 	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
-	        			<a href="/partida/juego/${partida.id}/votar/rojo"><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
+	        			<a href="/partida/juego/${partida.id}/votar?color=rojo" style="border-style :solid"><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
 	        			
-	        			<a href="/partida/juego/${partida.id}/votar/verde"><img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" /></a>
+	        			<a href="/partida/juego/${partida.id}/votar?color=verde"><img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" /></a>
 	        		</c:if>
 	        	
 	        	

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.user.Authorities;
 import org.springframework.samples.idus_martii.user.AuthoritiesService;
 import org.springframework.samples.idus_martii.user.User;
@@ -104,5 +105,15 @@ public class JugadorService {
 	public void rechazarPeticion(int jugadorId, int rechazadoId) {
 		 this.jugadorRepo.rechazarPeticion(jugadorId, rechazadoId);
 	}
+	
+	public void deleteAmigo(int idjugador, int idamigo){
+        this.jugadorRepo.rechazarPeticion(idjugador,idamigo);
+        this.jugadorRepo.rechazarPeticion(idamigo,idjugador);
+    }
+
+    public void deleteJugadorById(int id){
+        this.jugadorRepo.deleteById(id);
+    }
+
 	
 }

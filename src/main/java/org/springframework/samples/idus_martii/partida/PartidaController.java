@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -49,6 +50,7 @@ public class PartidaController {
 	private final String PARTIDAS_LISTING_VIEW_FINALIZADAS ="/partidas/partidasList";
     private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
+	private final String  PARTIDA_DETAIL_VIEW="/partidas/partidaDetail";
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
 
     private final String MENU_REFRESH_TIME="5";
@@ -62,7 +64,8 @@ public class PartidaController {
     MensajeService mensajeService;
 
     @Autowired
-    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, TurnoService turnoService, FaccionService faccionService, MensajeService mensajeService) {
+    public PartidaController(PartidaService partidaService, JugadorService jugadorService, RondaService rondaService, 
+        TurnoService turnoService, FaccionService faccionService, MensajeService mensajeService) {
         this.partidaService = partidaService;
         this.jugadorService = jugadorService;
         this.rondaService = rondaService;
@@ -77,6 +80,22 @@ public class PartidaController {
 
         return jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
     }
+    
+    private User getUsuarioConectado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        return currentUser;
+    }
+    
+    @Transactional(readOnly = true)
+	 @GetMapping("/{id}/detalles")
+	 public ModelAndView showDetallesPartida(@PathVariable int id){
+    	ModelAndView result=new ModelAndView(PARTIDA_DETAIL_VIEW);
+    	result.addObject("partida", partidaService.findPartida(id));
+    	result.addObject("datospartida", partidaService.getJugadoresPartida(id));
+	        return result;
+	    }
     
     @Transactional(readOnly = true)
     @GetMapping("/disponibles")
@@ -95,8 +114,12 @@ public class PartidaController {
         response.addHeader("Refresh", MENU_REFRESH_TIME);
 
         ModelAndView result = new ModelAndView(PARTIDAS_LISTING_VIEW_FINALIZADAS);
-
+        System.out.println(getUsuarioConectado().getAuthorities().toString());
+        if(getUsuarioConectado().getAuthorities().toString().equals("[admin]")) {
+        	result.addObject("partidas", partidaService.getAllPartidasFinalizadas());
+        }else {
         result.addObject("partidas", partidaService.getPartidasFinalizadasJugador(getJugadorConectado().getId()));
+        }
         return result;
     }
 
@@ -109,12 +132,20 @@ public class PartidaController {
         result.addObject("partidas", partidaService.getPartidasEnJuego());
         return result;
     }
-
+	
 	@GetMapping(value = "/new")
-	public ModelAndView initCreationForm(Map<String, Object> model) {		
-        Partida partida = new Partida();
-        model.put("partida", partida);
-        return new ModelAndView(VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM);
+	public String initCreationForm(Map<String, Object> model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+        Partida existe = partidaService.jugadorPartidaEnCurso(jugador.getId());
+        if(existe == null) {
+			Partida partida = new Partida();
+			model.put("partida", partida);
+			return VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM;
+		}else {
+			 return "redirect:/partida/" + existe.getId().toString();
+		}
 	}
 	
 	
@@ -143,11 +174,10 @@ public class PartidaController {
             partidaService.cancelarPartida(partidaId);
         } catch (CancelException e) {
             ModelAndView result = new ModelAndView("redirect:/");
-    
             result.addObject("message", "No se puede cancelar la partida");
             return result;
         }
-        ModelAndView result = new ModelAndView("redirect:/");
+        ModelAndView result = new ModelAndView("welcome");
         result.addObject("message", "Se ha cancelado la partida correctamente");
         return result;
     }
@@ -203,27 +233,27 @@ public class PartidaController {
 
         Jugador jugador = getJugadorConectado();
 
-        List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+        //List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
 
     	Turno turno = partidaService.getTurnoActual(partidaId);
     	Ronda ronda = partidaService.getRondaActual(partidaId);
     	Partida partida = partidaService.findPartida(partidaId);
-        
+
         try {
             partidaService.handleTurn(partidaId);
         } catch (NotFoundException e) {
-            ModelAndView res = new ModelAndView("redirect:/");
+            ModelAndView res = new ModelAndView("welcome");
             res.addObject("message", "No se encontró ninguna partida");
             return res;
         }
-        
+
         GameScreen gameScreen = partidaService.getCurrentGameScreen(partidaId);
         ModelAndView result = gameScreen.getView(partidaId, jugador);
         String aviso = gameScreen.getAviso();
-                
+        
         Integer votosFavor = partida.getVotosLeales();
         Integer votosContra = partida.getVotosTraidores();
-        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(),partidaId);
+        Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(), partidaId);
         
         result.addObject("partida", partidaService.findPartida(partidaId));
         result.addObject("jugador", jugador);
@@ -232,114 +262,47 @@ public class PartidaController {
         result.addObject("faccion", faccion);
         result.addObject("votosleales", votosFavor);
         result.addObject("votostraidores", votosContra);
-        result.addObject("mensajes", mensajes);
+        //result.addObject("mensajes", mensajes);
         result.addObject("aviso", aviso);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         return result;
-    }    
-
-    //TODO esto debería ser reducido a una sola url con un post
-    @GetMapping(value = "/juego/{partidaId}/espiar/1")
-    public ModelAndView GetEspiarEdil1(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
-                
-        try {
-            turnoService.espiarVoto1(partidaId);
-        } catch (NotFoundException e) {
-
-        }
-        
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
 
-    @GetMapping(value = "/juego/{partidaId}/espiar/2")
-    public ModelAndView GetEspiarEdil2(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
-                
+    @GetMapping(value = "/juego/{partidaId}/espiar")
+    public ModelAndView GetEspiarEdil(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
+        
         try {
-            turnoService.espiarVoto1(partidaId);
-        } catch (NotFoundException e) {
-
-        }
+            turnoService.espiarVoto(partidaId, getJugadorConectado(), voto);
+        } catch (AccessException e) { }
         
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
-    //TODO esto debería ser con enumerados
-    @GetMapping(value="/juego/{partidaId}/espiar/1/cambiar")
-    public String cambiarvoto(@PathVariable("partidaId") Integer partidaId) {
+    @GetMapping(value="/juego/{partidaId}/espiar/cambiar")
+    public ModelAndView cambiarvoto(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
 
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        VotosTurno votoEdil1 = turnoService.findVoto(turno.getId(), turno.getEdil1().getId());
+        if (turnoService.findVoto(partidaId, turno.getEdil1().getId()).getEspiado()) {
 
-        if (votoEdil1.getTipoVoto() == "Positivo") {
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Negativo");
-            turno.setVotosLeales(turno.getVotosLeales() - 1);
-            turno.setVotosTraidores(turno.getVotosTraidores() + 1);
+            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), voto);
         } else
-        if (votoEdil1.getTipoVoto() == "Negativo") {
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), "Positivo");
-            turno.setVotosLeales(turno.getVotosLeales() + 1);
-            turno.setVotosTraidores(turno.getVotosTraidores() - 1);
-        }
+        if (turnoService.findVoto(partidaId, turno.getEdil2().getId()).getEspiado()) {
 
-        return "redirect:/partida/juego/" + partidaId.toString(); 
-    	
+            turnoService.cambiarVoto(turno.getId(), turno.getEdil2().getId(), voto);
+        }
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
-                
-    //TODO Cambiar todo esto para que sea un solo post
-    //TODO Además igual habría que meterlo en los estados. O no. No sé.
-    @GetMapping(value="/juego/{partidaId}/votar/rojo")
-    public String votacionRoja(@PathVariable("partidaId") Integer partidaId) {
+    
+    @GetMapping(value="/juego/{partidaId}/votar")
+    public ModelAndView votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
 
         Jugador jugador = getJugadorConectado();
-        
-        Turno turno = partidaService.getTurnoActual(partidaId);
 
         try {
-            turnoService.anadirVotoRojo(turno.getId(), jugador); 
-        } catch(AccessException e){
+            turnoService.anadirVoto(partidaId, jugador, color);
+        } catch(AccessException e) { }
 
-        }
-
-        return "redirect:/partida/juego/" + partidaId.toString(); 
-    	
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
-    
-    @GetMapping(value="/juego/{partidaId}/votar/verde")
-    public String votacionVerde(@PathVariable("partidaId") Integer partidaId) {
-
-        Jugador jugador = getJugadorConectado();
-        
-        Turno turno = partidaService.getTurnoActual(partidaId);
-
-        try {
-            turnoService.anadirVotoVerde(turno.getId(), jugador); 
-        } catch(AccessException e){
-
-        }
-
-        return "redirect:/partida/juego/"+partidaId.toString(); 
-    	
-    }
-
-    @GetMapping(value="/juego/{partidaId}/votar/amarillo")
-    public ModelAndView votacionAmarillo(@PathVariable("partidaId") Integer partidaId) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
-
-        Turno turno = partidaService.getTurnoActual(partidaId);
-
-        try {
-            turnoService.anadirVotoAmarillo(turno.getId(), jugador); 
-        }catch(Exception e){
-            System.out.println(e);
-        }
-
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());    	
-    
-    }
-    
-
 }

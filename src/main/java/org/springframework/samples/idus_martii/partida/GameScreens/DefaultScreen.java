@@ -9,7 +9,7 @@ public class DefaultScreen implements GameScreen {
 
     @Override
     public String getAviso() {
-        return null;
+        return "";
     }
 
     @Override

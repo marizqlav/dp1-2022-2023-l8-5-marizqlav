@@ -1,19 +1,25 @@
 package org.springframework.samples.idus_martii.jugador;
 
+import java.util.List;
 import java.util.Set;
 
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
 import org.springframework.samples.idus_martii.model.BaseEntity;
+import org.springframework.samples.idus_martii.partida.Lobby;
 import org.springframework.samples.idus_martii.statistics.Achievement;
 import org.springframework.samples.idus_martii.user.User;
 import lombok.Getter;
@@ -37,9 +43,6 @@ public class Jugador extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
 	private Set<Faccion> faccion;
 
-	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
-	//private Set<Peticion> peticionesEnviadas;
-
 	public String getUsername() {
 		return this.getUser().getUsername();
 	}
@@ -47,22 +50,19 @@ public class Jugador extends BaseEntity{
 		 this.user.setUsername(username) ;
 	}
 	
-	
-	@ManyToMany
+	@ManyToMany(cascade= CascadeType.PERSIST)
 	@JoinTable(name = "jugador_achievement", joinColumns = @JoinColumn(name="jugador_id"),
-	inverseJoinColumns = @JoinColumn(name = "achievement"))
+	inverseJoinColumns = @JoinColumn(name = "achievement_id"))
 	private Set<Achievement> achievement;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jugador")
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "jugador")
 	private Set<Mensaje> mensajes;
-	
-    //@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "jugador")
-    //private Set<Partida> partidasCreadas;
 
-	
-	@ManyToMany
+	@ManyToMany(cascade= CascadeType.REMOVE)
 	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "jugador"))
 	private Set<Jugador> setAmigos;
 	
+	@ManyToMany(mappedBy="jugadores",cascade= CascadeType.REMOVE)
+	private Set<Lobby> lobbys;
 }

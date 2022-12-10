@@ -40,8 +40,11 @@ public class FaccionRepositoryTest {
 		assertFalse(faccion.isNew());
 	}
 	
-	
-	
+	@Test
+	public void testSetFaccionSelecionada() {
+		faccionRepository.setFaccionSelecionada(1, 1, "Traidor");
+		assertNotNull(faccionRepository.getFaccionJugadorPartida(1, 1));
+	}	
 }
 
 

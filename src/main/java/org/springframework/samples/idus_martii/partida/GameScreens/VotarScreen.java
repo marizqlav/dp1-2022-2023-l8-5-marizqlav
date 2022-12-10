@@ -36,7 +36,7 @@ public class VotarScreen implements GameScreen {
             return new ModelAndView("partidas/votar"); //TODO mirar cambiar por el jsp en vez del redirect
         }
 
-        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+        return new ModelAndView("/partidas/tablero");
     }
     
 }

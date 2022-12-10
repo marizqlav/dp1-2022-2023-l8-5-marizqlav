@@ -1,53 +1,34 @@
 package org.springframework.samples.idus_martii.turno;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
+import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.turno.VotosTurno;
 
 @DataJpaTest
 public class TurnoRepositoryTest {
 	@Autowired
 	TurnoRepository turnoRepository;
 	
-//    @Query("SELECT v.tipoVoto FROM VotosTurno v WHERE v.turno.id=:turno_id AND v.jugador.id=:jugador_id")
-//    FaccionesEnumerado espiarVoto(@Param("turno_id") int turno_id,@Param("jugador_id") int jugador_id);
-    //Devuelve null porque no se ha realizado ningun espia
-	@Test
-	public void testEspiarVoto() {
-		FaccionesEnumerado voto=turnoRepository.espiarVoto(4, 2);
-//		assertNotNull(voto);
-//		assertEquals(voto, "Traidor");
-	}
-	
-//    @Query("SELECT v FROM VotosTurno v WHERE v.turno.id=:turno_id AND v.jugador.id=:jugador_id")
-//    VotosTurno findVotoByturnoAndPlayer(@Param("turno_id") int turno_id,@Param("jugador_id") int jugador_id);
-    
+
 	@Test
 	public void testFindVotoByturnoAndPlayer() {
-		VotosTurno votoTurno=turnoRepository.findVotoByturnoAndPlayer(1, 2);
-//		assertNotNull(votoTurno);
-//		assertEquals(votoTurno, "Traidor");
+		Jugador j1=new Jugador();
+		Turno t1=new Turno();
+		j1.setId(1);
+		t1.setId(1);		
+		turnoRepository.anadirVotoTurno(t1.getId(), j1.getId(), "Traidor");
+		turnoRepository.save(t1);
+		VotosTurno votosTurnoPorJugador= turnoRepository.findVotoByturnoAndPlayer(1, 1);
+		assertNotNull(votosTurnoPorJugador);
 	}
-	
-//    @Query("SELECT t FROM Turno t WHERE t.numTurno=:i")
-//    Turno turnoPorNumero(@Param("i") int i);
-	//sale un error relacionado con FaccionesEnumerado
-//	@Test
-//	public void testTurnoPorNumero() {
-//		Turno turnPorNumeroo=turnoRepository.turnoPorNumero(2);
-//		assertNotNull(turnPorNumeroo);
-//		assertEquals(turnPorNumeroo, "Traidor");
-//	}
-	
-	
+
+	@Test
+	public void testAnadirVotoTurno() {
+		turnoRepository.anadirVotoTurno(1, 2, "Traidor");
+		assertNotNull(turnoRepository.findVotoByturnoAndPlayer(1, 2));
+	}	
 }
-
-
-	

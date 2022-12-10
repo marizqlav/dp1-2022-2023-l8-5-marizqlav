@@ -7,7 +7,7 @@ public interface EstadoTurno {
 
 	public void takeAction(Turno context);
 
-    public EstadoTurno getNextState(Turno context); //Return null to keep the current state
+    public EstadoTurnoEnum getNextState(Turno context);
 
     public GameScreen getGameScreen();
 }

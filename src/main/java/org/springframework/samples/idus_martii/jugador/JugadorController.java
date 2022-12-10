@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -32,8 +33,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class JugadorController {
+	
 	private static final String VIEWS_JUGADOR_CREATE_FORM = "jugadores/createOrUpdateJugadorForm";
 	private final String  JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
+	private final String  JUGADORES_AMIGOS_VIEW="/jugadores/jugadoresAmigosList";
 	private final String  JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
 	private static final String VIEWS_USUARIO_LISTING = "jugadores/userByPlayer";
 	private final String  PETICIONES_AMISTAD_VIEW="/jugadores/peticionesAmistadList";
@@ -68,25 +71,32 @@ public class JugadorController {
 	
 	 
 	 @Transactional(readOnly = true)
-	    @GetMapping("/jugadores/profile/{id}")
-	    public ModelAndView showPerfilJugador(@PathVariable int id){
-		 	Jugador jugador=jugadorService.getJugadorById(id);
-		 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		 	ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
-	        result.addObject("jugador", jugador);
-	       
-	        if(authentication!=null)
+	 @GetMapping("/jugadores/profile/{id}")
+	 public ModelAndView showPerfilJugador(@PathVariable int id){
+		 Jugador jugador=jugadorService.getJugadorById(id);
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
+	     result.addObject("jugador", jugador);
+	        if(authentication!=null) {
 	        	if(authentication.isAuthenticated()) {
 	        		User currentUser = (User) authentication.getPrincipal();
 	        		System.out.println(currentUser.getUsername());
 	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
-	        		result.addObject("currentPlayer", jugadoractual);
-	        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
-	        		System.out.println(noSonAmigos);
-	        		result.addObject("noSonAmigos", noSonAmigos);
+	        		if(jugadoractual!=null) {
+	        			result.addObject("currentPlayer", jugadoractual);
+		        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
+		        		System.out.println(noSonAmigos);
+		        		result.addObject("noSonAmigos", noSonAmigos);
+		        		if(jugadoractual.getId() == jugador.getId()) {
+			        		Boolean esTuPerfil=true;
+			        		result.addObject("esTuPerfil", esTuPerfil);
+			        	}
+	        		}
+
 	        	}
-	        	else
-	        		System.out.println("El usuario no está autentificado");
+	        }
+	        else
+	        	System.out.println("El usuario no está autentificado");
 	        return result;
 	    }
 	 
@@ -192,25 +202,29 @@ public class JugadorController {
 		}
 		
 		@GetMapping(value = "/jugadores/peticiones/rechazar/{rechazadoId}")
-	    public String rechazar(@PathVariable("rechazadoId") Integer rechazadoId) {
+	    public ModelAndView rechazar(@PathVariable("rechazadoId") Integer rechazadoId) {
 	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    	User currentUser = (User) authentication.getPrincipal();
 	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        ModelAndView result=new ModelAndView(PETICIONES_AMISTAD_VIEW);
 	        if(jugadorService.sonAmigos(jugador.getId(), rechazadoId)!=null) {
 	        	jugadorService.rechazarPeticion(jugador.getId(), rechazadoId);
+	        	result.addObject("message", "Solicitud de amistad rechazada");
 	        }
-	        return "redirect:/jugadores/peticiones";          
+	        return result;          
 		}
 		
 		@GetMapping(value = "/jugadores/peticiones/aceptar/{aceptadoId}")
-	    public String aceptar(@PathVariable("aceptadoId") Integer aceptadoId) {
+	    public ModelAndView aceptar(@PathVariable("aceptadoId") Integer aceptadoId) {
 	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    	User currentUser = (User) authentication.getPrincipal();
 	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+	        ModelAndView result=new ModelAndView(PETICIONES_AMISTAD_VIEW);
 	        if(jugadorService.sonAmigos(jugador.getId(), aceptadoId)!=null) {
 	        	jugadorService.anadirAmigo(jugador.getId(),aceptadoId);
+	        	result.addObject("message", "Solicitud de amistad aceptada");
 	        }
-	        return "redirect:/jugadores/peticiones";          
+	        return result;          
 		}
 		
 		@GetMapping(value = "/jugadores/amigos")
@@ -221,8 +235,55 @@ public class JugadorController {
 	        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
 	        
 	        List<Jugador> amigos = jugadorService.getAmigos(jugador.getId());
-	        ModelAndView result=new ModelAndView(JUGADORES_LISTING_VIEW);
+	        ModelAndView result=new ModelAndView(JUGADORES_AMIGOS_VIEW);
 	        result.addObject("selections", amigos);
 	        return result;          
 		}
+		
+
+		 @Transactional()
+		    @GetMapping("/jugadores/amigos/eliminar/{jugadorId}")
+		    public ModelAndView deleteAmigo(@PathVariable int jugadorId){
+			 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		    	User currentUser = (User) authentication.getPrincipal();
+		        Jugador jugador = jugadorService.getJugadorByUsername(currentUser.getUsername()).get(0);
+		        jugadorService.deleteAmigo(jugador.getId(),jugadorId);        
+		        ModelAndView result= new ModelAndView(JUGADORES_AMIGOS_VIEW);
+		        result.addObject("message", "Amigo eliminado correctamente");
+		        return result;
+		    }
+
+	    @Transactional(readOnly = true)
+	    @GetMapping("/jugadores/profile/{id}/edit")
+	    public ModelAndView editJugador(@PathVariable int id){
+	        Jugador jugador =jugadorService.getJugadorById(id);        
+	        ModelAndView result=new ModelAndView(VIEWS_JUGADOR_CREATE_FORM);
+	        result.addObject("jugador", jugador);
+	        return result;
+	    }
+	    @Transactional
+	    @PostMapping("/jugadores/profile/{id}/edit")
+	    public ModelAndView saveJugador(@PathVariable int id,@Valid Jugador jugador, BindingResult br){
+
+	        if(br.hasErrors()){
+	            return new ModelAndView(VIEWS_JUGADOR_CREATE_FORM,br.getModel());            
+	        }
+
+	        Jugador jugadorEditar=jugadorService.getJugadorById(id);
+	        BeanUtils.copyProperties(jugador,jugadorEditar,"id");
+	        jugadorService.save(jugadorEditar);
+	        ModelAndView result=showPerfilJugador(id);
+	        result.addObject("message", "El jugador se ha actualizado correctamente");
+	        return result; 
+	    }
+
+		   @Transactional()
+		    @GetMapping("/jugadores/eliminar/{jugadorId}")
+		    public ModelAndView deleteTurno(@PathVariable int jugadorId){
+		        jugadorService.deleteJugadorById(jugadorId);        
+		        ModelAndView result= new ModelAndView("welcome");
+		        result.addObject("message", "El jugador se ha eliminado correctamente");
+		        return result;
+		    }
+
 }

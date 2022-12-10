@@ -9,11 +9,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <idus_martii:layout pageName="jugadores">
     <h2>
-        <c:if test="${jugador['new']}">New </c:if> Jugador
+        <c:if test="${jugador['new']}">New </c:if> Jugffffador
     </h2>
     <form:form modelAttribute="jugador" class="form-horizontal" id="add-jugador-form">
         <div class="form-group has-feedback">
-            <idus_martii:inputField label="Username" name="user.username"/>
+        	
+			<idus_martii:inputUsername label="Username" name="user.username"></idus_martii:inputUsername>
             <idus_martii:inputField label="Name" name="user.name"/>
             <idus_martii:inputField label="Surname" name="user.surname"/>
             <idus_martii:inputField label="Photo" name="user.photo"/>
@@ -24,10 +25,10 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <c:choose>
                     <c:when test="${jugador['new']}">
-                        <button class="btn btn-default" type="submit">Add Jugador</button>
+                        <button class="btn btn-default" type="submit">Añadir Jugador</button>
                     </c:when>
                     <c:otherwise>
-                        <button class="btn btn-default" type="submit">Update Jugador</button>
+                        <button class="btn btn-default" type="submit">Actaulizar Jugador</button>
                     </c:otherwise>
                 </c:choose>
             </div>
