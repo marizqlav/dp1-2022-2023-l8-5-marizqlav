@@ -346,4 +346,10 @@ public class PartidaService {
 			}
 		}		
 	}
+
+
+	public void save(Partida partida) {
+		partidaRepo.save(partida);
+		
+	}
 }
