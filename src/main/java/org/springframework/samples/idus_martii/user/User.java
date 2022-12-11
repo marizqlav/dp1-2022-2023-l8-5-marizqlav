@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
-import org.springframework.samples.idus_martii.model.AuditableEntity;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,9 +34,10 @@ public class User {
 	
 	String password;
 	
-	@NotAudited
+	
 	boolean enabled;
 	
+	@NotAudited
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Authorities> authorities;
 }
