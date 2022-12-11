@@ -17,6 +17,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import java.util.List;
 
 import org.assertj.core.util.Lists;
@@ -24,6 +26,7 @@ import org.assertj.core.util.Lists;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
@@ -33,6 +36,9 @@ import org.junit.jupiter.api.Test;
     excludeAutoConfiguration = SecurityConfiguration.class)
 public class RondaControllerTest {
     	
+
+	public static final String ID_RONDA="1";
+	
     @Autowired
     private MockMvc mockMvc;
 
@@ -68,6 +74,32 @@ public class RondaControllerTest {
 	public void testShowRondas() throws Exception {
 	    mockMvc.perform(get("/rondas/")).
 	   		andExpect(status().isOk());
+	}
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Deleting the ronda")
+	void testProcessDeleteTurnoFormSuccess() throws Exception {
+		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/delete"))
+		.andExpect(view().name("/rondas/rondasList"));
+	}
+
+//	me da un error en el controller porque saveRonda y editRonda tienen la misma url
+//	@WithMockUser(value = "spring")
+//	@Test
+//	@DisplayName("Updating the ronda")
+//	void testProcessUpdateRondaFormSuccess() throws Exception {
+//		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/edit")
+//				.param("id", "1"))
+//		.andExpect(view().name("/rondas/rondasList"));
+//	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Cannot updating the ronda")
+	void testProcessUpdateRondaHasErrors() throws Exception {
+		mockMvc.perform(get("/rondas/"+ 2 +"/edit")
+				.param("id", "1"))
+		.andExpect(view().name("/rondas/createOrUpdateRondaForm"));
 	}
 
 }

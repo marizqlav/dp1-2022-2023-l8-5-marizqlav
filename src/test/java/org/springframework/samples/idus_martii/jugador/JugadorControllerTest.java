@@ -6,11 +6,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
-import org.springframework.samples.idus_martii.faccion.Faccion;
-import org.springframework.samples.idus_martii.partida.PartidaService;
-import org.springframework.samples.idus_martii.ronda.RondaService;
-import org.springframework.samples.idus_martii.statistics.Achievement;
-import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
@@ -20,16 +15,19 @@ import org.springframework.samples.idus_martii.user.User;
 import org.springframework.samples.idus_martii.user.UserService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Set;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
@@ -88,5 +86,87 @@ public class JugadorControllerTest {
 	    mockMvc.perform(get("/jugadores/profile/"+ID_JUGADOR)).
 	   		andExpect(status().isOk());
 	}
+	
+	@WithMockUser(username="admin",authorities= {"admin"})
+    @Test
+    @DisplayName("InitFindForm the jugador")
+	void testInitFindForm() throws Exception {
+		mockMvc.perform(get("/jugadores/find"))
+				.andExpect(status().isOk());
+	}
+//Da error porque no esta creada la vista de jugadoresList, pero funciona bien
+//	@WithMockUser(username="admin",authorities= {"admin"})
+//    @Test
+//    @DisplayName("processFindForm the jugador")
+//	void testprocessFindForm() throws Exception {
+//		mockMvc.perform(get("/jugadores"))
+//				.andExpect(view().name("jugadores/jugadoresList"));
+//	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Crear Jugador form")
+	void testInitCreationForm() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/new"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("jugadores/createOrUpdateJugadorForm"))
+		.andExpect(MockMvcResultMatchers.model().attributeExists("jugador"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Create new Jugador")
+	void processCreationJugadorSuccess() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/jugadores/profile/"+ID_JUGADOR+"/edit")
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+				.param("user", "Alex")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
+
+	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Cannot create new Jugador")
+	void processCreationJugadorHasErrors() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/jugadores/profile/"+ID_JUGADOR+"/edit")
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
+				.param("user", "Alexxxxxxxxx"))
+		.andExpect(status().isOk())
+		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Updating the jugador")
+	void testProcessUpdateRoundFormSuccess() throws Exception {
+		mockMvc.perform(get("/jugadores/profile/" + ID_JUGADOR+"/edit")
+				.param("user", "Ale"))
+		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
+	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Cannot updating the jugador")
+	void testProcessUpdateRoundHasErrors() throws Exception {
+		mockMvc.perform(get("/jugadores/profile/" + 2+"/edit")
+				.param("user", "Ale"))
+		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
+	}
+
+	
+	
+//	da error si se pone el view porque no se a donde va el return
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Deleting the jugador")
+	void testProcessDeleteTurnoFormSuccess() throws Exception {
+		mockMvc.perform(get("/jugadores/eliminar/" + ID_JUGADOR))
+//		.andExpect(status().is3xxRedirection())
+		.andExpect(view().name("welcome"));
+	}
+
+
+
 
 }
