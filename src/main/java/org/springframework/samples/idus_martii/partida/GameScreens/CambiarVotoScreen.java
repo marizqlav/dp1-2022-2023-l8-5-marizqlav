@@ -11,29 +11,49 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class VotarScreen implements GameScreen {
+public class CambiarVotoScreen implements GameScreen {
 
     private PartidaService partidaService;
     private TurnoService turnoService;
 
     @Autowired
-    VotarScreen(@Lazy PartidaService partidaService, @Lazy TurnoService turnoService) {
+    CambiarVotoScreen(@Lazy PartidaService partidaService, @Lazy TurnoService turnoService) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
     }
 
+
     @Override
     public String getAviso() {
-        return "Esperando votos";
+        return "El predor cambiará el voto";
     }
 
     @Override
     public ModelAndView getView(Integer partidaId, Jugador jugadorConectado) {
+    
         Turno turno = partidaService.getTurnoActual(partidaId);
-        VotosTurno votoTurno = turnoService.findVoto(turno.getId(), jugadorConectado.getId());
+        
+        if (jugadorConectado.equals(turno.getPredor())) {
+            
+            ModelAndView result = new ModelAndView("/partidas/cambiar");
 
-        if ((jugadorConectado.equals(turno.getEdil1()) || jugadorConectado.equals(turno.getEdil2())) && votoTurno == null) {
-            return new ModelAndView("partidas/votar");
+            String segundaRonda = "false";
+            if (turno.getRonda().getNumRonda() == 2) {
+                segundaRonda = "true";
+            }
+            result.addObject("segundaRonda", segundaRonda);
+
+            VotosTurno votoEdil1 = turnoService.findVoto(turno.getId(), turno.getEdil1().getId());
+            VotosTurno votoEdil2 = turnoService.findVoto(turno.getId(), turno.getEdil2().getId());
+
+            if (votoEdil1.getEspiado()) {
+                result.addObject("votoEdil", votoEdil1);
+            } else
+            if (votoEdil2.getEspiado()) {
+                result.addObject("votoEdil", votoEdil2);
+            }
+
+            return result;
         }
 
         return new ModelAndView("/partidas/tablero");

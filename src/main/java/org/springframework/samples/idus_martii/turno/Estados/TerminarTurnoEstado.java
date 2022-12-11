@@ -30,17 +30,18 @@ public class TerminarTurnoEstado implements EstadoTurno {
     }
 
     @Override
-    public void takeAction(Turno context) {
+    public void takeAction(Turno context) { //TODO comprobar final del juego
         siguienteTurno(context.getRonda().getPartida().getId());
-        
     }
 
     public void siguienteTurno(Integer partidaId) {
         Turno turno = partidaService.getTurnoActual(partidaId);
 
         if (turno.getNumTurno() == partidaService.findJugadores(partidaId).size()) {
+
             finalizarRonda(partidaId);
         }
+
         iniciarTurno(partidaId);
     }
 
@@ -72,11 +73,7 @@ public class TerminarTurnoEstado implements EstadoTurno {
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
-        if (context.getRonda().getNumRonda() == 1) { //TODO Comprobar final ronda
-            return EstadoTurnoEnum.EstablecerRoles;
-        } else {
-            return null; //TODO devolver el otro estado
-        }
+        return null;
     }
 
     @Override

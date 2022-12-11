@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class VotarScreen implements GameScreen {
+public class DescubiertoAmarilloScreen implements GameScreen {
 
     private PartidaService partidaService;
     private TurnoService turnoService;
 
     @Autowired
-    VotarScreen(@Lazy PartidaService partidaService, @Lazy TurnoService turnoService) {
+    DescubiertoAmarilloScreen(@Lazy PartidaService partidaService, @Lazy TurnoService turnoService) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
     }
 
     @Override
     public String getAviso() {
-        return "Esperando votos";
+        return "El voto era amarillo! El edil puede volver a votar";
     }
 
     @Override
@@ -32,11 +32,18 @@ public class VotarScreen implements GameScreen {
         Turno turno = partidaService.getTurnoActual(partidaId);
         VotosTurno votoTurno = turnoService.findVoto(turno.getId(), jugadorConectado.getId());
 
-        if ((jugadorConectado.equals(turno.getEdil1()) || jugadorConectado.equals(turno.getEdil2())) && votoTurno == null) {
-            return new ModelAndView("partidas/votar");
+        Jugador edilEspiado = null;
+        if (turnoService.findVoto(turno.getId(), turno.getEdil1().getId()).getEspiado()) {
+            edilEspiado = turno.getEdil1();
+        } else
+        if (turnoService.findVoto(turno.getId(), turno.getEdil2().getId()).getEspiado()) {
+            edilEspiado = turno.getEdil2();
+        }
+
+        if (jugadorConectado.equals(edilEspiado) && votoTurno.getVotoOriginal() == null) {
+            return new ModelAndView("partidas/cambiar");
         }
 
         return new ModelAndView("/partidas/tablero");
     }
-    
 }

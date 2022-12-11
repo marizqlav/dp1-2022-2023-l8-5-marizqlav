@@ -1,6 +1,8 @@
 package org.springframework.samples.idus_martii.turno;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -24,7 +26,10 @@ public class VotosTurno extends BaseEntity{
 	@ManyToOne(optional = false)
 	Jugador jugador;
 	
+	@Enumerated(EnumType.STRING)
 	FaccionesEnumerado tipoVoto;
+
 	Boolean espiado = false;
-	FaccionesEnumerado votoOriginal = null; //Si se ha cambiado por el Edil
+
+	FaccionesEnumerado votoOriginal = null;
 }
