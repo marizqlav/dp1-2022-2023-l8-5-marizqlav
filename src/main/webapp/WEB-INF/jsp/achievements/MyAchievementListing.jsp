@@ -15,8 +15,6 @@
             <th>Descripción</th>
             <th>Icono</th>
             <th>Umbral</th>
-            <th></th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -37,24 +35,11 @@
                 <td>       
                     <c:out value="${achievement.threshold} "/>
                 </td>
-				<td> 
-                    <a href="/statistics/achievements/${achievement.id}/edit"> 
-                    	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>                            
-                    </a>       
-                </td>
-                <td> 
-                    <a href="/statistics/achievements/${achievement.id}/delete"> 
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </a>      
-                </td>
 				
-				
-
             </tr>
         </c:forEach>
         </tbody>
     </table>
     
-      <a class="btn btn-default" href="/statistics/achievements/new">Crear nuevo logro</a>
 
 </petclinic:layout>
