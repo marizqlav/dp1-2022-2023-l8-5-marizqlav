@@ -11,9 +11,13 @@ import org.springframework.samples.idus_martii.faccion.FaccionesConverter;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.samples.idus_martii.ronda.Ronda;
+import org.springframework.samples.idus_martii.turno.Estados.CambiarVotoEstado;
+import org.springframework.samples.idus_martii.turno.Estados.DescubiertoAmarilloEstado;
+import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
+import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -70,6 +74,18 @@ public class TurnoControllerTest {
     
     @MockBean
     private TerminarTurnoEstado terminarTurnoEstado;
+    
+    @MockBean
+    private CambiarVotoEstado cambiarVotoEstado;
+    
+    @MockBean
+    private DescubiertoAmarilloEstado descubiertoAmarilloEstado;
+    
+    @MockBean
+    private RecuentoEstado recuentoEstado;
+
+    @MockBean
+    private EmpezarTurnoEstado empezarTurnoEstado;
 
 	@BeforeEach
 	void setup() {
