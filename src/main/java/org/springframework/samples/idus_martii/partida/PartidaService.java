@@ -81,6 +81,10 @@ public class PartidaService {
         return partidaRepo.findAllFinalizadasJugador(idJugador);
     }
     
+    List<Partida> getPartidasCreadasJugador(Integer idJugador) {
+        return partidaRepo.findAllCreadasJugador(idJugador);
+    }
+    
     List<Partida> getAllPartidasFinalizadas() {
         return partidaRepo.findAllFinalizadas();
     }
