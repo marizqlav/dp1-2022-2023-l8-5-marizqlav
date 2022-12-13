@@ -254,7 +254,6 @@ public class PartidaService {
         rondaInicial.setPartida(partida);
        
         Turno turnoInicial = new Turno();
-        turnoInicial.setEstadoTurno(EstadoTurnoEnum.EstablecerRoles);
         turnoInicial.setRonda(rondaInicial);
         
         partidaRepo.save(partida);
@@ -345,5 +344,11 @@ public class PartidaService {
 				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
 			}
 		}		
+	}
+
+
+	public void save(Partida partida) {
+		partidaRepo.save(partida);
+		
 	}
 }

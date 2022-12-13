@@ -11,32 +11,46 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class VotarScreen implements GameScreen {
+public class RecuentoScreen implements GameScreen {
 
     private PartidaService partidaService;
     private TurnoService turnoService;
 
     @Autowired
-    VotarScreen(@Lazy PartidaService partidaService, @Lazy TurnoService turnoService) {
+    RecuentoScreen(@Lazy PartidaService partidaService, @Lazy TurnoService turnoService) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
     }
 
+
     @Override
     public String getAviso() {
-        return "Esperando votos";
+        return "Estos son los votos finales del turno (no en orden)";
     }
 
     @Override
     public ModelAndView getView(Integer partidaId, Jugador jugadorConectado) {
         Turno turno = partidaService.getTurnoActual(partidaId);
-        VotosTurno votoTurno = turnoService.findVoto(turno.getId(), jugadorConectado.getId());
 
-        if ((jugadorConectado.equals(turno.getEdil1()) || jugadorConectado.equals(turno.getEdil2())) && votoTurno == null) {
-            return new ModelAndView("partidas/votar");
+        VotosTurno votoEdil1 = turnoService.findVoto(turno.getId(), turno.getEdil1().getId());
+        VotosTurno votoEdil2 = turnoService.findVoto(turno.getId(), turno.getEdil2().getId());
+
+        VotosTurno v1;
+        VotosTurno v2;
+        if (Math.random() > 0.5) {
+            v1 = votoEdil1;
+            v2 = votoEdil2;
+        } else {
+            v2 = votoEdil1;
+            v1 = votoEdil2;
         }
 
-        return new ModelAndView("/partidas/tablero");
+        ModelAndView result = new ModelAndView("/partidas/recuento");
+
+        result.addObject("votoEdil1", v1);
+        result.addObject("votoEdil2", v2);
+
+        return result;
     }
     
 }

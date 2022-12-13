@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/statistics/achievements")
 public class AchievementController {
 	
+	 private final String  MY_ACHIEVEMENTS_LISTING_VIEW="/achievements/MyAchievementListing";
 	 private final String  ACHIEVEMENTS_LISTING_VIEW="/achievements/AchievementListing";
 	 private final String ACHIEVEMENTS_FORM="/achievements/createOrUpdateAchievementForm";
 	 
@@ -37,10 +38,12 @@ public class AchievementController {
 	    @Transactional(readOnly = true)
 	    @GetMapping("/")
 	    public ModelAndView showPlayerAchievements(){
-	        ModelAndView result=new ModelAndView(ACHIEVEMENTS_LISTING_VIEW);
+	        ModelAndView result=new ModelAndView(MY_ACHIEVEMENTS_LISTING_VIEW);
 	        result.addObject("achievements", service.getAchievements()); //TODO Crear meteodo para devover los logros de un jugador
 	        return result;
 	    }
+	    
+	    
 	    @Transactional()
 	    @GetMapping("/{id}/delete")
 	    public ModelAndView deleteAchievement(@PathVariable int id){
