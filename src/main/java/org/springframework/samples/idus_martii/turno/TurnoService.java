@@ -49,8 +49,8 @@ public class TurnoService {
     }
 
     //TODO restriccion un jugador solo puede votar una vez
-    public void anadirVoto(Integer partidaId, Jugador jugador, String strVoto) throws AccessException {
-        Turno turno = partidaService.getTurnoActual(partidaId);
+    public void anadirVoto(Integer turnoId, Jugador jugador, String strVoto) throws AccessException {
+        Turno turno = repo.findById(turnoId).get();
         
         if (!(jugador.equals(turno.getEdil1()) || jugador.equals(turno.getEdil2()))) {
             throw new AccessException("Solo pueden votar los ediles");

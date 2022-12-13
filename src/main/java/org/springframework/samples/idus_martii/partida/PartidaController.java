@@ -314,9 +314,10 @@ public class PartidaController {
     public ModelAndView votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
         
         Jugador jugador = getJugadorConectado();
+        Turno turno = partidaService.getTurnoActual(partidaId);
 
         try {
-            turnoService.anadirVoto(partidaId, jugador, color);
+            turnoService.anadirVoto(turno.getId(), jugador, color);
         } catch(AccessException e) { }
 
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
