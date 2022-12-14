@@ -55,18 +55,18 @@
 							</li>
 							<li class="divider"></li>
 							<li>
-								<a href="<c:url value="/partida/enJuego" />">Lista de partidas en juego</a>		
+								<a href="<c:url value="/partida/creadas" />">Lista de partidas creadas</a>		
 							</li>
 						</ul>					
 				</idus_martii:menuItem>	
-				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/myachivements"
+				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/"
 					title="Logros">
 					<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
 					<span>Logros</span>
 				</idus_martii:menuItem>
 </sec:authorize>
 <sec:authorize access="hasAuthority('admin')">
-				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/"
+				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/manageAchievements"
 					title="Logros">
 					<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
 					<span>Logros</span>

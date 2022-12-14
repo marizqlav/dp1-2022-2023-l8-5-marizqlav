@@ -48,6 +48,7 @@ public class PartidaController {
 
 	private static final String VIEWS_PARTIDA_CREATE_OR_UPDATE_FORM = "partidas/createOrUpdatePartidaForm";
 	private final String PARTIDAS_LISTING_VIEW_FINALIZADAS ="/partidas/partidasList";
+	private final String PARTIDAS_LISTING_VIEW_CREADAS ="/partidas/partidasListCreadas";
     private final String PARTIDAS_LISTING_VIEW_ACTUALES = "/partidas/partidasListActuales";
 	private final String  PARTIDAS_DISPONIBLES_LISTING_VIEW="/partidas/partidasDisponiblesList";
 	private final String  PARTIDA_DETAIL_VIEW="/partidas/partidaDetail";
@@ -105,6 +106,19 @@ public class PartidaController {
         ModelAndView result = new ModelAndView(PARTIDAS_DISPONIBLES_LISTING_VIEW);
         result.addObject("partidas", partidaService.getPartidasEnJuego());
 
+        return result;
+    }
+    
+    @Transactional(readOnly = true)
+    @GetMapping("/creadas")
+    public ModelAndView showPartidasCreadas(HttpServletResponse response) {
+        response.addHeader("Refresh", MENU_REFRESH_TIME);
+
+        ModelAndView result = new ModelAndView(PARTIDAS_LISTING_VIEW_CREADAS);
+        Jugador jugador = getJugadorConectado();
+  
+        	result.addObject("partidas", partidaService.getPartidasCreadasJugador(jugador.getId()));
+       
         return result;
     }
 
@@ -278,29 +292,32 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
-    @GetMapping(value="/juego/{partidaId}/espiar/cambiar")
+    @GetMapping(value="/juego/{partidaId}/cambiar")
     public ModelAndView cambiarvoto(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
 
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        if (turnoService.findVoto(partidaId, turno.getEdil1().getId()).getEspiado()) {
-
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil1().getId(), voto);
-        } else
-        if (turnoService.findVoto(partidaId, turno.getEdil2().getId()).getEspiado()) {
-
-            turnoService.cambiarVoto(turno.getId(), turno.getEdil2().getId(), voto);
-        }
+        try {
+            if (turnoService.findVoto(turno.getId(), turno.getEdil1().getId()).getEspiado()) {
+                turnoService.cambiarVoto(turno.getId(), getJugadorConectado(), turno.getEdil1().getId(), voto);
+            } else
+            if (turnoService.findVoto(turno.getId(), turno.getEdil2().getId()).getEspiado()) {
+                
+                turnoService.cambiarVoto(turno.getId(), getJugadorConectado(), turno.getEdil2().getId(), voto);
+            }
+        } catch (AccessException e) { }
+        
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
     
     @GetMapping(value="/juego/{partidaId}/votar")
     public ModelAndView votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
-
+        
         Jugador jugador = getJugadorConectado();
+        Turno turno = partidaService.getTurnoActual(partidaId);
 
         try {
-            turnoService.anadirVoto(partidaId, jugador, color);
+            turnoService.anadirVoto(turno.getId(), jugador, color);
         } catch(AccessException e) { }
 
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
