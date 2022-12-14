@@ -6,8 +6,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
+import org.springframework.samples.idus_martii.turno.Estados.CambiarVotoEstado;
+import org.springframework.samples.idus_martii.turno.Estados.DescubiertoAmarilloEstado;
+import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
+import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
 import org.springframework.samples.idus_martii.user.AuthoritiesService;
@@ -62,6 +66,18 @@ public class JugadorControllerTest {
     
     @MockBean
     private TerminarTurnoEstado terminarTurnoEstado;
+    
+    @MockBean
+    private CambiarVotoEstado cambiarVotoEstado;
+    
+    @MockBean
+    private DescubiertoAmarilloEstado descubiertoAmarilloEstado;
+    
+    @MockBean
+    private RecuentoEstado recuentoEstado;
+
+    @MockBean
+    private EmpezarTurnoEstado empezarTurnoEstado;
 
 
 	@BeforeEach
@@ -95,13 +111,13 @@ public class JugadorControllerTest {
 				.andExpect(status().isOk());
 	}
 //Da error porque no esta creada la vista de jugadoresList, pero funciona bien
-//	@WithMockUser(username="admin",authorities= {"admin"})
-//    @Test
-//    @DisplayName("processFindForm the jugador")
-//	void testprocessFindForm() throws Exception {
-//		mockMvc.perform(get("/jugadores"))
-//				.andExpect(view().name("jugadores/jugadoresList"));
-//	}
+	@WithMockUser(username="admin",authorities= {"admin"})
+    @Test
+    @DisplayName("processFindForm the jugador")
+	void testProcessFindForm() throws Exception {
+		mockMvc.perform(get("/jugadores"))
+				.andExpect(view().name("/jugadores/jugadoresList"));
+	}
 	
 	@WithMockUser(value = "spring")
 	@Test
@@ -155,14 +171,11 @@ public class JugadorControllerTest {
 	}
 
 	
-	
-//	da error si se pone el view porque no se a donde va el return
 	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("Deleting the jugador")
 	void testProcessDeleteTurnoFormSuccess() throws Exception {
 		mockMvc.perform(get("/jugadores/eliminar/" + ID_JUGADOR))
-//		.andExpect(status().is3xxRedirection())
 		.andExpect(view().name("welcome"));
 	}
 
