@@ -39,7 +39,7 @@ public class EstablecerRolesEstado implements EstadoTurno {
         } else {
         	 System.out.println("Cambio siguiente");
         	 Turno turnoanterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size()-2);
-            setRolesConsecutivos(partidaId, partidaService.findJugadores(partidaId).indexOf(turnoanterior.getConsul()) + 1);
+            setRolesConsecutivos(partidaId, partidaService.findJugadores(partidaId).indexOf(turnoanterior.getConsul()));
            
         }
     }
@@ -53,18 +53,20 @@ public class EstablecerRolesEstado implements EstadoTurno {
         System.out.println(turno);
         Integer n =  posicionConsul;
         System.out.println(n);
+        
+        n = addNumber.apply(n);
         turno.setConsul(listaJugadores.get(n));
+        
         n = addNumber.apply(n);
-        System.out.println(n);
         turno.setPredor(listaJugadores.get(n));
+        
         n = addNumber.apply(n);
-        System.out.println(n);
         turno.setEdil1(listaJugadores.get(n));
+
         n = addNumber.apply(n);
-        System.out.println(n);
         turno.setEdil2(listaJugadores.get(n));
-        n = addNumber.apply(n);
-        System.out.println(n);
+     
+
         turnoService.save(turno);
         System.out.println("Turno actualizado");
     }
