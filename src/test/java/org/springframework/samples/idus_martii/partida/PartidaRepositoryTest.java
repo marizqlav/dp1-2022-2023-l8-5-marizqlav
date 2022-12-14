@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -156,6 +157,29 @@ public class PartidaRepositoryTest {
 		List<Partida> listaPartidasGanadas=partidaRepository.findPartidasGanadas(1);
 		assertNotNull(listaPartidasGanadas);
 		assertFalse(listaPartidasGanadas.isEmpty());
+	}
+	
+	@Test
+	public void testJugadorPartidaEnCurso() {
+		Partida partida = new Partida();
+        Lobby lobby = new Lobby();
+        lobby.setId(2);
+        partida.setNumeroJugadores(5);
+        partida.setFechaCreacion(LocalDateTime.now());
+    	partida.setLobby(lobby);
+        lobby.setPartida(partida);
+		Jugador jugador = new Jugador();
+		jugador.setId(222);
+		partida.setFechaFin(null);
+		partida.setJugador(jugador);
+		System.out.println("jugador:" + jugador.getId());
+		System.out.println("partida jugador: " + partida.getJugador().getId());
+		partidaRepository.save(partida);
+		System.out.println("encontrada: " + partidaRepository.jugadorPartidaEnCurso(jugador.getId()));
+		
+		assertEquals(partida, partidaRepository.jugadorPartidaEnCurso(jugador.getId()));
+
+		
 	}
 	
 }
