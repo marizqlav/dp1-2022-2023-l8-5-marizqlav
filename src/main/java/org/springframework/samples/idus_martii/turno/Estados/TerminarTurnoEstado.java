@@ -36,9 +36,7 @@ public class TerminarTurnoEstado implements EstadoTurno {
 
     public void siguienteTurno(Integer partidaId) {
         Turno turno = partidaService.getTurnoActual(partidaId);
-
         if (turno.getNumTurno() == partidaService.findJugadores(partidaId).size()) {
-
             finalizarRonda(partidaId);
         }
 
@@ -47,7 +45,6 @@ public class TerminarTurnoEstado implements EstadoTurno {
 
     private void finalizarRonda(Integer partidaId) {
         Ronda ronda = partidaService.getRondaActual(partidaId);
-
     	if (ronda.getNumRonda() == 1) {
     		iniciarRonda(ronda.getPartida().getId());
     	} else {
@@ -64,11 +61,14 @@ public class TerminarTurnoEstado implements EstadoTurno {
 
     private void iniciarRonda(Integer partidaId) { //Use instead of iniciarTurno for new Ronda
 		Partida partida = partidaService.findPartida(partidaId);
-
+		
 		Ronda ronda = new Ronda();
         ronda.setPartida(partida);
         
         rondaService.save(ronda);
+        partida.getRondas().add(ronda);
+        partidaService.save(partida);
+
 	}
 
     @Override
