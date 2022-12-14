@@ -31,13 +31,16 @@ public class EstablecerRolesEstado implements EstadoTurno {
     @Override
     public void takeAction(Turno turno) {
         Integer partidaId = turno.getRonda().getPartida().getId();
-
+       
         if (turno.getNumTurno() == 1) {
             Integer random = (int) Math.floor((Math.random() * (partidaService.findPartida(partidaId).getNumeroJugadores())));
             setRolesConsecutivos(partidaId, random);
-
+            System.out.println("Cambio 1 de roles");
         } else {
-            setRolesConsecutivos(partidaId, partidaService.findJugadores(partidaId).indexOf(turno.getConsul()) + 1);
+        	 System.out.println("Cambio siguiente");
+        	 Turno turnoanterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size()-2);
+            setRolesConsecutivos(partidaId, partidaService.findJugadores(partidaId).indexOf(turnoanterior.getConsul()) + 1);
+           
         }
     }
 
@@ -47,22 +50,23 @@ public class EstablecerRolesEstado implements EstadoTurno {
         Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
         
         Turno turno = partidaService.getTurnoActual(partidaId);
-
+        System.out.println(turno);
         Integer n =  posicionConsul;
-
+        System.out.println(n);
         turno.setConsul(listaJugadores.get(n));
         n = addNumber.apply(n);
-
+        System.out.println(n);
         turno.setPredor(listaJugadores.get(n));
         n = addNumber.apply(n);
-
+        System.out.println(n);
         turno.setEdil1(listaJugadores.get(n));
         n = addNumber.apply(n);
-
+        System.out.println(n);
         turno.setEdil2(listaJugadores.get(n));
         n = addNumber.apply(n);
-        
+        System.out.println(n);
         turnoService.save(turno);
+        System.out.println("Turno actualizado");
     }
 
     @Override

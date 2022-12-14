@@ -30,7 +30,7 @@ public class RecuentoEstado implements EstadoTurno {
     @Override
     public void takeAction(Turno turno) {
         counter += 1;
-        if (counter != 0) {
+        if (counter != 1) {
             return;
         }
 
@@ -63,6 +63,7 @@ public class RecuentoEstado implements EstadoTurno {
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
         if (counter > COUNT_LIMIT) {
+        	counter = 0;
             return EstadoTurnoEnum.TerminarTurno;
         }
         return EstadoTurnoEnum.Recuento;
