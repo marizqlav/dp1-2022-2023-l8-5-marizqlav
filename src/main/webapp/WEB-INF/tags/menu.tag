@@ -55,7 +55,7 @@
 							</li>
 							<li class="divider"></li>
 							<li>
-								<a href="<c:url value="/partida/enJuego" />">Lista de partidas en juego</a>		
+								<a href="<c:url value="/partida/creadas" />">Lista de partidas creadas</a>		
 							</li>
 						</ul>					
 				</idus_martii:menuItem>	
