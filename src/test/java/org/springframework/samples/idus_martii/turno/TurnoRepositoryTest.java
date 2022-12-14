@@ -14,10 +14,13 @@ public class TurnoRepositoryTest {
 	TurnoRepository turnoRepository;
 	
 
-	@Test
+	@Test //cambiar findVotoByturnoAndPlayer de Turno a VotosTuroRepository
 	public void testFindVotoByturnoAndPlayer() {
 		Jugador j1=new Jugador();
 		Turno t1=new Turno();
+		
+		VotosTurno vT = new VotosTurno();
+		vT.setJugador(j1);
 		j1.setId(1);
 		t1.setId(1);		
 		turnoRepository.anadirVotoTurno(t1.getId(), j1.getId(), "Traidor");
@@ -26,9 +29,9 @@ public class TurnoRepositoryTest {
 		assertNotNull(votosTurnoPorJugador);
 	}
 
-	@Test
-	public void testAnadirVotoTurno() {
-		turnoRepository.anadirVotoTurno(1, 2, "Traidor");
-		assertNotNull(turnoRepository.findVotoByturnoAndPlayer(1, 2));
-	}	
+//	@Test
+//	public void testAnadirVotoTurno() {
+//		turnoRepository.anadirVotoTurno(1, 2, "Traidor");
+//		assertNotNull(turnoRepository.findVotoByturnoAndPlayer(1, 2));
+//	}	
 }

@@ -279,7 +279,7 @@ public class JugadorController {
 
 		   @Transactional()
 		    @GetMapping("/jugadores/eliminar/{jugadorId}")
-		    public ModelAndView deleteTurno(@PathVariable int jugadorId){
+		    public ModelAndView deleteJugador(@PathVariable int jugadorId){
 		        jugadorService.deleteJugadorById(jugadorId);        
 		        ModelAndView result= new ModelAndView("welcome");
 		        result.addObject("message", "El jugador se ha eliminado correctamente");
