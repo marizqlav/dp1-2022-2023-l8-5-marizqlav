@@ -111,13 +111,13 @@ public class JugadorControllerTest {
 				.andExpect(status().isOk());
 	}
 //Da error porque no esta creada la vista de jugadoresList, pero funciona bien
-//	@WithMockUser(username="admin",authorities= {"admin"})
-//    @Test
-//    @DisplayName("processFindForm the jugador")
-//	void testprocessFindForm() throws Exception {
-//		mockMvc.perform(get("/jugadores"))
-//				.andExpect(view().name("jugadores/jugadoresList"));
-//	}
+	@WithMockUser(username="admin",authorities= {"admin"})
+    @Test
+    @DisplayName("processFindForm the jugador")
+	void testProcessFindForm() throws Exception {
+		mockMvc.perform(get("/jugadores"))
+				.andExpect(view().name("/jugadores/jugadoresList"));
+	}
 	
 	@WithMockUser(value = "spring")
 	@Test
@@ -171,14 +171,11 @@ public class JugadorControllerTest {
 	}
 
 	
-	
-//	da error si se pone el view porque no se a donde va el return
 	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("Deleting the jugador")
 	void testProcessDeleteTurnoFormSuccess() throws Exception {
 		mockMvc.perform(get("/jugadores/eliminar/" + ID_JUGADOR))
-//		.andExpect(status().is3xxRedirection())
 		.andExpect(view().name("welcome"));
 	}
 
