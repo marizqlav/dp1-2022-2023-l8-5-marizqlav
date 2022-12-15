@@ -150,6 +150,9 @@ public class JugadorController {
 			// find jugadors by last name
 			Collection<Jugador> results = this.jugadorService.getJugadorByUsername(jugador.getUsername());
 			//Collection<Jugador> results = this.jugadorService.getAll();
+			
+			System.out.println("aaaaaaaaaaaaa"+ jugadorService.getPlayersPaginated(results).keySet() + "bbb");
+			
 			if (results.isEmpty()) {
 				// no jugadores found
 				result.rejectValue("username", "notFound", "not found");
