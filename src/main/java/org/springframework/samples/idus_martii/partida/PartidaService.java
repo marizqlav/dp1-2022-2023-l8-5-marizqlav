@@ -89,8 +89,8 @@ public class PartidaService {
         return partidaRepo.findAllFinalizadas();
     }
 
-    public List<Faccion> getJugadoresPartida(int id) {
-  		return this.partidaRepo.findJugadoresPartida(id);
+    public List<Faccion> getFaccionesPartida(Integer id) {
+  		return this.partidaRepo.findFaccionesPartida(id);
   	}
     
     public void crearPartida(Partida partida, Jugador jugador) throws CreationException {

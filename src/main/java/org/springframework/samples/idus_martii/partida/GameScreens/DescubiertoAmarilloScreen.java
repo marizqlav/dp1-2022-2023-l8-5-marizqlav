@@ -23,7 +23,7 @@ public class DescubiertoAmarilloScreen implements GameScreen {
     }
 
     @Override
-    public String getAviso() {
+    public String getAviso(Integer partidaId) {
         return "El voto era amarillo! El edil puede volver a votar";
     }
 

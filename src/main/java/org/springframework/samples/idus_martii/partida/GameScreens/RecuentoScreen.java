@@ -24,7 +24,7 @@ public class RecuentoScreen implements GameScreen {
 
 
     @Override
-    public String getAviso() {
+    public String getAviso(Integer partidaId) {
         return "Estos son los votos finales del turno (no en orden)";
     }
 

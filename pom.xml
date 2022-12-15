@@ -210,6 +210,11 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.jpatterns</groupId>
+            <artifactId>jpatterns</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>

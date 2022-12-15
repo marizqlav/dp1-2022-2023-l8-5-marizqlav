@@ -20,7 +20,7 @@ public class ElegirFaccionScreen implements GameScreen {
     }
 
     @Override
-    public String getAviso() {
+    public String getAviso(Integer partidaId) {
         return "Elija facción";
     }
 

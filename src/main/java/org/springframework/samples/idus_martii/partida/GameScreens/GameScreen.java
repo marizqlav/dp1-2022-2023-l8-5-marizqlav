@@ -4,6 +4,6 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.web.servlet.ModelAndView;
 
 public interface GameScreen {
-    public String getAviso();
+    public String getAviso(Integer partidaId);
     public ModelAndView getView(Integer partidaId, Jugador jugadorConectado);
 }
