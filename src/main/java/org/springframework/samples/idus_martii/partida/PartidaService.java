@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
+
 import java.util.Map;
 import java.awt.Paint;
 import java.lang.reflect.Array;
@@ -52,11 +53,10 @@ public class PartidaService {
     @Autowired
     public PartidaService(PartidaRepository partidaRepo, TurnoService turnoService, RondaService rondaService, 
         FaccionService faccionService, @Lazy EstadoTurnoConverter estadoTurnoConverter) {
-        this.partidaRepo = partidaRepo;
         this.turnoService = turnoService;
         this.rondaService = rondaService;
         this.faccionService = faccionService;
-
+        this.partidaRepo = partidaRepo;
         this.estadoTurnoConverter = estadoTurnoConverter;
     }
 
@@ -89,8 +89,8 @@ public class PartidaService {
         return partidaRepo.findAllFinalizadas();
     }
 
-    public List<Faccion> getJugadoresPartida(int id) {
-  		return this.partidaRepo.findJugadoresPartida(id);
+    public List<Faccion> getFaccionesPartida(Integer id) {
+  		return this.partidaRepo.findFaccionesPartida(id);
   	}
     
     public void crearPartida(Partida partida, Jugador jugador) throws CreationException {
@@ -167,10 +167,12 @@ public class PartidaService {
 	}
     
     public Map<FaccionesEnumerado, List<Integer>> getStats(Jugador jugador){
+    	System.out.println(partidaRepo == null);
     	List<Partida> jugadas =  partidaRepo.findAllFinalizadasJugador(jugador.getId());
     	List<Partida> victorias =  partidaRepo.findPartidasGanadas(jugador.getId());
     	Map<FaccionesEnumerado, List<Integer>> stats = new HashMap<FaccionesEnumerado, List<Integer>>();
     	List<Integer> ls = new ArrayList<Integer>();
+    	ls.add(0);
     	ls.add(0);
     	ls.add(0);
     	for(FaccionesEnumerado faccion : FaccionesEnumerado.values()) {
@@ -181,43 +183,35 @@ public class PartidaService {
     		if(victorias.contains(p)) {
     			values.add(stats.get(p.faccionGanadora).get(0) +1);
     			values.add(stats.get(p.faccionGanadora).get(1));
+    			values.add(stats.get(p.faccionGanadora).get(2) +1);
     			stats.put(p.faccionGanadora, values);
     		}else{
     			values.add(stats.get(p.faccionGanadora).get(0));
     			values.add(stats.get(p.faccionGanadora).get(1) +1);
+    			values.add(stats.get(faccionService.getFaccionJugadorPartida(jugador.getId(), p.getId()).getFaccionSelecionada()).get(2) +1);
     			stats.put(faccionService.getFaccionJugadorPartida(jugador.getId(), p.getId()).getFaccionSelecionada(), values);
     		}
     	}
     	return stats;
     }
-    
-    public Map<String, Duration> duracionPartidasJugador(Jugador jugador) {
-    	 Map<String, Duration> stats = new HashMap<String, Duration>();
-    	 Duration min = null;
-    	 Duration max = null;
-    	 Duration sum = null;
-    	 for(Partida p : partidaRepo.findAllFinalizadasJugador(jugador.getId())) {
-    		 Duration duration = Duration.between(p.getFechaCreacion(), p.getFechaFin());
-    		 if(sum == null) {
-    			 min = duration;
-    	    	 max = duration;
-    	    	 sum = duration;
-    		 }
-    		 else {
-    			 if(duration.compareTo(min) <0) {
-    				 min = duration;
-    			 }
-    			 else if(duration.compareTo(max) >0) {
-    				 max = duration;
-    			 }
-    			 sum = sum.plus(duration);
-    		 }
-    	 }
-    	 stats.put("max", max);
-    	 stats.put("min", min);
-    	 stats.put("media", sum.dividedBy(partidaRepo.findAllFinalizadasJugador(jugador.getId()).size()));
-    	 return stats;
+   
+    public FaccionesEnumerado faccionMasJugadaugador(Jugador jugador){
+    	Map<FaccionesEnumerado, List<Integer>> stats = this.getStats(jugador);
+		 int leal = stats.get(FaccionesEnumerado.Leal).get(2);
+		 int traidor = stats.get(FaccionesEnumerado.Traidor).get(2);
+		 int mercader = stats.get(FaccionesEnumerado.Mercader).get(2);
+		 if(leal >= traidor && leal >= mercader){
+			 return FaccionesEnumerado.Leal;
+		 }
+		 else if(traidor >= leal && traidor >= mercader){
+			 return FaccionesEnumerado.Traidor;
+		 }
+		 else {
+			 return FaccionesEnumerado.Mercader;
+		 }
     }
+    
+
     
     public Map<String, Integer> promedioJugadoresPartida(Jugador jugador){
    	 Map<String, Integer> stats = new HashMap<String, Integer>();

@@ -24,7 +24,7 @@ public class CambiarVotoScreen implements GameScreen {
 
 
     @Override
-    public String getAviso() {
+    public String getAviso(Integer partidaId) {
         return "El predor cambiará el voto";
     }
 

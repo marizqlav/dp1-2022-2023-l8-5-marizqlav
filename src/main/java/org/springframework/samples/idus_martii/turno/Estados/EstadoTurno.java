@@ -1,8 +1,11 @@
 package org.springframework.samples.idus_martii.turno.Estados;
 
+import org.jpatterns.gof.StatePattern;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.turno.Turno;
 
+@StatePattern
+@StatePattern.State
 public interface EstadoTurno {
 
 	public void takeAction(Turno context);

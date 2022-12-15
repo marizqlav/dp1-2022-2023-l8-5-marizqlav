@@ -6,6 +6,7 @@ public enum EstadoTurnoEnum {
     Votar,
     Espiar,
     CambiarVoto,
+    ElegirRoles,
     DescubiertoAmarillo,
     Recuento,
     ElegirFaccion,

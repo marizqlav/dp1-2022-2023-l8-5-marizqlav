@@ -24,6 +24,7 @@ import org.springframework.samples.idus_martii.partida.GameScreens.DefaultScreen
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
+import org.springframework.samples.idus_martii.turno.InvalidPlayerException;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.samples.idus_martii.turno.VotosTurno;
@@ -94,7 +95,7 @@ public class PartidaController {
 	 public ModelAndView showDetallesPartida(@PathVariable int id){
     	ModelAndView result=new ModelAndView(PARTIDA_DETAIL_VIEW);
     	result.addObject("partida", partidaService.findPartida(id));
-    	result.addObject("datospartida", partidaService.getJugadoresPartida(id));
+    	result.addObject("datospartida", partidaService.getFaccionesPartida(id));
 	        return result;
 	    }
     
@@ -263,7 +264,7 @@ public class PartidaController {
 
         GameScreen gameScreen = partidaService.getCurrentGameScreen(partidaId);
         ModelAndView result = gameScreen.getView(partidaId, jugador);
-        String aviso = gameScreen.getAviso();
+        String aviso = gameScreen.getAviso(partidaId);
         
         Integer votosFavor = partida.getVotosLeales();
         Integer votosContra = partida.getVotosTraidores();
@@ -311,7 +312,7 @@ public class PartidaController {
     }
     
     @GetMapping(value="/juego/{partidaId}/votar")
-    public ModelAndView votacionRoja(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
+    public ModelAndView votacion(@PathVariable("partidaId") Integer partidaId, @RequestParam String color) {
         
         Jugador jugador = getJugadorConectado();
         Turno turno = partidaService.getTurnoActual(partidaId);
@@ -322,4 +323,18 @@ public class PartidaController {
 
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
+
+    @GetMapping(value="/juego/{partidaId}/elegirrol")
+    public ModelAndView elegirRol(@PathVariable("partidaId") Integer partidaId, @RequestParam Integer jugadorId) {
+        
+        Turno turno = partidaService.getTurnoActual(partidaId);
+        Jugador jugadorAAsignar = jugadorService.getJugadorById(jugadorId);
+
+        try {
+            turnoService.asignarRol(turno.getId(), jugadorAAsignar);
+        } catch (InvalidPlayerException e) { }
+
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+    }
+
 }
