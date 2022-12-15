@@ -10,29 +10,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.samples.idus_martii.statistics.StatisticsService;
 
 @Controller
 @RequestMapping("/statistics")
 public class StatisticsController {
 	
-	 private final String STATISTICS_PLAYER_VIEW="/estadisticas/estadisticasJugador";
+	private final String STATISTICS_PLAYER_VIEW="/estadisticas/estadisticasJugador";
+	private final StatisticsService statService;
+	
+	JugadorService jService;
+	PartidaService pService;
 	 
-	 JugadorService jService;
-	 PartidaService pService;
+	@Autowired
+	public StatisticsController(JugadorService jService, PartidaService pService, StatisticsService statService) {
+		this.jService=jService;
+		this.pService=pService;
+		this.statService = statService;
+	}
 	 
-	 @Autowired
-	 public StatisticsController(JugadorService jService, PartidaService pService) {
-		 this.jService=jService;
-		 this.pService=pService;
-	 }
-	 
-	 @Transactional(readOnly = true)
-	    @GetMapping("/jugador/{jugadorId}")
-	    public ModelAndView showStatisticPlayer(@PathVariable("jugadorId") Integer jugadorId ) {
-	        ModelAndView result=new ModelAndView(STATISTICS_PLAYER_VIEW);
-//	        Jugador j = jService.getJugadorById(jugadorId);
-//	        result.addObject("users", jService.getUserByJugador(j));
-	        return result;
-	    }
+	@Transactional(readOnly = true)
+	@GetMapping("/jugador/{jugadorId}")
+	public ModelAndView showStatisticPlayer(@PathVariable("jugadorId") Integer jugadorId ) {
+		ModelAndView result=new ModelAndView(STATISTICS_PLAYER_VIEW);
+		System.out.println(statService.paridasGanadas(jService.getJugadorById(jugadorId)));
+//	  	Jugador j = jService.getJugadorById(jugadorId);
+//	    result.addObject("users", jService.getUserByJugador(j));
+		return result;
+	}
 
 }
