@@ -136,7 +136,7 @@ public class JugadorController {
 	 	@GetMapping(value = "/jugadores/find")
 		public String initFindForm(Map<String, Object> model) {
 			model.put("jugador", new Jugador());
-			return "jugadores/findJugadores";
+			return "/jugadores/findJugadores";
 		}
 
 		@GetMapping(value = "/jugadores")
@@ -163,7 +163,7 @@ public class JugadorController {
 			else {
 				// multiple jugadores found
 				model.put("selections", results);
-				return "jugadores/jugadoresList";
+				return JUGADORES_LISTING_VIEW;
 			}
 		}
 		

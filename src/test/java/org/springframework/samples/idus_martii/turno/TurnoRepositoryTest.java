@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.turno.VotosTurno;
 
@@ -16,17 +17,18 @@ public class TurnoRepositoryTest {
 
 	@Test //cambiar findVotoByturnoAndPlayer de Turno a VotosTuroRepository
 	public void testFindVotoByturnoAndPlayer() {
-		Jugador j1=new Jugador();
-		Turno t1=new Turno();
-		
-		VotosTurno vT = new VotosTurno();
-		vT.setJugador(j1);
-		j1.setId(1);
-		t1.setId(1);		
-		turnoRepository.anadirVotoTurno(t1.getId(), j1.getId(), "Traidor");
-		turnoRepository.save(t1);
-		VotosTurno votosTurnoPorJugador= turnoRepository.findVotoByturnoAndPlayer(1, 1);
-		assertNotNull(votosTurnoPorJugador);
+//		Jugador j1=new Jugador();
+//		Turno t1=new Turno();
+//		VotosTurno vT = new VotosTurno();
+//		vT.setJugador(j1);
+//		j1.setId(1);
+//		t1.setId(1);
+//		vT.setTipoVoto(FaccionesEnumerado.Traidor);
+//		vT.setTurno(t1);
+////		turnoRepository.anadirVotoTurno(t1.getId(), j1.getId(), "Traidor");
+//		turnoRepository.save(t1);
+		VotosTurno vT = turnoRepository.findVotoByturnoAndPlayer(1, 1);
+		assertNotNull(vT);
 	}
 
 //	@Test
