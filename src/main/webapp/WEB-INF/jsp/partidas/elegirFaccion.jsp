@@ -270,12 +270,22 @@ width:60px;
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado">Enviar voto</span>
 	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
-	        			<a href="/partida/juego/${partida.id}/votar?color=rojo" ><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
-	        			
-	        			<a href="/partida/juego/${partida.id}/votar?color=verde"><img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" /></a>
+	        			<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == 'Traidor'}">
+	        			Traidor
+	        			<img src="/resources/images/faccion_traidor.jpg" id="faccionactual"/>
 	        		</c:if>
-	        	
-	        	
+	        		<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == 'Leal'}">
+	        			Leal
+	        			<img src="/resources/images/faccion_leal.jpg" id="faccionactual"/>
+	        		</c:if>
+	        		<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == 'Mercader'}">
+	        			Mercader
+	        			<img src="/resources/images/faccion_mercader.jpg" id="faccionactual"/>
+	        		</c:if>
+	        		<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == NULL}">
+	        			No asignada
+	        			<img src="/resources/images/idus-martii.jpg" id="faccionposible3"/>
+	        		</c:if>
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>

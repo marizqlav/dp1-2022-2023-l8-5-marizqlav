@@ -8,5 +8,6 @@ public enum EstadoTurnoEnum {
     CambiarVoto,
     DescubiertoAmarillo,
     Recuento,
+    ElegirFaccion,
     TerminarTurno;
 }
