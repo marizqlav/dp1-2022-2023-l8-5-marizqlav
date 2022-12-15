@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.jugador;
 
 import java.time.LocalTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +152,6 @@ public class JugadorController {
 			Collection<Jugador> results = this.jugadorService.getJugadorByUsername(jugador.getUsername());
 			//Collection<Jugador> results = this.jugadorService.getAll();
 			
-			System.out.println("aaaaaaaaaaaaa"+ jugadorService.getPlayersPaginated(results).keySet() + "bbb");
 			
 			if (results.isEmpty()) {
 				// no jugadores found
@@ -168,6 +168,42 @@ public class JugadorController {
 				model.put("selections", results);
 				return JUGADORES_LISTING_VIEW;
 			}
+		}
+		
+		@GetMapping(value = "/jugadores/{pagina}")
+		public ModelAndView processFindFormPaginated(Jugador jugador, BindingResult result, Map<String, Object> model, @PathVariable("pagina") Integer pagina) {
+			String url = "";
+			// allow parameterless GET request for /jugadores to return all records
+			if (jugador.getUsername() == null) {
+				jugador.setUsername(""); // empty string signifies broadest possible search
+			}
+
+			// find jugadors by last name
+			List<Jugador> results = jugadorService.getPlayersPaginated(this.jugadorService.getJugadorByUsername(jugador.getUsername())).get(pagina-1);
+			int max = jugadorService.getPlayersPaginated(this.jugadorService.getJugadorByUsername(jugador.getUsername())).size();
+			//Collection<Jugador> results = this.jugadorService.getAll();
+			
+			if (results.isEmpty()) {
+				// no jugadores found
+				result.rejectValue("username", "notFound", "not found");
+				url = "/jugadores/findJugadores";
+			}
+			else if (results.size() == 1) {
+				// 1 jugador found
+				jugador = results.iterator().next();
+				url = "redirect:/jugadores/profile/" + jugador.getId();
+			}
+			else {
+				// multiple jugadores found
+				model.put("selections", results);
+				model.put("busqueda", "?user.username="+ result.getFieldValue("username"));
+				model.put("ultima", max);
+				url = JUGADORES_LISTING_VIEW;
+			}
+			ModelAndView modeloView =new ModelAndView(url);
+			modeloView.addObject("pagina", pagina);
+			return modeloView;
+			
 		}
 		
 		@GetMapping(value = "/new")

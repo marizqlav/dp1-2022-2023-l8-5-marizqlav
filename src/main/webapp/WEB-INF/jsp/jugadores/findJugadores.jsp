@@ -14,7 +14,7 @@
     <h2>Buscar Jugadores</h2>
 
     
-    <form:form modelAttribute="jugador" action="/jugadores" method="get" class="form-horizontal"
+    <form:form modelAttribute="jugador" action="/jugadores/1?user.username=" method="get" class="form-horizontal"
                id="search-owner-form">
         <div class="form-group">
             <div class="control-group" id="username">
