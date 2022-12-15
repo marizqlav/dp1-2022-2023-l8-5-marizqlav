@@ -56,7 +56,7 @@ public class PartidaController {
 	private final String  LOBBY_ESPERA_VIEW="/partidas/lobbyEspera";
 
     private final String MENU_REFRESH_TIME="5";
-    private final String GAME_REFRESH_TIME="60";
+    private final String GAME_REFRESH_TIME="3";
 
     PartidaService partidaService;
     JugadorService jugadorService;
