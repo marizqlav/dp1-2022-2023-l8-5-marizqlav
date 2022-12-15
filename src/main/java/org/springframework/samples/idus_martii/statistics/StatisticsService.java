@@ -31,5 +31,9 @@ public class StatisticsService {
 		return partidaRepo.findAllFinalizadasJugador(jugador.getId()).size();
 	}
 	
+	
+	public FaccionesEnumerado faccionMasJugadaJugador (Jugador jugador){
+		 return partidaService.faccionMasJugadaugador(jugador);
+	}
 
 }

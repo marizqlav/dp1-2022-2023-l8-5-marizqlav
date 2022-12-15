@@ -1,6 +1,10 @@
 package org.springframework.samples.idus_martii.statistics;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.partida.PartidaService;
@@ -35,8 +39,12 @@ public class StatisticsController {
 		ModelAndView result=new ModelAndView(STATISTICS_PLAYER_VIEW);
 		System.out.println(statService.paridasGanadas(jService.getJugadorById(jugadorId)));
 		System.out.println(statService.partidasTotales(jService.getJugadorById(jugadorId)));
-//	  	Jugador j = jService.getJugadorById(jugadorId);
-//	    result.addObject("users", jService.getUserByJugador(j));
+		Map<FaccionesEnumerado, List<Integer>> stats = statService.paridasGanadas(jService.getJugadorById(jugadorId));
+		result.addObject("lealW",  stats.get(FaccionesEnumerado.Leal).get(0));
+		result.addObject("traidorW",  stats.get(FaccionesEnumerado.Traidor).get(0));
+		result.addObject("mercaderW",  stats.get(FaccionesEnumerado.Mercader).get(0));
+		result.addObject("numPartidas",  statService.partidasTotales(jService.getJugadorById(jugadorId)));
+		result.addObject("masJugada",  statService.faccionMasJugadaJugador(jService.getJugadorById(jugadorId)));
 		return result;
 	}
 
