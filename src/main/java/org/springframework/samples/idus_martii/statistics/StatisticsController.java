@@ -37,7 +37,7 @@ public class StatisticsController {
 	@GetMapping("/jugador/{jugadorId}")
 	public ModelAndView showStatisticPlayer(@PathVariable("jugadorId") Integer jugadorId ) {
 		ModelAndView result=new ModelAndView(STATISTICS_PLAYER_VIEW);
-    
+		System.out.println(statService.duracionPartidas(jService.getJugadorById(jugadorId)));
 		System.out.println(statService.paridasGanadas(jService.getJugadorById(jugadorId)));
 		System.out.println(statService.partidasTotales(jService.getJugadorById(jugadorId)));
 		Map<FaccionesEnumerado, List<Integer>> stats = statService.paridasGanadas(jService.getJugadorById(jugadorId));
@@ -46,6 +46,7 @@ public class StatisticsController {
 		result.addObject("mercaderW",  stats.get(FaccionesEnumerado.Mercader).get(0));
 		result.addObject("numPartidas",  statService.partidasTotales(jService.getJugadorById(jugadorId)));
 		result.addObject("masJugada",  statService.faccionMasJugadaJugador(jService.getJugadorById(jugadorId)));
+		result.addObject("jugador", jugadorId);
 		return result;
 	}
 

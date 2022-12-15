@@ -40,7 +40,8 @@ public class StatisticsService {
 	}
   
 	public Map<String, Duration> duracionPartidas(Jugador jugador){
-		 Map<String, Duration> stats = new HashMap<String, Duration>();
+		System.out.println("partidaRepo" + partidaRepo==null); 
+		Map<String, Duration> stats = new HashMap<String, Duration>();
     	 Duration min = null;
     	 Duration max = null;
     	 Duration sum = null;
@@ -68,6 +69,38 @@ public class StatisticsService {
     	 stats.put("media", sum.dividedBy(partidaRepo.findAllFinalizadasJugador(jugador.getId()).size()));
     	 return stats;
 		
+	}
+	
+	// ESTADÍSTICAS GLOBALES
+	
+	
+	public Map<String, Integer> numJugadoresPartida(){
+		Map<String, Integer> stats = new HashMap<String, Integer>();
+	   	 int min = 5;
+	   	 int max = 5;
+	   	 int sum = 0;
+	   	 for(Partida p : partidaRepo.findAllFinalizadas()) {
+	   		 int jugadores = p.getNumeroJugadores();
+	   		 stats.put(p.getId().toString(), jugadores);
+	   		 if(sum == 0) {
+	   			 min = jugadores;
+	   	    	 max = jugadores;
+	   	    	 sum = jugadores;
+	   		 }
+	   		 else {
+	   			 if(jugadores<min) {
+	   				 min = jugadores;
+	   			 }
+	   			 else if(jugadores>max) {
+	   				 max = jugadores;
+	   			 }
+	   			 sum = sum + jugadores;
+	   		 }
+	   	 }
+	   	 stats.put("max", max);
+	   	 stats.put("min", min);
+	   	 stats.put("media", sum/partidaRepo.findAllFinalizadas().size());
+	   	 return stats;
 	}
 	
 	

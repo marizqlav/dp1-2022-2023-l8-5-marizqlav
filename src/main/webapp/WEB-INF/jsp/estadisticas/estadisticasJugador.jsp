@@ -98,15 +98,15 @@
 }
 </style>
 
- 	    <h2>Perfil de usuario</h2>
+ 	    <h2>Estadístcas</h2>
 
     <table id="jugadoresTable" class="table table-striped">
         <thead>
         <tr>
-            <th></th>
+
             <th>Partidas jugadas</th>
-            <th>Victorias como traidor</th>
             <th>Victorias como leal</th>
+            <th>Victorias como Traidor</th>
             <th>Victorias como mercader</th>
             <th>Facción más elegida</th>
         </tr>
@@ -120,46 +120,35 @@
                   	${numPartidas}
                   </c:if>
                 </td>
-                <td>                    
-                    ${lealW}                                       
+                <td>  
+                	<c:if test="${lealW == null}">0</c:if>
+                  	<c:if test="${lealW != null}">
+                  		${lealW} 
+                  	</c:if>                               
                 </td>
-                <td>                    
-                    ${traidorW}                                      
+                <td>
+                	<c:if test="${traidorW == null}">0</c:if>
+                  	<c:if test="${traidorW != null}">
+                  		${traidorW} 
+                  	</c:if>                                     
                 </td>
-                <td>                    
-                    ${mercaderW}                                      
+                <td>   
+                	<c:if test="${mercaderW == null}">0</c:if>
+                  	<c:if test="${mercaderW != null}">
+                  		${mercaderW} 
+                  	</c:if>                                     
                 </td>
-                <td>                    
-                    ${masJugada}                                      
+                <td>    
+                	<c:if test="${masJugada == null}">Desconocido</c:if>
+                  	<c:if test="${masJugada != null}">
+                  		${masJugada} 
+                  	</c:if>                                     
                 </td>
-                <c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
-                <td>                
-                   	${jugador.user.email}
-                </td> </c:if>
-                		
-
-                <td> 
-                	<c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
-                    	<a href="/jugadores/profile/${jugador.id}/edit"> 
-                        	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                    	</a>
-                    </c:if>      
-                    <script>
-					function myFunction() {
-					  let text = "¿Estás seguro de que deseas eliminar este usuario?";
-					  if (confirm(text) == true) {
-					    window.location.replace("/jugadores/eliminar/${jugador.id}")
-					  }
-					}
-					</script>       
-
-                </td>
-            	
 
             </tr>
    
         </tbody>
     </table>
    
-	<c:if test="${noSonAmigos && jugador.user.username!=pageContext.request.userPrincipal.name}"><a class="btn btn-default" href="/jugadores/amigos/${currentPlayer.id}/${jugador.id}">Añadir a amigo</a></c:if>
+	<a class="btn btn-default" href="/jugadores/profile/${jugador}">Ver perfil</a>
 </idus_martii:layout>

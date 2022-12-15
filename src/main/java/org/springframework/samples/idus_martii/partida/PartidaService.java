@@ -56,7 +56,7 @@ public class PartidaService {
         this.turnoService = turnoService;
         this.rondaService = rondaService;
         this.faccionService = faccionService;
-
+        this.partidaRepo = partidaRepo;
         this.estadoTurnoConverter = estadoTurnoConverter;
     }
 
@@ -167,6 +167,7 @@ public class PartidaService {
 	}
     
     public Map<FaccionesEnumerado, List<Integer>> getStats(Jugador jugador){
+    	System.out.println(partidaRepo == null);
     	List<Partida> jugadas =  partidaRepo.findAllFinalizadasJugador(jugador.getId());
     	List<Partida> victorias =  partidaRepo.findPartidasGanadas(jugador.getId());
     	Map<FaccionesEnumerado, List<Integer>> stats = new HashMap<FaccionesEnumerado, List<Integer>>();
