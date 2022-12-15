@@ -166,14 +166,27 @@ public class PartidaService {
 		return partidaRepo.findPartidasGanadas(jugador.getId()).size();
 	}
     
-    public Map<FaccionesEnumerado, Integer> getStats(Jugador jugador){
+    public Map<FaccionesEnumerado, List<Integer>> getStats(Jugador jugador){
+    	List<Partida> jugadas =  partidaRepo.findAllFinalizadasJugador(jugador.getId());
     	List<Partida> victorias =  partidaRepo.findPartidasGanadas(jugador.getId());
-    	Map<FaccionesEnumerado, Integer> stats = new HashMap<FaccionesEnumerado, Integer>();
+    	Map<FaccionesEnumerado, List<Integer>> stats = new HashMap<FaccionesEnumerado, List<Integer>>();
+    	List<Integer> ls = new ArrayList<Integer>();
+    	ls.add(0);
+    	ls.add(0);
     	for(FaccionesEnumerado faccion : FaccionesEnumerado.values()) {
-    		stats.put(faccion, 0);
+    		stats.put(faccion, ls);
     	}
-    	for(Partida p : victorias) {
-    		stats.put(p.faccionGanadora, stats.get(p.faccionGanadora) +1);
+    	for(Partida p : jugadas) {
+    		List<Integer> values = new ArrayList<Integer>();
+    		if(victorias.contains(p)) {
+    			values.add(stats.get(p.faccionGanadora).get(0) +1);
+    			values.add(stats.get(p.faccionGanadora).get(1));
+    			stats.put(p.faccionGanadora, values);
+    		}else{
+    			values.add(stats.get(p.faccionGanadora).get(0));
+    			values.add(stats.get(p.faccionGanadora).get(1) +1);
+    			stats.put(faccionService.getFaccionJugadorPartida(jugador.getId(), p.getId()).getFaccionSelecionada(), values);
+    		}
     	}
     	return stats;
     }
