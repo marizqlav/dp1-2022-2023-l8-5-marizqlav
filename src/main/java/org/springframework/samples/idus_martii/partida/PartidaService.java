@@ -173,6 +173,7 @@ public class PartidaService {
     	List<Integer> ls = new ArrayList<Integer>();
     	ls.add(0);
     	ls.add(0);
+    	ls.add(0);
     	for(FaccionesEnumerado faccion : FaccionesEnumerado.values()) {
     		stats.put(faccion, ls);
     	}
@@ -181,14 +182,32 @@ public class PartidaService {
     		if(victorias.contains(p)) {
     			values.add(stats.get(p.faccionGanadora).get(0) +1);
     			values.add(stats.get(p.faccionGanadora).get(1));
+    			values.add(stats.get(p.faccionGanadora).get(2) +1);
     			stats.put(p.faccionGanadora, values);
     		}else{
     			values.add(stats.get(p.faccionGanadora).get(0));
     			values.add(stats.get(p.faccionGanadora).get(1) +1);
+    			values.add(stats.get(faccionService.getFaccionJugadorPartida(jugador.getId(), p.getId()).getFaccionSelecionada()).get(2) +1);
     			stats.put(faccionService.getFaccionJugadorPartida(jugador.getId(), p.getId()).getFaccionSelecionada(), values);
     		}
     	}
     	return stats;
+    }
+   
+    public FaccionesEnumerado faccionMasJugadaugador(Jugador jugador){
+    	Map<FaccionesEnumerado, List<Integer>> stats = this.getStats(jugador);
+		 int leal = stats.get(FaccionesEnumerado.Leal).get(2);
+		 int traidor = stats.get(FaccionesEnumerado.Traidor).get(2);
+		 int mercader = stats.get(FaccionesEnumerado.Mercader).get(2);
+		 if(leal >= traidor && leal >= mercader){
+			 return FaccionesEnumerado.Leal;
+		 }
+		 else if(traidor >= leal && traidor >= mercader){
+			 return FaccionesEnumerado.Traidor;
+		 }
+		 else {
+			 return FaccionesEnumerado.Mercader;
+		 }
     }
     
 

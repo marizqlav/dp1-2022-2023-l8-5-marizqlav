@@ -104,37 +104,34 @@
         <thead>
         <tr>
             <th></th>
-            <th>Nombre de usuario</th>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
-                  <th>Correo</th>
-            </c:if>    
-			<th></th>
-				
-
-
+            <th>Partidas jugadas</th>
+            <th>Victorias como traidor</th>
+            <th>Victorias como leal</th>
+            <th>Victorias como mercader</th>
+            <th>Facción más elegida</th>
         </tr>
         </thead>
         <tbody>
   
             <tr>
                 <td>                    
-                  <c:if test="${jugador.user.photo == ''}">none</c:if>
-                  <c:if test="${jugador.user.photo != ''}">
-                  	<img src="${jugador.user.photo}" width="100px"  />
+                  <c:if test="${numPartidas == null}">0</c:if>
+                  <c:if test="${numPartidas != null}">
+                  	${numPartidas}
                   </c:if>
                 </td>
                 <td>                    
-                    ${jugador.user.username}                                       
+                    ${lealW}                                       
                 </td>
                 <td>                    
-                    ${jugador.user.name}                                      
+                    ${traidorW}                                      
                 </td>
                 <td>                    
-                    ${jugador.user.surname}                                      
+                    ${mercaderW}                                      
                 </td>
-               
+                <td>                    
+                    ${masJugada}                                      
+                </td>
                 <c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
                 <td>                
                    	${jugador.user.email}
@@ -154,10 +151,8 @@
 					    window.location.replace("/jugadores/eliminar/${jugador.id}")
 					  }
 					}
-					</script>               
-                <sec:authorize access="hasAuthority('admin')">
-					<a onclick="myFunction()"  class="botonb">Eliminar usuario</a>
-				</sec:authorize>
+					</script>       
+
                 </td>
             	
 

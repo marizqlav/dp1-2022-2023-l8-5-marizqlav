@@ -33,6 +33,12 @@ public class StatisticsService {
 		return partidaRepo.findAllFinalizadasJugador(jugador.getId()).size();
 	}
 	
+
+	
+	public FaccionesEnumerado faccionMasJugadaJugador (Jugador jugador){
+		 return partidaService.faccionMasJugadaugador(jugador);
+	}
+  
 	public Map<String, Duration> duracionPartidas(Jugador jugador){
 		 Map<String, Duration> stats = new HashMap<String, Duration>();
     	 Duration min = null;
