@@ -124,4 +124,5 @@
     </table>
    
 	<c:if test="${noSonAmigos && jugador.user.username!=pageContext.request.userPrincipal.name}"><a class="btn btn-default" href="/jugadores/amigos/${currentPlayer.id}/${jugador.id}">Añadir a amigo</a></c:if>
+	<a class="btn btn-default" href="/statistics/jugador/${jugador.id}">Ver estadísticas</a>
 </idus_martii:layout>
