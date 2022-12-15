@@ -5,7 +5,6 @@
 <%@ taglib prefix="idus_martii" tagdir="/WEB-INF/tags" %>
 <!-- %@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %-->  
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<div style="background-image: url(/resources/images/portada.jpg); background-size: 100% 100%; height:120%">
 <idus_martii:layout pageName="home" >
 <style type="text/css" media="screen">
 .botona {
@@ -99,35 +98,73 @@
 }
 </style>
 
- 	<sec:authorize access="hasAuthority('player')">
-		<a href="/partida/new" class="botona">Crear Partida</a>
-		<a href="/partida/disponibles" class="botona">Unirse a Partida</a>
-	</sec:authorize>
-	<sec:authorize access="hasAuthority('admin')">
-		<a href="/partida/enJuego" class="botonb">Lista de partidas en curso</a>
-		<a href="/partida/finalizadas" class="botonb">Lista de partidas terminadas</a>
-	</sec:authorize>
-<!--
-    <h2><fmt:message key="welcome"/></h2>
-   	<div class="row">
-   	
-    <h2>Project ${title}</h2>
-    <p><h2>Group ${group}</h2></p>
-    <p><ul>
-    <c:forEach items="${persons}" var="person">
-    	<li>${person.firstName}<h></h> ${person.lastName}</li>
-    </c:forEach>    
-    </ul></p>  
-    </div>
-    -->  
-    <div class="row">
-    	<div class="col-md-12">
-<!-- 
-            <spring:url value="/resources/images/portada.jpg" htmlEscape="true" var="usImage"/>
-            <img class="img-responsive" src="${usImage}"/>
--->
-        </div>
-    </div>
+ 	    <h2>Perfil de usuario</h2>
+
+    <table id="jugadoresTable" class="table table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Nombre de usuario</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
+                  <th>Correo</th>
+            </c:if>    
+			<th></th>
+				
+
+
+        </tr>
+        </thead>
+        <tbody>
+  
+            <tr>
+                <td>                    
+                  <c:if test="${jugador.user.photo == ''}">none</c:if>
+                  <c:if test="${jugador.user.photo != ''}">
+                  	<img src="${jugador.user.photo}" width="100px"  />
+                  </c:if>
+                </td>
+                <td>                    
+                    ${jugador.user.username}                                       
+                </td>
+                <td>                    
+                    ${jugador.user.name}                                      
+                </td>
+                <td>                    
+                    ${jugador.user.surname}                                      
+                </td>
+               
+                <c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
+                <td>                
+                   	${jugador.user.email}
+                </td> </c:if>
+                		
+
+                <td> 
+                	<c:if test="${esTuPerfil || pageContext.request.userPrincipal.authorities=='[admin]'}" >
+                    	<a href="/jugadores/profile/${jugador.id}/edit"> 
+                        	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    	</a>
+                    </c:if>      
+                    <script>
+					function myFunction() {
+					  let text = "¿Estás seguro de que deseas eliminar este usuario?";
+					  if (confirm(text) == true) {
+					    window.location.replace("/jugadores/eliminar/${jugador.id}")
+					  }
+					}
+					</script>               
+                <sec:authorize access="hasAuthority('admin')">
+					<a onclick="myFunction()"  class="botonb">Eliminar usuario</a>
+				</sec:authorize>
+                </td>
+            	
+
+            </tr>
    
+        </tbody>
+    </table>
+   
+	<c:if test="${noSonAmigos && jugador.user.username!=pageContext.request.userPrincipal.name}"><a class="btn btn-default" href="/jugadores/amigos/${currentPlayer.id}/${jugador.id}">Añadir a amigo</a></c:if>
 </idus_martii:layout>
- </div>
