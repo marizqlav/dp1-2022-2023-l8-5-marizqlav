@@ -34,6 +34,7 @@ public class StatisticsController {
 	public ModelAndView showStatisticPlayer(@PathVariable("jugadorId") Integer jugadorId ) {
 		ModelAndView result=new ModelAndView(STATISTICS_PLAYER_VIEW);
 		System.out.println(statService.paridasGanadas(jService.getJugadorById(jugadorId)));
+		System.out.println(statService.partidasTotales(jService.getJugadorById(jugadorId)));
 //	  	Jugador j = jService.getJugadorById(jugadorId);
 //	    result.addObject("users", jService.getUserByJugador(j));
 		return result;

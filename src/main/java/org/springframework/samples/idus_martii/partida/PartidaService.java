@@ -77,7 +77,7 @@ public class PartidaService {
         return partidaRepo.findAllEnJuego();
     }
 
-    List<Partida> getPartidasFinalizadasJugador(Integer idJugador) {
+    public List<Partida> getPartidasFinalizadasJugador(Integer idJugador) {
         return partidaRepo.findAllFinalizadasJugador(idJugador);
     }
     

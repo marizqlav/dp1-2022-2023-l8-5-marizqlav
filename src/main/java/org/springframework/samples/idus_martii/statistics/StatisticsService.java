@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.partida.PartidaRepository;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class StatisticsService {
 		return partidaService.getStats(jugador);
 	}
 	
+	public int partidasTotales(Jugador jugador) {
+		return partidaRepo.findAllFinalizadasJugador(jugador.getId()).size();
+	}
 	
 
 }
