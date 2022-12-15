@@ -121,42 +121,62 @@ public class TurnoService {
             repoVotosTurno.save(votoEdil2);
         }
     }
-    
-    /*public void asignarRol(String rol, Jugador jugador, Integer turnoId) { //TODO revisar
-    	
+
+    public List<Jugador> getJugadoresValidosParaRol(Integer turnoId, String rol) {
+
+        List<Jugador> jugadoresValidos = new ArrayList<>();
+
     	Turno turno = getById(turnoId);
-    	int anterior = repo.findById(turnoId).get().getNumTurno()-1;
+        
+        for (Jugador j : partidaService.findJugadores(turnoId)) {
+            jugadoresValidos.add(j);
+        }
+        
+        if (turno.getConsul() != null) { jugadoresValidos.remove(turno.getConsul()); }
+        if (turno.getPredor() != null) { jugadoresValidos.remove(turno.getPredor()); }
+        if (turno.getEdil1() != null) { jugadoresValidos.remove(turno.getEdil1()); }
+        if (turno.getEdil2() != null) { jugadoresValidos.remove(turno.getEdil2()); }
+        
+        if (rol.equals("edil") && turno.getRonda().getPartida().getNumeroJugadores() == 5) {
+            
+            Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
+
+            if (jugadoresValidos.contains(turnoAnterior.getEdil1())) { jugadoresValidos.remove(turnoAnterior.getEdil1()); }
+            if (jugadoresValidos.contains(turnoAnterior.getEdil2())) { jugadoresValidos.remove(turnoAnterior.getEdil2()); }
+        }
+
+        return jugadoresValidos;
+    }
+    
+    public void asignarRol(Integer turnoId, Jugador jugador) throws InvalidPlayerException {
     	
-    	
-    	List<Jugador> edilesTurnoAnterior= new ArrayList<>();
-    	edilesTurnoAnterior.add(repo.turnoPorNumero(anterior).getEdil1());
-    	edilesTurnoAnterior.add(repo.turnoPorNumero(anterior).getEdil2());
-    	
-    	List<Jugador> edilesTurnoActual= new ArrayList<>();
-    	if(repo.turnoPorNumero(anterior+1).getEdil1()!=null) {edilesTurnoActual.add(jugador);}
-    	if(repo.turnoPorNumero(anterior+1).getEdil2()!=null) {edilesTurnoActual.add(jugador);}
-    	
-    	
-    	
-    	
-    	if(rol.equals("predor") && repo.turnoPorNumero(anterior).getPredor() != jugador) {
-    		turno.setPredor(jugador);
-    	}
-    	else if(!edilesTurnoAnterior.contains(jugador) 
-    			&& (edilesTurnoActual.get(0)==null || (edilesTurnoActual.get(1)==null)) ) {
-        			edilesTurnoActual.add(jugador);
-    	}
-    	else if(edilesTurnoAnterior.contains(jugador) && turno.getRonda().getPartida().getNumeroJugadores()==5
-    			&& (edilesTurnoActual.isEmpty() || !edilesTurnoActual.contains(jugador))) {
-    			edilesTurnoActual.add(jugador);
-    	}
-    	else {
-    		System.out.println("Ha petao el edil, mal hecho");
-    	}
-    	
-    	turno.setEdil1(edilesTurnoActual.get(0));
-    	turno.setEdil1(edilesTurnoActual.get(1));
-    	save(turno);
-    }*/
+        Turno turno = getById(turnoId);
+
+        String rol = "";
+        if (turno.getPredor() == null) {
+            rol = "predor";
+        } else
+        if (turno.getEdil1() == null || turno.getEdil2() == null) {
+            rol = "edil";
+        }
+
+        if (!getJugadoresValidosParaRol(turnoId, rol).contains(jugador)) {
+            throw new InvalidPlayerException("Este jugador no es valido");
+        }
+
+        if (rol.equals("predor")) {
+            turno.setPredor(jugador);
+        }
+        if (rol.equals("edil")) {
+            if (turno.getEdil1() == null) {
+                turno.setEdil1(jugador);
+            } else
+            if (turno.getEdil2() == null) {
+                turno.setEdil2(jugador);
+            }
+        }
+
+        save(turno);
+    }
 
 }
