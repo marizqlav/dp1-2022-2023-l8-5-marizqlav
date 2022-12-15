@@ -34,19 +34,18 @@ public class JugadorService {
 		return jugadorRepo.findAll();
 	}
 	
-	public Map<Integer, List<Jugador>> getPlayersPaginated(Collection<Jugador> listaJugadores){
-		Map<Integer, List<Jugador>> jugadores = new HashMap<Integer, List<Jugador>>();
-		Integer pagina = 1;
+	public List<List<Jugador>> getPlayersPaginated(Collection<Jugador> listaJugadores){
+		List<List<Jugador>> jugadores = new ArrayList<List<Jugador>>();
 		int maxJugadores = 0;
-		List<Jugador> jugadoresPagina = new ArrayList<Jugador>();
-		jugadores.put(pagina, jugadoresPagina);
+		int cont = 0;
+		jugadores.add(new ArrayList<Jugador>());
 		for(Jugador j : listaJugadores) {
-			if(maxJugadores >5){
-				pagina = pagina +1;
+			if(maxJugadores >1){
 				maxJugadores = 0;
-				jugadores.put(pagina, jugadoresPagina);
+				cont = cont +1;
+				jugadores.add(new ArrayList<Jugador>());
 			}
-			jugadores.get(pagina).add(j);
+			jugadores.get(cont).add(j);
 			maxJugadores = maxJugadores +1;
 		}
 		return jugadores;

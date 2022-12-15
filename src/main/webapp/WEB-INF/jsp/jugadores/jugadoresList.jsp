@@ -37,4 +37,17 @@
       <sec:authorize access="hasAuthority('admin')">
 		<a class="btn btn-default" href='<spring:url value="/users/new" htmlEscape="true"/>'>Añadir Jugador</a>
 	</sec:authorize>
+	
+		
+		<c:if test="${pagina > 1}">
+			<a class="btn btn-default" href='<spring:url value="/jugadores/1${busqueda}" htmlEscape="true"/>'> 1 </a>
+			<a class="btn btn-default" href='<spring:url value="/jugadores/${pagina-1}${busqueda}" htmlEscape="true"/>'> < </a>
+		</c:if>
+		${pagina}
+		<c:if test="${pagina < ultima}">
+			<a class="btn btn-default" href='<spring:url value="/jugadores/${pagina+1}${busqueda}" htmlEscape="true"/>'> > </a>
+			<a class="btn btn-default" href='<spring:url value="/jugadores/${ultima}${busqueda}" htmlEscape="true"/>'> ${ultima} </a>
+		</c:if>
+		
+		
 </idus_martii:layout>
