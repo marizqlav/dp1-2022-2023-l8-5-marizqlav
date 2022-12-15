@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.partida;
 
 import java.util.List;
+
 import java.util.Map;
 import java.awt.Paint;
 import java.lang.reflect.Array;
@@ -52,7 +53,6 @@ public class PartidaService {
     @Autowired
     public PartidaService(PartidaRepository partidaRepo, TurnoService turnoService, RondaService rondaService, 
         FaccionService faccionService, @Lazy EstadoTurnoConverter estadoTurnoConverter) {
-        this.partidaRepo = partidaRepo;
         this.turnoService = turnoService;
         this.rondaService = rondaService;
         this.faccionService = faccionService;
@@ -191,33 +191,7 @@ public class PartidaService {
     	return stats;
     }
     
-    public Map<String, Duration> duracionPartidasJugador(Jugador jugador) {
-    	 Map<String, Duration> stats = new HashMap<String, Duration>();
-    	 Duration min = null;
-    	 Duration max = null;
-    	 Duration sum = null;
-    	 for(Partida p : partidaRepo.findAllFinalizadasJugador(jugador.getId())) {
-    		 Duration duration = Duration.between(p.getFechaCreacion(), p.getFechaFin());
-    		 if(sum == null) {
-    			 min = duration;
-    	    	 max = duration;
-    	    	 sum = duration;
-    		 }
-    		 else {
-    			 if(duration.compareTo(min) <0) {
-    				 min = duration;
-    			 }
-    			 else if(duration.compareTo(max) >0) {
-    				 max = duration;
-    			 }
-    			 sum = sum.plus(duration);
-    		 }
-    	 }
-    	 stats.put("max", max);
-    	 stats.put("min", min);
-    	 stats.put("media", sum.dividedBy(partidaRepo.findAllFinalizadasJugador(jugador.getId()).size()));
-    	 return stats;
-    }
+
     
     public Map<String, Integer> promedioJugadoresPartida(Jugador jugador){
    	 Map<String, Integer> stats = new HashMap<String, Integer>();
