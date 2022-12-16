@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.faccion.Faccion;
@@ -69,7 +71,7 @@ public class PartidaService {
         return partidaRepo.findJugadores(partidaId);
     }
     
-    List<Partida> getPartidas() {
+    public List<Partida> getPartidas() {
         return partidaRepo.findAll();
     }
     
@@ -372,4 +374,56 @@ public class PartidaService {
 		partidaRepo.save(partida);
 		
 	}
+	
+	public long[] promedioPartida(){
+		long sum = 0;
+		for(Partida p : partidaRepo.findAll()) {
+			sum = sum +  Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+		}
+		sum = sum/partidaRepo.findAll().size();
+		return new long[]{ sum/3600, (sum%3600)/60, ((sum%3600)%60)};
+	}
+	
+	public Partida partidaMasLarga(){
+		long sum = -1;
+		Partida partida = new Partida();
+		for(Partida p : partidaRepo.findAll()) {
+			if(Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds()>=sum) {
+				partida = p;
+				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+			}
+		}
+		return partida;
+	}
+	
+	public Partida partidaMasCorta(){
+		long sum = -1;
+		Partida partida = new Partida();
+		for(Partida p : partidaRepo.findAll()) {
+			if(sum == -1) {
+				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+				partida = p;
+			}
+			else if(Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds()<=sum) {
+				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+				partida = p;
+			}
+		}
+		return partida;
+	}
+	
+	
+	public List<Partida> ultimas6partidas(){
+		List<Partida> res = new ArrayList<Partida>();
+		List<Partida> sorted = partidaRepo.findAll().stream().sorted((o1, o2)-> o1.getFechaFin().compareTo(o2.getFechaFin())).collect(Collectors.toList());
+		for(int i = 0; i<6; i++) {
+			if(i> sorted.size()-1) {
+				break;
+			}
+			res.add(sorted.get(i));
+		}
+		return res;
+	}
+	
+	
 }

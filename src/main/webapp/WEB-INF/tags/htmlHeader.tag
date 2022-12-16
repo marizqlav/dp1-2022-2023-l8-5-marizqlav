@@ -11,7 +11,7 @@ Idus Martii
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags --%>
 
-    <spring:url value="/resources/images/laurel.png" var="favicon"/>
+    <spring:url value="https://quejuegosdemesa.com/wp-content/uploads/2020/02/idus-martii.jpg" var="favicon"/>
     <link rel="shortcut icon" type="image/x-icon" href="${favicon}">
 
     <title>Idus Martii</title>
