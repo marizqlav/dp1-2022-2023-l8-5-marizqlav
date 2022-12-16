@@ -356,6 +356,16 @@ public class PartidaService {
 			}
 		}		
 	}
+	
+	public int ganadasSabotajeJugador(Jugador j){
+		int cont = 0;
+		for(Partida p : partidaRepo.findPartidasGanadas(j.getId())) {
+			if(java.lang.Math.max(p.getVotosLeales(), p.getVotosTraidores())>= p.getLimite()){
+				cont = cont +1;
+			}
+		}
+		return cont;
+	}
 
 
 	public void save(Partida partida) {
