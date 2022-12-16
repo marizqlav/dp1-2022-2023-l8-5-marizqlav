@@ -21,6 +21,7 @@ import org.springframework.samples.idus_martii.statistics.StatisticsService;
 public class StatisticsController {
 	
 	private final String STATISTICS_PLAYER_VIEW="/estadisticas/estadisticasJugador";
+	private final String STATISTICS_GLOBAL_VIEW="/estadisticas/estadisticasGlobales";
 	private final StatisticsService statService;
 	
 	JugadorService jService;
@@ -47,6 +48,23 @@ public class StatisticsController {
 		result.addObject("numPartidas",  statService.partidasTotales(jService.getJugadorById(jugadorId)));
 		result.addObject("masJugada",  statService.faccionMasJugadaJugador(jService.getJugadorById(jugadorId)));
 		result.addObject("jugador", jugadorId);
+		return result;
+	}
+	
+	@Transactional(readOnly = true)
+	@GetMapping("/global")
+	public ModelAndView showStatisticGlobal() {
+		
+		System.out.println(pService.promedioPartida()[1]+ "zzz");
+		ModelAndView result=new ModelAndView(STATISTICS_GLOBAL_VIEW);
+		result.addObject("max",statService.numJugadoresPartida().get("max"));
+		result.addObject("min",statService.numJugadoresPartida().get("min"));
+		result.addObject("media",statService.numJugadoresPartida().get("media"));
+		result.addObject("mediaDuracion", pService.promedioPartida());
+		result.addObject("totalPartidas",pService.getPartidas().size());
+		result.addObject("partidas", pService.ultimas6partidas());
+		result.addObject("larga", pService.partidaMasLarga());
+		result.addObject("corta", pService.partidaMasCorta());
 		return result;
 	}
 
