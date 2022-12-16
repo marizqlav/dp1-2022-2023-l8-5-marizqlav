@@ -65,6 +65,7 @@ public class StatisticsController {
 		result.addObject("partidas", pService.ultimas6partidas());
 		result.addObject("larga", pService.partidaMasLarga());
 		result.addObject("corta", pService.partidaMasCorta());
+		result.addObject("faccionMasGanadora", pService.faccionMasGanadora());
 		return result;
 	}
 

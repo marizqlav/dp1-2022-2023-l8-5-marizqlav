@@ -426,4 +426,31 @@ public class PartidaService {
 	}
 	
 	
+	public FaccionesEnumerado faccionMasGanadora(){
+		int leal = 0;
+		int traidor = 0;
+		int mercader=0;
+		for(Partida p: partidaRepo.findAll()){
+			if(p.faccionGanadora == FaccionesEnumerado.Leal) {
+				leal = leal+1;
+			}
+			else if(p.faccionGanadora == FaccionesEnumerado.Traidor) {
+				traidor=traidor+1;
+			}
+			else {
+				mercader = mercader+1;
+			}
+		}
+		if(leal >= traidor && leal >= mercader){
+			 return FaccionesEnumerado.Leal;
+		 }
+		 else if(traidor >= leal && traidor >= mercader){
+			 return FaccionesEnumerado.Traidor;
+		 }
+		 else {
+			 return FaccionesEnumerado.Mercader;
+		 }
+		
+	}
+	
 }
