@@ -41,6 +41,8 @@ public class JugadorController {
 	private final String  JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
 	private static final String VIEWS_USUARIO_LISTING = "jugadores/userByPlayer";
 	private final String  PETICIONES_AMISTAD_VIEW="/jugadores/peticionesAmistadList";
+	
+	
 	private final JugadorService jugadorService;
 	
 	@Autowired
@@ -100,6 +102,7 @@ public class JugadorController {
 	        	System.out.println("El usuario no está autentificado");
 	        return result;
 	    }
+	 
 	 
 	 @Transactional(readOnly = true)
 	    @GetMapping("/jugadores/profile/nombre/{nombre}")
