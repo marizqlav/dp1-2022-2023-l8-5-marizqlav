@@ -109,6 +109,7 @@
 		            <th>Mínimo de jugadores</th>
 		            <th>Jugadores Promedio</th>
 		            <th>Duración Promedio</th>
+		            <th>Facción con más victorias</th>
 		        </tr>
 	        </thead>
 	        <tbody>
@@ -141,6 +142,12 @@
 	                	<c:if test="${mediaDuracion == null}">0</c:if>
 	                  	<c:if test="${mediaDuracion != null}">
 	                  		${mediaDuracion[0]}h ${mediaDuracion[1]} m ${mediaDuracion[2]} s  
+	                  	</c:if>                                     
+	                </td>
+	                <td>   
+	                	<c:if test="${faccionMasGanadora == null}">Paz en el senado</c:if>
+	                  	<c:if test="${faccionMasGanadora != null}">
+	                  		${faccionMasGanadora}
 	                  	</c:if>                                     
 	                </td>
            		</tr>
