@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.turno.Estados;
 
+import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.partida.GameScreens.DescubiertoAmarilloScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
@@ -8,6 +9,7 @@ import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.stereotype.Component;
 
 @Component
+@StatePattern.ConcreteState
 public class DescubiertoAmarilloEstado implements EstadoTurno {
 
     private DescubiertoAmarilloScreen screen;

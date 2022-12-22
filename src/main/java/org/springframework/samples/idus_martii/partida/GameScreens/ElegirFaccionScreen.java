@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Component
 public class ElegirFaccionScreen implements GameScreen {
+	
 
     private PartidaService partidaService;
 
@@ -20,7 +21,7 @@ public class ElegirFaccionScreen implements GameScreen {
     }
 
     @Override
-    public String getAviso() {
+    public String getAviso(Integer partidaId) {
         return "Elija facción";
     }
 
@@ -29,8 +30,8 @@ public class ElegirFaccionScreen implements GameScreen {
         Ronda ronda = partidaService.getRondaActual(partidaId);
         Turno turno = partidaService.getTurnoActual(partidaId);
 
-        if (ronda.getNumRonda() == 2 || turno.getNumTurno() == partidaService.findJugadores(partidaId).size()) {
-            return new ModelAndView();//TODO redirect JSP elegir faccion
+        if ((ronda.getNumRonda() == 2 && turno.getNumTurno()==1 && jugadorConectado == turno.getConsul()) || (ronda.getNumRonda() == 1 && turno.getNumTurno()!=1)) {
+            return new ModelAndView("/partidas/elegirFaccion");//TODO redirect JSP elegir faccion
         }
 
         return new ModelAndView("/partidas/tablero");

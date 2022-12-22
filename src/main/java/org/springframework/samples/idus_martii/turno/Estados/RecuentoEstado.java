@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.turno.Estados;
 
+import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
@@ -11,6 +12,7 @@ import org.springframework.samples.idus_martii.turno.VotosTurno;
 import org.springframework.stereotype.Component;
 
 @Component
+@StatePattern.ConcreteState
 public class RecuentoEstado implements EstadoTurno {
 
     private RecuentoScreen recuentoScreen;

@@ -1,10 +1,10 @@
 package org.springframework.samples.idus_martii.jugador;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-
-
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,23 @@ public class JugadorService {
 	
 	public List<Jugador> getAll(){
 		return jugadorRepo.findAll();
+	}
+	
+	public List<List<Jugador>> getPlayersPaginated(Collection<Jugador> listaJugadores){
+		List<List<Jugador>> jugadores = new ArrayList<List<Jugador>>();
+		int maxJugadores = 0;
+		int cont = 0;
+		jugadores.add(new ArrayList<Jugador>());
+		for(Jugador j : listaJugadores) {
+			if(maxJugadores >1){
+				maxJugadores = 0;
+				cont = cont +1;
+				jugadores.add(new ArrayList<Jugador>());
+			}
+			jugadores.get(cont).add(j);
+			maxJugadores = maxJugadores +1;
+		}
+		return jugadores;
 	}
 
 	
