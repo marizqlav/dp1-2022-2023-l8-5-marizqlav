@@ -9,11 +9,7 @@ import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.FaccionesConverter;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
-import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.partida.PartidaService;
-import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
-import org.springframework.samples.idus_martii.turno.VotosTurno;
-import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -87,7 +83,7 @@ public class TurnoService {
     }
     
     public VotosTurno findVoto(Integer turnoId, Integer jugadorId){
-    	return repo.findVotoByturnoAndPlayer(turnoId, jugadorId);
+    	return repoVotosTurno.findVotoByturnoAndPlayer(turnoId, jugadorId);
     }
     
     public void anadirVotoTurno(Turno turno, Jugador jugador, FaccionesEnumerado voto) {

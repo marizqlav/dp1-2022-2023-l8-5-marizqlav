@@ -114,7 +114,7 @@ public class StatisticsControllerTest {
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 		.andExpect(view().name("/achievements/createOrUpdateAchievementForm"));
 	}
-//
+
 	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("Cannot create Logro")

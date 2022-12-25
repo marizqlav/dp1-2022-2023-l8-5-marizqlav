@@ -29,6 +29,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -83,11 +86,20 @@ public class JugadorControllerTest {
 	@BeforeEach
 	void setup() {
 		Jugador jugador = new Jugador();
-		User usuario = jugador.getUser();
+		Jugador jugador2 = new Jugador();
+		User usuario= new User();
+		usuario.setName("Jose");
+		List<Jugador> listaJugadores= new ArrayList<>();
+		listaJugadores.add(jugador);
+		listaJugadores.add(jugador2);
 		jugador.setId(1);
 		jugador.setUser(usuario);
 		jugadorService.save(jugador);
 		given(jugadorService.getAll()).willReturn(Lists.newArrayList(jugador));
+		given(jugadorService.getJugadorById(jugador.getId())).willReturn(jugador);
+		given(jugadorService.getJugadorByUsername(jugador.getUser().getName())).willReturn(Lists.newArrayList());
+		given(jugadorService.getUserByJugador(jugador)).willReturn(jugador.getUser());
+		given(jugadorService.getByName(jugador.getUser().getName())).willReturn(jugador);
 	}
 
 	@WithMockUser
@@ -110,14 +122,14 @@ public class JugadorControllerTest {
 		mockMvc.perform(get("/jugadores/find"))
 				.andExpect(status().isOk());
 	}
-//Da error y no tengo idea del porque
-//	@WithMockUser(username="admin",authorities= {"admin"})
-//    @Test
-//    @DisplayName("processFindForm the jugador")
-//	void testprocessFindForm() throws Exception {
-//		mockMvc.perform(get("/jugadores"))
-//				.andExpect(view().name("/jugadores/jugadoresList"));
-//	}
+//Da error
+	@WithMockUser(username="admin",authorities= {"admin"})
+    @Test
+    @DisplayName("processFindForm the jugador")
+	void testprocessFindForm() throws Exception {
+		mockMvc.perform(get("/jugadores"))
+				.andExpect(view().name("/jugadores/jugadoresList"));
+	}
 	
 	@WithMockUser(value = "spring")
 	@Test
