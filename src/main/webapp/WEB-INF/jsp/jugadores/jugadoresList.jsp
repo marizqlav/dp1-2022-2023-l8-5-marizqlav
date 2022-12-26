@@ -41,19 +41,12 @@
 		<table>
 		<c:if test="${pagina > 1}">
 			<td><a class="btn btn-default" href='<spring:url value="/jugadores/1${busqueda}" htmlEscape="true"/>'> 1 </a></td>
-			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${pagina-1}${busqueda}" htmlEscape="true"/>'> < </a></td>
+			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${pagina-1}${busqueda}" htmlEscape="true"/>'></a></td>
 		</c:if>
 		<td><p>${pagina}</p></td>
 		<c:if test="${pagina < ultima}">
-			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${pagina+1}${busqueda}" htmlEscape="true"/>'> > </a></td>
+			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${pagina+1}${busqueda}" htmlEscape="true"/>'></a></td>
 			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${ultima}${busqueda}" htmlEscape="true"/>'> ${ultima} </a></td>
 		</c:if>
-			
-			
 		</table>
-		
-		
-		
-		
-		
 </idus_martii:layout>

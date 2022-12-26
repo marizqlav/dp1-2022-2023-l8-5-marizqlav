@@ -15,6 +15,7 @@ import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.samples.idus_martii.turno.Estados.CambiarVotoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.DescubiertoAmarilloEstado;
+import org.springframework.samples.idus_martii.turno.Estados.ElegirRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
@@ -87,6 +88,10 @@ public class PartidaControllerTest {
 
     @MockBean
     private EmpezarTurnoEstado empezarTurnoEstado;
+    
+    @MockBean
+    private ElegirRolesEstado elegirRolesEstado;
+    
 
 	private static final int PARTIDA_ID = 1;
 

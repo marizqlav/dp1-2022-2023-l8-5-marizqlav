@@ -25,7 +25,6 @@ public class VotosTurnoRepositoryTest {
 		votos.setJugador(j1);
 		votos.setTurno(t1);
 		votos.setTipoVoto(FaccionesEnumerado.Leal);
-		System.out.println("aaaaaaaaaaaaaaaaa"+ j1.getId());
 		votosTurnoRepository.save(votos);
 		VotosTurno vT = votosTurnoRepository.findVotoByturnoAndPlayer(t1.getId(), j1.getId());
 		assertNotNull(vT);
