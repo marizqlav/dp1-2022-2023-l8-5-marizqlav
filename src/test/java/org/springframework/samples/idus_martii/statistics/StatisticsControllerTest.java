@@ -6,6 +6,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
+import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.turno.Estados.*;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -26,7 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-
 @WebMvcTest(controllers = AchievementController.class,
     excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                                             classes = WebSecurityConfigurer.class),
@@ -41,6 +41,9 @@ public class StatisticsControllerTest {
 
     @MockBean
     private AchievementService achievementService;
+    
+    @MockBean
+    private JugadorService jugadorService;
     
     @MockBean
     private EstablecerRolesEstado establecerRolesEstado;
@@ -65,6 +68,9 @@ public class StatisticsControllerTest {
 
     @MockBean
     private EmpezarTurnoEstado empezarTurnoEstado;
+    
+    @MockBean
+    private ElegirRolesEstado elegirRolesEstado;
 
 	@BeforeEach
 	void setup() {

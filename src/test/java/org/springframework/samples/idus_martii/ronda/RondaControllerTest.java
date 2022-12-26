@@ -69,6 +69,9 @@ public class RondaControllerTest {
 
     @MockBean
     private EmpezarTurnoEstado empezarTurnoEstado;
+    
+    @MockBean
+    private ElegirRolesEstado elegirRolesEstado;
    
 	@BeforeEach
 	void setup() {
