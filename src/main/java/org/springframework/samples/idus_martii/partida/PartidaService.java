@@ -37,6 +37,7 @@ import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverte
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoEnum;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PartidaService {
@@ -153,9 +154,12 @@ public class PartidaService {
 	}
 
     public Turno getTurnoActual(Integer partidaId) {
+		System.out.println("qqqqqqqqqqqqqqqqqqqqqq");
     	Partida p = partidaRepo.findById(partidaId).get();
-    	Ronda r = p.getRondas().get(p.getRondas().size()-1);
-    	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
+		System.out.println(p.getRondas().size() - 1);
+    	Ronda r = p.getRondas().get(p.getRondas().size() - 1);
+		System.out.println(r.getTurnos().size() - 1);
+    	Turno t = r.getTurnos().get(r.getTurnos().size() - 1);
     	return t;
     }
     
@@ -301,13 +305,18 @@ public class PartidaService {
         partidaRepo.save(partida);
     }
 
-	private boolean guard = true; //Bug fix, probablemente se puede hacer mejor pero asi funciona
+	private boolean guard = true; //Bug fix, aunque a veces no funciona
+	//TODO arreglarlo con transacciones o algo
+	//TODO debería devolver un estado default con pantalla default en lugar de dar error
 
+	@Transactional
     public void handleTurn(Integer partidaId) throws NotFoundException {
 		if (!guard) {
 			return;
 		}
 		guard = false;
+
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
 
         Partida partida = findPartida(partidaId);
 
@@ -319,10 +328,14 @@ public class PartidaService {
 
         EstadoTurno estado = estadoTurnoConverter.convert(turno.getEstadoTurno());
 
+		System.out.println("bbbbbbbbbbbbbbbbbbbbb");
+		System.out.println(turno.getEstadoTurno().toString());
         estado.takeAction(turno);
 
         turno.setEstadoTurno(estado.getNextState(turno));
         turnoService.save(turno);
+
+		System.out.println("zzzzzzzzzzzzzzzzzzzzzzz");
 
 		guard = true;
     }

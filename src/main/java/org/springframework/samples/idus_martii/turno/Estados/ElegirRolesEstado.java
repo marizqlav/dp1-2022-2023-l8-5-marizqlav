@@ -7,6 +7,7 @@ import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
+import org.springframework.samples.idus_martii.partida.GameScreens.DefaultScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
@@ -19,12 +20,16 @@ public class ElegirRolesEstado implements EstadoTurno {
     private PartidaService partidaService;
     private TurnoService turnoService;
 
+    private DefaultScreen defaultScreen;
+
     private boolean guard = true;
 
     @Autowired
-    ElegirRolesEstado(PartidaService partidaService, TurnoService turnoService) {
+    ElegirRolesEstado(PartidaService partidaService, TurnoService turnoService, DefaultScreen defaultScreen) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
+
+        this.defaultScreen = defaultScreen;
     }
 
     @Override
@@ -40,10 +45,20 @@ public class ElegirRolesEstado implements EstadoTurno {
         Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
         
         Turno turno = partidaService.getTurnoActual(partidaId);
-        Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size()-2);
-        Integer n =  partidaService.findJugadores(partidaId).indexOf(turnoAnterior.getConsul());
+        Turno turnoAnterior = null;
+
+        if (turno.getNumTurno() == 1) {
+            turnoAnterior = turno.getRonda().getPartida().getRondas().get(0).getTurnos().get(
+                turno.getRonda().getPartida().getRondas().get(0).getTurnos().size() - 1);
         
+        } else {
+            turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
+        }
+
+        Integer n =  partidaService.findJugadores(partidaId).indexOf(turnoAnterior.getConsul());
+
         n = addNumber.apply(n);
+
         turno.setConsul(listaJugadores.get(n));
 
         turnoService.save(turno);
@@ -62,7 +77,8 @@ public class ElegirRolesEstado implements EstadoTurno {
 
     @Override
     public GameScreen getGameScreen() {
-        return null;
+        System.out.println("xxxxxxxxxxxxxxxxx");
+        return defaultScreen; //TODO provisional
     }
     
 }
