@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.turno.Estados;
 
+import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.jugador.Jugador;
@@ -12,6 +13,7 @@ import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.stereotype.Component;
 
 @Component
+@StatePattern.ConcreteState
 public class ElegirFaccionEstado implements EstadoTurno {
 
     private ElegirFaccionScreen elegirFaccionScreen;

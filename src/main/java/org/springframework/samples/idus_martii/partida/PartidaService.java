@@ -301,7 +301,14 @@ public class PartidaService {
         partidaRepo.save(partida);
     }
 
+	private boolean guard = true; //Bug fix, probablemente se puede hacer mejor pero asi funciona
+
     public void handleTurn(Integer partidaId) throws NotFoundException {
+		if (!guard) {
+			return;
+		}
+		guard = false;
+
         Partida partida = findPartida(partidaId);
 
         if (partida == null || !partida.iniciada()) {
@@ -316,6 +323,8 @@ public class PartidaService {
 
         turno.setEstadoTurno(estado.getNextState(turno));
         turnoService.save(turno);
+
+		guard = true;
     }
     
     public GameScreen getCurrentGameScreen(Integer partidaId) {
