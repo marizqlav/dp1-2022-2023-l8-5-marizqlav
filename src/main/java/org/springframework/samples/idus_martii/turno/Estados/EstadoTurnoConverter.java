@@ -16,12 +16,13 @@ public class EstadoTurnoConverter implements Converter<EstadoTurnoEnum, EstadoTu
     TerminarTurnoEstado terminarTurnoEstado;
     DescubiertoAmarilloEstado descubiertoAmarilloEstado;
     RecuentoEstado recuentoEstado;
-    ElegirFaccion elegirFaccionEstado;
+    ElegirFaccionEstado elegirFaccionEstado;
     
     @Autowired
     EstadoTurnoConverter(EstablecerRolesEstado establecerRolesEstado, VotarEstado votarEstado, EspiarEstado espiarEstado,
         CambiarVotoEstado cambiarVotoEstado, ElegirRolesEstado elegirRolesEstado, TerminarTurnoEstado terminarTurnoEstado, 
-        DescubiertoAmarilloEstado descubiertoAmarilloEstado, RecuentoEstado recuentoEstado, EmpezarTurnoEstado empezarTurnoEstado) {
+        DescubiertoAmarilloEstado descubiertoAmarilloEstado, RecuentoEstado recuentoEstado, EmpezarTurnoEstado empezarTurnoEstado,
+        ElegirFaccionEstado elegirFaccionEstado) {
             
         this.empezarTurnoEstado = empezarTurnoEstado;
         this.establecerRolesEstado = establecerRolesEstado;
