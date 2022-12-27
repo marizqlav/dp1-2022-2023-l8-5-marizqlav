@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.statistics;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -52,9 +53,11 @@ public class StatisticsServiceTest {
 	
 	 @Test
 	 public void TestDuracionPartidas() {
-		 Map<String, Duration> jugador3 = this.ss.duracionPartidas(js.getJugadorById(1));
+		 Map<String, Duration> jugador3 = this.ss.duracionPartidas(js.getJugadorById(3));
 		 assertThat(jugador3.size()).isEqualTo(3);
-		 
+		 assertThat(jugador3.get("max")).isEqualTo(Duration.between(LocalTime.of(10, 35, 02), LocalTime.of(10, 49, 31)));
+		 assertThat(jugador3.get("min")).isEqualTo(Duration.between(LocalTime.of(10, 35, 02), LocalTime.of(10, 49, 31)));
+		 assertThat(jugador3.get("media")).isEqualTo(Duration.between(LocalTime.of(10, 35, 02), LocalTime.of(10, 49, 31)));
 	 }
 	 
 	 @Test
