@@ -58,7 +58,7 @@ INSERT INTO achievement(id,name,description,threshold,badge_image)
                         (3,'Et tu, Brute?','Si ganas <THRESHOLD> o  más partidas en la facción traidora, recibirás un pack de 23 puñales.',1.0,'https://bit.ly/proGamer'),
                         (4,'Sanco, dios de la honestidad','Gana <THRESHOLD> o  más partidas en la facción leal y demuestra tu lealtad al Caesar.',1.0,'https://bit.ly/proGamer'),
                         (5,'Collegia opificum','Gana <THRESHOLD> o  más partidas en la facción mercader y llena tus arcas de denarios.',1.0,'https://bit.ly/proGamer'),
-                        (6,'Sabotaje','Gana <THRESHOLD> partida haciendo que la facción rival se pase de votos',1.0,'https://bit.ly/proGamer');
+                        (6,'Sabotaje','Gana <THRESHOLD> partida haciendo que la facción rival se pase de votos',1.0,'http://bitly.ws/xRBS');
                         
                         
 INSERT INTO jugador_achievement VALUES(1,1);
