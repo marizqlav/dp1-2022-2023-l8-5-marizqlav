@@ -1,6 +1,7 @@
 package org.springframework.samples.idus_martii.turno.Estados;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.samples.idus_martii.partida.GameScreens.ElegirFaccionScreen;
@@ -11,18 +12,18 @@ import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ElegirFaccion implements EstadoTurno {
+public class ElegirFaccionEstado implements EstadoTurno {
 
     private ElegirFaccionScreen elegirFaccionScreen;
 
-    private TurnoService turnoService;
+    private FaccionService faccionService;
 
     @Autowired
-    ElegirFaccion(ElegirFaccionScreen elegirFaccionScreen, TurnoService turnoService) {
+    ElegirFaccionEstado(ElegirFaccionScreen elegirFaccionScreen, FaccionService faccionService) {
 
         this.elegirFaccionScreen = elegirFaccionScreen;
 
-        this.turnoService = turnoService;
+        this.faccionService = faccionService;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class ElegirFaccion implements EstadoTurno {
     @Override
     public EstadoTurnoEnum getNextState(Turno turno) {
     	
-        if (turnoService.findVoto(turno.getId(), turno.getEdil1().getId()) != null && turnoService.findVoto(turno.getId(), turno.getEdil2().getId()) != null) {
+        if (faccionService.getFaccionJugadorPartida(turno.getConsul().getId(), turno.getRonda().getPartida().getId()).getFaccionSelecionada() != null) {
         	return EstadoTurnoEnum.TerminarTurno;
         }
         return EstadoTurnoEnum.ElegirFaccion;

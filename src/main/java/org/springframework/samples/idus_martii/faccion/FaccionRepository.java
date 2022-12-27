@@ -27,10 +27,5 @@ public interface FaccionRepository extends CrudRepository<Faccion, Integer> {
 	List<Faccion> getFaccionesPartida(@Param("idPartida") Integer idPartida);
 	
 	@Query("SELECT f FROM Faccion f WHERE f.partida.id = :idpartida AND f.jugador.id = :idjugador")
-	Faccion getFaccionJugadorPartida(@Param("idjugador") Integer idjugador,@Param("idpartida") Integer idpartida);
-	
-	@Transactional
-	@Modifying
-	@Query(value = "UPDATE faccion SET faccion_selecionada = :faccionSelecionada WHERE partida_id = :partidaid AND jugador_id= :jugadorid", nativeQuery = true)
-	void setFaccionSelecionada(@Param("jugadorid") int jugadorid, @Param("partidaid") int partidaid, @Param("faccionSelecionada") String faccionSelecionada);
+	Faccion getFaccionJugadorPartida(@Param("idjugador") Integer idjugador, @Param("idpartida") Integer idpartida);
 }
