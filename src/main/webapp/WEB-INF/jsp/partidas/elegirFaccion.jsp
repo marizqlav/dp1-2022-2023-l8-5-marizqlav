@@ -231,7 +231,7 @@ width:60px;
  text-decoration:none;
 }
 #votacionpositiva{
- margin-left:400px;
+ margin-left:200px;
 }
 .button {
     background-color: #4CAF50;
@@ -268,25 +268,27 @@ width:60px;
 			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
-	        	<span id="textoenunciado">Enviar voto</span>
-	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
-	        			<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == 'Traidor'}">
-	        			Traidor
-	        			<img src="/resources/images/faccion_traidor.jpg" id="faccionactual"/>
+	        	<span id="textoenunciado">Elegir facción</span>
+	        		<c:if test="${faccion.faccionPosible1.toString() == 'Leal'}">
+						<a href="/partida/juego/${partida.id}/elegirfaccion?faccion=Leal" ><img src="/resources/images/faccion_leal.jpg" width="150px" id="votacionpositiva" /></a>
 	        		</c:if>
-	        		<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == 'Leal'}">
-	        			Leal
-	        			<img src="/resources/images/faccion_leal.jpg" id="faccionactual"/>
+	        		<c:if test="${faccion.faccionPosible1.toString() == 'Traidor'}">
+						<a href="/partida/juego/${partida.id}/elegirfaccion?faccion=Traidor" ><img src="/resources/images/faccion_traidor.jpg" width="150px" id="votacionpositiva" /></a>
 	        		</c:if>
-	        		<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == 'Mercader'}">
-	        			Mercader
-	        			<img src="/resources/images/faccion_mercader.jpg" id="faccionactual"/>
+	        		<c:if test="${faccion.faccionPosible1.toString() == 'Mercader'}">
+						<a href="/partida/juego/${partida.id}/elegirfaccion?faccion=Mercader" ><img src="/resources/images/faccion_mercader.jpg" width="150px" id="votacionpositiva" /></a>
 	        		</c:if>
-	        		<c:if test="${jugador.id == faccion.jugador.id && faccion.faccionSelecionada == NULL}">
-	        			No asignada
-	        			<img src="/resources/images/idus-martii.jpg" id="faccionposible3"/>
+	        		<c:if test="${faccion.faccionPosible2.toString() == 'Leal'}">
+						<a href="/partida/juego/${partida.id}/elegirfaccion?faccion=Leal" ><img src="/resources/images/faccion_leal.jpg" width="150px" id="votacionnegativa" /></a>
+	        		</c:if>
+	        		<c:if test="${faccion.faccionPosible2.toString() == 'Traidor'}">
+						<a href="/partida/juego/${partida.id}/elegirfaccion?faccion=Traidor" ><img src="/resources/images/faccion_traidor.jpg" width="150px" id="votacionnegativa" /></a>
+	        		</c:if>
+	        		<c:if test="${faccion.faccionPosible2.toString() == 'Mercader'}">
+						<a href="/partida/juego/${partida.id}/elegirfaccion?faccion=Mercader" ><img src="/resources/images/faccion_mercader.jpg" width="150px" id="votacionnegativa" /></a>
 	        		</c:if>
 	        	</td>
+				
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>
 	        		<span style="font-size:20px;">Rol actual: 

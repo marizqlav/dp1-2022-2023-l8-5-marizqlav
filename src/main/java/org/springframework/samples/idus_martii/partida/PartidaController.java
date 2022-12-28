@@ -337,4 +337,16 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
 
+    @GetMapping(value="/juego/{partidaId}/elegirfaccion")
+    public ModelAndView elegirFaccion(@PathVariable("partidaId") Integer partidaId, @RequestParam String faccion) {
+        
+        Jugador jugador = getJugadorConectado();
+
+        try {
+            faccionService.asignarFaccionAJugador(faccion, jugador.getId(), partidaId);
+        } catch (AccessException e) { }
+
+        return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+    }
+
 }

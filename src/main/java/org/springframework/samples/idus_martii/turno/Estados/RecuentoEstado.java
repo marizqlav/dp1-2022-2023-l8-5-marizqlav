@@ -66,7 +66,7 @@ public class RecuentoEstado implements EstadoTurno {
     public EstadoTurnoEnum getNextState(Turno context) {
         if (counter > COUNT_LIMIT) {
         	counter = 0;
-            return EstadoTurnoEnum.TerminarTurno;
+            return EstadoTurnoEnum.ElegirFaccion;
         }
         return EstadoTurnoEnum.Recuento;
     }
