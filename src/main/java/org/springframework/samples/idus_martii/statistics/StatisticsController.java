@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
-import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.samples.idus_martii.statistics.StatisticsService;
 
 @Controller
 @RequestMapping("/statistics")
@@ -38,9 +36,6 @@ public class StatisticsController {
 	@GetMapping("/jugador/{jugadorId}")
 	public ModelAndView showStatisticPlayer(@PathVariable("jugadorId") Integer jugadorId ) {
 		ModelAndView result=new ModelAndView(STATISTICS_PLAYER_VIEW);
-		System.out.println(statService.duracionPartidas(jService.getJugadorById(jugadorId)));
-		System.out.println(statService.paridasGanadas(jService.getJugadorById(jugadorId)));
-		System.out.println(statService.partidasTotales(jService.getJugadorById(jugadorId)));
 		Map<FaccionesEnumerado, List<Integer>> stats = statService.paridasGanadas(jService.getJugadorById(jugadorId));
 		result.addObject("lealW",  stats.get(FaccionesEnumerado.Leal).get(0));
 		result.addObject("traidorW",  stats.get(FaccionesEnumerado.Traidor).get(0));
@@ -54,8 +49,6 @@ public class StatisticsController {
 	@Transactional(readOnly = true)
 	@GetMapping("/global")
 	public ModelAndView showStatisticGlobal() {
-		
-		System.out.println(pService.promedioPartida()[1]+ "zzz");
 		ModelAndView result=new ModelAndView(STATISTICS_GLOBAL_VIEW);
 		result.addObject("max",statService.numJugadoresPartida().get("max"));
 		result.addObject("min",statService.numJugadoresPartida().get("min"));
