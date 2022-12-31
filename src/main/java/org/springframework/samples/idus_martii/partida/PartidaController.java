@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -249,7 +251,7 @@ public class PartidaController {
         Jugador jugador = getJugadorConectado();
 
         //List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
-
+        
     	Turno turno = partidaService.getTurnoActual(partidaId);
     	Ronda ronda = partidaService.getRondaActual(partidaId);
     	Partida partida = partidaService.findPartida(partidaId);
@@ -280,6 +282,7 @@ public class PartidaController {
         //result.addObject("mensajes", mensajes);
         result.addObject("aviso", aviso);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
+        
         return result;
     }
 
@@ -324,9 +327,12 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
 
-    @GetMapping(value="/juego/{partidaId}/elegirrol")
-    public ModelAndView elegirRol(@PathVariable("partidaId") Integer partidaId, @RequestParam Integer jugadorId) {
+    @PostMapping(value="/juego/{partidaId}/elegirrol")
+    public ModelAndView elegirRol(@PathVariable("partidaId") Integer partidaId, HttpServletRequest request) {
         
+        Jugador jugador = jugadorService.getByName(request.getParameter("jugador"));
+        Integer jugadorId = jugador.getId();
+
         Turno turno = partidaService.getTurnoActual(partidaId);
         Jugador jugadorAAsignar = jugadorService.getJugadorById(jugadorId);
 
