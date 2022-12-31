@@ -26,7 +26,7 @@ public class ElegirFaccionScreen implements GameScreen {
 
     @Override
     public String getAviso(Integer partidaId) {
-        return "Elija facción";
+        return "Eligiendo facción";
     }
 
     @Override
@@ -34,13 +34,10 @@ public class ElegirFaccionScreen implements GameScreen {
         Turno turno = partidaService.getTurnoActual(partidaId);
         Faccion faccion = faccionService.getFaccionJugadorPartida(turno.getConsul().getId(), partidaId);
 
-        System.out.println("00000000000000000");
         if (jugadorConectado.equals(turno.getConsul()) && faccion.getFaccionSelecionada() == null) {
             
             ModelAndView result = new ModelAndView("/partidas/elegirFaccion");
             result.addObject("faccion", faccion);
-            System.out.println("aaaaaaaaaaaaaaa");
-            System.out.println(faccion);
             return result;
         }
 
