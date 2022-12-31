@@ -7,7 +7,6 @@ import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
-import org.springframework.samples.idus_martii.partida.GameScreens.DefaultScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
@@ -15,66 +14,55 @@ import org.springframework.stereotype.Component;
 
 @Component
 @StatePattern.ConcreteState
-public class EstablecerRolesEstado implements EstadoTurno {
+public class ElegirRolesEstado implements EstadoTurno {
 
     private PartidaService partidaService;
     private TurnoService turnoService;
 
-    private GameScreen gameScreen;
+    private boolean guard = true;
 
     @Autowired
-    EstablecerRolesEstado(PartidaService partidaService, TurnoService turnoService, DefaultScreen gameScreen) {
+    ElegirRolesEstado(PartidaService partidaService, TurnoService turnoService) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
-
-        this.gameScreen = gameScreen;
     }
 
     @Override
-    public void takeAction(Turno turno) {
-        Integer partidaId = turno.getRonda().getPartida().getId();
-       
-        if (turno.getNumTurno() == 1) {
-            Integer random = (int) Math.floor((Math.random() * (partidaService.findPartida(partidaId).getNumeroJugadores())));
-            setRolesConsecutivos(partidaId, random);
-        } else {
-        	Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
-            setRolesConsecutivos(partidaId, partidaService.findJugadores(partidaId).indexOf(turnoAnterior.getConsul()));
-           
+    public void takeAction(Turno context) {
+        if (!guard) {
+            return;
         }
-    }
 
-    public void setRolesConsecutivos(Integer partidaId, Integer posicionConsul) {
+        Integer partidaId = context.getRonda().getPartida().getId();
+
     	List<Jugador> listaJugadores = partidaService.findJugadores(partidaId);
         
         Function<Integer, Integer> addNumber = x -> (x >= listaJugadores.size() - 1) ? 0 : x + 1;
         
         Turno turno = partidaService.getTurnoActual(partidaId);
-        Integer n =  posicionConsul;
+        Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size()-2);
+        Integer n =  partidaService.findJugadores(partidaId).indexOf(turnoAnterior.getConsul());
         
         n = addNumber.apply(n);
         turno.setConsul(listaJugadores.get(n));
-        
-        n = addNumber.apply(n);
-        turno.setPredor(listaJugadores.get(n));
-        
-        n = addNumber.apply(n);
-        turno.setEdil1(listaJugadores.get(n));
-
-        n = addNumber.apply(n);
-        turno.setEdil2(listaJugadores.get(n));
 
         turnoService.save(turno);
+
+        guard = false;
     }
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
-        return EstadoTurnoEnum.Votar;
+        if (context.getConsul() != null && context.getPredor() != null && context.getEdil1() != null && context.getEdil2() != null) {
+            guard = true;
+            return EstadoTurnoEnum.Votar;
+        }
+        return EstadoTurnoEnum.ElegirRoles;
     }
 
     @Override
     public GameScreen getGameScreen() {
-        return gameScreen;
+        return null;
     }
     
 }

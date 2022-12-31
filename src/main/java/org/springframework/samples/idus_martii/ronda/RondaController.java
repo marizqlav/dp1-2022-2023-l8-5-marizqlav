@@ -1,5 +1,7 @@
 package org.springframework.samples.idus_martii.ronda;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,7 +52,11 @@ public class RondaController {
     
     @Transactional
     @PostMapping("/{id}/edit")
-    public ModelAndView saveRonda(@PathVariable int id,Ronda ronda){
+    public ModelAndView saveRonda(@PathVariable int id,@Valid Ronda ronda,BindingResult br){
+        if(br.hasErrors()){
+            return new ModelAndView(RONDAS_FORM,br.getModel());            
+        }
+
         Ronda rondaToBeUpdated=service.getById(id);
         BeanUtils.copyProperties(ronda,rondaToBeUpdated,"id");
         service.save(rondaToBeUpdated);

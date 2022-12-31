@@ -53,8 +53,12 @@ VALUES (1, 'Leal', 'Mercader', 'Leal', 1, 1),
                          (2,'10:23:09',2,'Mensaje de prueba 2');
                         
 INSERT INTO achievement(id,name,description,threshold,badge_image) 
-                VALUES (1,'Viciado','Si juegas <THRESHOLD> partidas o más, consideramos que ya estás enganchado.',10.0,'https://bit.ly/certifiedGamer'),
-                        (2,'Triunfador','Si ganas <THRESHOLD> o  más partidas es que eres todo un triunfador.',20.0,'https://bit.ly/proGamer');
+                VALUES (1,'Viciado','Si juegas <THRESHOLD> partidas o más, consideramos que ya estás enganchado.',1.0,'https://bit.ly/certifiedGamer'),
+                        (2,'Triunfador','Si ganas <THRESHOLD> o  más partidas es que eres todo un triunfador.',1.0,'https://bit.ly/proGamer'),
+                        (3,'Et tu, Brute?','Si ganas <THRESHOLD> o  más partidas en la facción traidora, recibirás un pack de 23 puñales.',1.0,'https://bit.ly/proGamer'),
+                        (4,'Sanco, dios de la honestidad','Gana <THRESHOLD> o  más partidas en la facción leal y demuestra tu lealtad al Caesar.',1.0,'https://bit.ly/proGamer'),
+                        (5,'Collegia opificum','Gana <THRESHOLD> o  más partidas en la facción mercader y llena tus arcas de denarios.',1.0,'https://bit.ly/proGamer'),
+                        (6,'Sabotaje','Gana <THRESHOLD> partida haciendo que la facción rival se pase de votos',1.0,'http://bitly.ws/xRBS');
                         
                         
 INSERT INTO jugador_achievement VALUES(1,1);

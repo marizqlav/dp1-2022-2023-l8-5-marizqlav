@@ -12,8 +12,7 @@
 	<div class="container" >
 		<div class="navbar-header">
 		
-			<a class="navbar-brand"
-				href="<spring:url value="/" htmlEscape="true" />"><span></span></a>
+			
 				
 			<button type="button" class="navbar-toggle" data-toggle="collapse"
 				data-target="#main-navbar">
@@ -58,12 +57,21 @@
 								<a href="<c:url value="/partida/creadas" />">Lista de partidas creadas</a>		
 							</li>
 						</ul>					
-				</idus_martii:menuItem>	
-				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/"
-					title="Logros">
-					<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-					<span>Logros</span>
 				</idus_martii:menuItem>
+				
+				<idus_martii:menuItem active="${name eq 'Staristics'}" url="/statistics/"
+					title="Estadística" dropdown="${true}">										
+						<ul class="dropdown-menu">
+							<li>
+								<a href="<c:url value="/statistics/achievements/" />">Logros</a>		
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="<c:url value="/statistics/global" />">Estadísiticas globales</a>		
+							</li>
+						</ul>					
+				</idus_martii:menuItem>		
+				
 </sec:authorize>
 <sec:authorize access="hasAuthority('admin')">
 				<idus_martii:menuItem active="${name eq 'achievements'}" url="/statistics/achievements/manageAchievements"

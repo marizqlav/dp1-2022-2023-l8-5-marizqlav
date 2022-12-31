@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.turno.Estados;
 
+import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.partida.PartidaService;
@@ -12,6 +13,7 @@ import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.stereotype.Component;
 
 @Component
+@StatePattern.ConcreteState
 public class TerminarTurnoEstado implements EstadoTurno {
 
     PartidaService partidaService;
@@ -36,9 +38,7 @@ public class TerminarTurnoEstado implements EstadoTurno {
 
     public void siguienteTurno(Integer partidaId) {
         Turno turno = partidaService.getTurnoActual(partidaId);
-
         if (turno.getNumTurno() == partidaService.findJugadores(partidaId).size()) {
-
             finalizarRonda(partidaId);
         }
 
@@ -47,7 +47,6 @@ public class TerminarTurnoEstado implements EstadoTurno {
 
     private void finalizarRonda(Integer partidaId) {
         Ronda ronda = partidaService.getRondaActual(partidaId);
-
     	if (ronda.getNumRonda() == 1) {
     		iniciarRonda(ronda.getPartida().getId());
     	} else {
@@ -64,11 +63,14 @@ public class TerminarTurnoEstado implements EstadoTurno {
 
     private void iniciarRonda(Integer partidaId) { //Use instead of iniciarTurno for new Ronda
 		Partida partida = partidaService.findPartida(partidaId);
-
+		
 		Ronda ronda = new Ronda();
         ronda.setPartida(partida);
         
         rondaService.save(ronda);
+        partida.getRondas().add(ronda);
+        partidaService.save(partida);
+
 	}
 
     @Override

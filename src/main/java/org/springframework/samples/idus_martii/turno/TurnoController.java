@@ -1,5 +1,7 @@
 package org.springframework.samples.idus_martii.turno;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,7 +52,10 @@ public class TurnoController {
     
     @Transactional
     @PostMapping("/{id}/edit")
-    public ModelAndView saveTurno(@PathVariable int id,Turno turno){
+    public ModelAndView saveTurno(@PathVariable int id,Turno turno, BindingResult br){
+        if(br.hasErrors()){
+            return new ModelAndView(TURNOS_FORM,br.getModel());            
+        }
         Turno turnoToBeUpdated=service.getById(id);
         BeanUtils.copyProperties(turno,turnoToBeUpdated,"id");
         service.save(turnoToBeUpdated);
@@ -70,7 +75,7 @@ public class TurnoController {
     
     @Transactional
     @PostMapping("/new")
-    public ModelAndView saveNewTurno(Turno turno, BindingResult br){
+    public ModelAndView saveNewTurno(@Valid Turno turno, BindingResult br){
         service.save(turno);
         ModelAndView result=showTurnos();
         result.addObject("message", "El turno se ha creado correctamente");

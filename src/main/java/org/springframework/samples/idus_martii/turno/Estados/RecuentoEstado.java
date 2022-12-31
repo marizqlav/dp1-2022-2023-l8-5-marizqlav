@@ -1,5 +1,6 @@
 package org.springframework.samples.idus_martii.turno.Estados;
 
+import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
@@ -11,6 +12,7 @@ import org.springframework.samples.idus_martii.turno.VotosTurno;
 import org.springframework.stereotype.Component;
 
 @Component
+@StatePattern.ConcreteState
 public class RecuentoEstado implements EstadoTurno {
 
     private RecuentoScreen recuentoScreen;
@@ -30,7 +32,7 @@ public class RecuentoEstado implements EstadoTurno {
     @Override
     public void takeAction(Turno turno) {
         counter += 1;
-        if (counter != 0) {
+        if (counter != 1) {
             return;
         }
 
@@ -63,7 +65,8 @@ public class RecuentoEstado implements EstadoTurno {
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
         if (counter > COUNT_LIMIT) {
-            return EstadoTurnoEnum.TerminarTurno;
+        	counter = 0;
+            return EstadoTurnoEnum.ElegirFaccion;
         }
         return EstadoTurnoEnum.Recuento;
     }

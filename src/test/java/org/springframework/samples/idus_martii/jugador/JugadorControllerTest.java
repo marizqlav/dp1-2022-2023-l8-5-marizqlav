@@ -6,8 +6,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
+import org.springframework.samples.idus_martii.turno.Estados.CambiarVotoEstado;
+import org.springframework.samples.idus_martii.turno.Estados.DescubiertoAmarilloEstado;
+import org.springframework.samples.idus_martii.turno.Estados.ElegirRolesEstado;
+import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
+import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
 import org.springframework.samples.idus_martii.user.AuthoritiesService;
@@ -24,6 +29,9 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,16 +70,40 @@ public class JugadorControllerTest {
     
     @MockBean
     private TerminarTurnoEstado terminarTurnoEstado;
+    
+    @MockBean
+    private CambiarVotoEstado cambiarVotoEstado;
+    
+    @MockBean
+    private DescubiertoAmarilloEstado descubiertoAmarilloEstado;
+    
+    @MockBean
+    private RecuentoEstado recuentoEstado;
+
+    @MockBean
+    private EmpezarTurnoEstado empezarTurnoEstado;
+    
+    @MockBean
+    private ElegirRolesEstado elegirRolesEstado;
 
 
 	@BeforeEach
 	void setup() {
 		Jugador jugador = new Jugador();
-		User usuario = jugador.getUser();
+		Jugador jugador2 = new Jugador();
+		User usuario= new User();
+		usuario.setName("Jose");
+		List<Jugador> listaJugadores= new ArrayList<>();
+		listaJugadores.add(jugador);
+		listaJugadores.add(jugador2);
 		jugador.setId(1);
 		jugador.setUser(usuario);
 		jugadorService.save(jugador);
 		given(jugadorService.getAll()).willReturn(Lists.newArrayList(jugador));
+		given(jugadorService.getJugadorById(jugador.getId())).willReturn(jugador);
+		given(jugadorService.getJugadorByUsername(jugador.getUser().getName())).willReturn(Lists.newArrayList());
+		given(jugadorService.getUserByJugador(jugador)).willReturn(jugador.getUser());
+		given(jugadorService.getByName(jugador.getUser().getName())).willReturn(jugador);
 	}
 
 	@WithMockUser
@@ -94,14 +126,14 @@ public class JugadorControllerTest {
 		mockMvc.perform(get("/jugadores/find"))
 				.andExpect(status().isOk());
 	}
-//Da error porque no esta creada la vista de jugadoresList, pero funciona bien
-//	@WithMockUser(username="admin",authorities= {"admin"})
-//    @Test
-//    @DisplayName("processFindForm the jugador")
-//	void testprocessFindForm() throws Exception {
-//		mockMvc.perform(get("/jugadores"))
-//				.andExpect(view().name("jugadores/jugadoresList"));
-//	}
+//Da error
+	@WithMockUser(username="admin",authorities= {"admin"})
+    @Test
+    @DisplayName("processFindForm the jugador")
+	void testprocessFindForm() throws Exception {
+		mockMvc.perform(get("/jugadores"))
+				.andExpect(view().name("/jugadores/jugadoresList"));
+	}
 	
 	@WithMockUser(value = "spring")
 	@Test
@@ -155,14 +187,11 @@ public class JugadorControllerTest {
 	}
 
 	
-	
-//	da error si se pone el view porque no se a donde va el return
 	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("Deleting the jugador")
 	void testProcessDeleteTurnoFormSuccess() throws Exception {
 		mockMvc.perform(get("/jugadores/eliminar/" + ID_JUGADOR))
-//		.andExpect(status().is3xxRedirection())
 		.andExpect(view().name("welcome"));
 	}
 
