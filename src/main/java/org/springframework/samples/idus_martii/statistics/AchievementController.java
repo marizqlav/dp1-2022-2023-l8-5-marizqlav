@@ -102,10 +102,7 @@ public class AchievementController {
 	    
 	    @Transactional
 	    @PostMapping("/new")
-	    public ModelAndView saveNewAchievement(@Valid Achievement achievement, BindingResult br){
-	        if(br.hasErrors()){
-	            return new ModelAndView(ACHIEVEMENTS_FORM,br.getModel());            
-	        }
+	    public ModelAndView saveNewAchievement(@Valid Achievement achievement){
 	        achievementService.save(achievement);
 	        ModelAndView result=showAchievements();
 	        result.addObject("message", "The achievement was created successfully");
