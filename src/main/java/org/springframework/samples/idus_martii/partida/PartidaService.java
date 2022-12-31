@@ -154,11 +154,8 @@ public class PartidaService {
 	}
 
     public Turno getTurnoActual(Integer partidaId) {
-		System.out.println("qqqqqqqqqqqqqqqqqqqqqq");
     	Partida p = partidaRepo.findById(partidaId).get();
-		System.out.println(p.getRondas().size() - 1);
     	Ronda r = p.getRondas().get(p.getRondas().size() - 1);
-		System.out.println(r.getTurnos().size() - 1);
     	Turno t = r.getTurnos().get(r.getTurnos().size() - 1);
     	return t;
     }
@@ -316,8 +313,6 @@ public class PartidaService {
 		}
 		guard = false;
 
-		System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
-
         Partida partida = findPartida(partidaId);
 
         if (partida == null || !partida.iniciada()) {
@@ -328,14 +323,10 @@ public class PartidaService {
 
         EstadoTurno estado = estadoTurnoConverter.convert(turno.getEstadoTurno());
 
-		System.out.println("bbbbbbbbbbbbbbbbbbbbb");
-		System.out.println(turno.getEstadoTurno().toString());
-        estado.takeAction(turno);
+		estado.takeAction(turno);
 
         turno.setEstadoTurno(estado.getNextState(turno));
         turnoService.save(turno);
-
-		System.out.println("zzzzzzzzzzzzzzzzzzzzzzz");
 
 		guard = true;
     }

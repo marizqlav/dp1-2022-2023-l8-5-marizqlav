@@ -7,7 +7,7 @@ import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
-import org.springframework.samples.idus_martii.partida.GameScreens.DefaultScreen;
+import org.springframework.samples.idus_martii.partida.GameScreens.ElegirRolesScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
@@ -20,16 +20,16 @@ public class ElegirRolesEstado implements EstadoTurno {
     private PartidaService partidaService;
     private TurnoService turnoService;
 
-    private DefaultScreen defaultScreen;
+    private ElegirRolesScreen elegirRolesScreen;
 
     private boolean guard = true;
 
     @Autowired
-    ElegirRolesEstado(PartidaService partidaService, TurnoService turnoService, DefaultScreen defaultScreen) {
+    ElegirRolesEstado(PartidaService partidaService, TurnoService turnoService, ElegirRolesScreen elegirRolesScreen) {
         this.partidaService = partidaService;
         this.turnoService = turnoService;
 
-        this.defaultScreen = defaultScreen;
+        this.elegirRolesScreen = elegirRolesScreen;
     }
 
     @Override
@@ -77,8 +77,7 @@ public class ElegirRolesEstado implements EstadoTurno {
 
     @Override
     public GameScreen getGameScreen() {
-        System.out.println("xxxxxxxxxxxxxxxxx");
-        return defaultScreen; //TODO provisional
+        return elegirRolesScreen;
     }
     
 }

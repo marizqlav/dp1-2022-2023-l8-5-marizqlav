@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -250,14 +252,9 @@ public class PartidaController {
 
         //List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
         
-        System.out.println("hhhhhhhhhhhhhhhhhhhh");
     	Turno turno = partidaService.getTurnoActual(partidaId);
-        System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
     	Ronda ronda = partidaService.getRondaActual(partidaId);
-        System.out.println("jjjjjjjjjjjjjjjjjj");
     	Partida partida = partidaService.findPartida(partidaId);
-
-        System.out.println("kkkkkkkkkkkkkkkkkkkkk");
 
         try {
             partidaService.handleTurn(partidaId);
@@ -266,13 +263,10 @@ public class PartidaController {
             res.addObject("message", "No se encontró ninguna partida");
             return res;
         }
-        System.out.println("llllllllllllllllllllll");
 
         GameScreen gameScreen = partidaService.getCurrentGameScreen(partidaId);
         ModelAndView result = gameScreen.getView(partidaId, jugador);
         String aviso = gameScreen.getAviso(partidaId);
-
-        System.out.println("mmmmmmmmmmmmmmmmmmmmm");
         
         Integer votosFavor = partida.getVotosLeales();
         Integer votosContra = partida.getVotosTraidores();
@@ -289,7 +283,6 @@ public class PartidaController {
         result.addObject("aviso", aviso);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         
-        System.out.println("ooooooooooooooooooooooooo");
         return result;
     }
 
@@ -334,9 +327,12 @@ public class PartidaController {
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
     }
 
-    @GetMapping(value="/juego/{partidaId}/elegirrol")
-    public ModelAndView elegirRol(@PathVariable("partidaId") Integer partidaId, @RequestParam Integer jugadorId) {
+    @PostMapping(value="/juego/{partidaId}/elegirrol")
+    public ModelAndView elegirRol(@PathVariable("partidaId") Integer partidaId, HttpServletRequest request) {
         
+        Jugador jugador = jugadorService.getByName(request.getParameter("jugador"));
+        Integer jugadorId = jugador.getId();
+
         Turno turno = partidaService.getTurnoActual(partidaId);
         Jugador jugadorAAsignar = jugadorService.getJugadorById(jugadorId);
 
