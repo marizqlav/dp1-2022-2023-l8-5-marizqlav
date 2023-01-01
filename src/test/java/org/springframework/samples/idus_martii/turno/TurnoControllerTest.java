@@ -13,10 +13,12 @@ import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.turno.Estados.CambiarVotoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.DescubiertoAmarilloEstado;
+import org.springframework.samples.idus_martii.turno.Estados.ElegirRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverter;
 import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
@@ -56,7 +58,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TurnoControllerTest {
     	
 	
-	public static final String ID_TURNO="1";
+	public static final int ID_TURNO=1;
 
     @Autowired
     private MockMvc mockMvc;
@@ -93,6 +95,12 @@ public class TurnoControllerTest {
 
     @MockBean
     private EmpezarTurnoEstado empezarTurnoEstado;
+    
+    @MockBean
+    private ElegirRolesEstado elegirRolesEstado;
+    
+    @MockBean
+    private EstadoTurnoConverter estadoTurnoConverter;
 
 	@BeforeEach
 	void setup() {
@@ -102,6 +110,7 @@ public class TurnoControllerTest {
 		Jugador j3=new Jugador();
 		Jugador j4=new Jugador();
 		Ronda ronda = new Ronda();
+		turno.setId(ID_TURNO);
 		turno.setConsul(j1);
 		turno.setEdil1(j2);
 		turno.setEdil2(j3);
@@ -122,7 +131,7 @@ public class TurnoControllerTest {
 	}
 
 	//crear
-	@WithMockUser(value = "spring")
+	@WithMockUser
 	@Test
 	@DisplayName("Crear turno form")
 	void testInitCreationForm() throws Exception {
@@ -133,8 +142,8 @@ public class TurnoControllerTest {
 	}
 
 	//save
-//	Da error porque no esta creado createOrUpdateTurnoForm ni turnosList
-//	@WithMockUser(value = "spring")
+//	Da error 
+//	@WithMockUser
 //	@Test
 //	@DisplayName("Create Turno")
 //	void processCreationTurnoSuccess() throws Exception {
@@ -152,27 +161,27 @@ public class TurnoControllerTest {
 //		.andExpect(view().name("/turnos/createOrUpdateTurnoForm"));
 //	}
 
-//	@WithMockUser(value = "spring")
+//	@WithMockUser
 //	@Test
 //	@DisplayName("Cannot create Turno")
 //	void processCreationTurnoHasErrors() throws Exception {
 //		mockMvc.perform(MockMvcRequestBuilders.post("/turnos/"+ID_TURNO+"/edit")
-	//			.param("consul_id", "1")
-	//			.param("predor_id", "2")
-	//			.param("edil1_id", "3")
-	//			.param("edil2_id", "4")
-	//			.param("votos_traidores", "1")
-	//			.param("votos_leales", "1")
-	//			.param("votos_neutrales", "1")
-	//			.param("ronda_id", "1")
-	//			.with(SecurityMockMvcRequestPostProcessors.csrf()))
+//				.param("consul_id", "1")
+//				.param("predor_id", "2")
+//				.param("edil1_id", "3")
+//				.param("edil2_id", "4")
+//				.param("votos_traidores", "1")
+//				.param("votos_leales", "1")
+//				.param("votos_neutrales", "1")
+//				.param("ronda_id", "1")
+//				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 //		.andExpect(status().isOk())
 //		.andExpect(view().name("/turnos/createOrUpdateTurnoForm"));
 //	}
-//
-//	//saveNewRonda
-//	
-//	@WithMockUser(value = "spring")
+
+	//saveNewRonda
+	
+//	@WithMockUser
 //	@Test
 //	@DisplayName("Create new Turno")
 //	void processCreationTurnoNewSuccess() throws Exception {
@@ -190,7 +199,7 @@ public class TurnoControllerTest {
 //		.andExpect(view().name("/turnos/turnosList"));
 //	}
 //
-//	@WithMockUser(value = "spring")
+//	@WithMockUser
 //	@Test
 //	@DisplayName("Cannot create new Turno")
 //	void processCreationTurnoNewHasErrors() throws Exception {
@@ -210,7 +219,7 @@ public class TurnoControllerTest {
 //
 //	
 ////editar
-//	@WithMockUser(value = "spring")
+//	@WithMockUser
 //	@Test
 //	@DisplayName("Updating the turno")
 //	void testProcessUpdateTurnoFormSuccess() throws Exception {
@@ -226,7 +235,7 @@ public class TurnoControllerTest {
 //		.andExpect(view().name("/turnos/createOrUpdateTurnoForm"));
 //	}
 //
-//	@WithMockUser(value = "spring")
+//	@WithMockUser
 //	@Test
 //	@DisplayName("Cannot updating the turno")
 //	void testProcessUpdateTurnoHasErrors() throws Exception {
@@ -241,9 +250,9 @@ public class TurnoControllerTest {
 //				.param("ronda_id", "1"))
 //		.andExpect(view().name("/turnos/createOrUpdateTurnoForm"));
 //	}
-//
-//	
-	@WithMockUser(value = "spring")
+
+	
+	@WithMockUser
 	@Test
 	@DisplayName("Deleting the turno")
 	void testProcessDeleteTurnoFormSuccess() throws Exception {

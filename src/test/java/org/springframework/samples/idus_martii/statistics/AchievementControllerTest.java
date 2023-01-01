@@ -6,6 +6,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
+import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.turno.Estados.*;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -13,12 +14,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import org.assertj.core.util.Lists;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,21 +26,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-
 @WebMvcTest(controllers = AchievementController.class,
     excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                                             classes = WebSecurityConfigurer.class),
     excludeAutoConfiguration = SecurityConfiguration.class)
-public class StatisticsControllerTest {
+public class AchievementControllerTest {
     	
-	public static final String ID_ACHIEVEMENT="10";
-
+	public static final int ID_ACHIEVEMENT=1;
+	public static final int ID_JUGADOR=1;
 	
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private AchievementService achievementService;
+    
+    @MockBean
+    private JugadorService jugadorService;
     
     @MockBean
     private EstablecerRolesEstado establecerRolesEstado;
@@ -65,16 +67,23 @@ public class StatisticsControllerTest {
 
     @MockBean
     private EmpezarTurnoEstado empezarTurnoEstado;
+    
+    @MockBean
+    private ElegirRolesEstado elegirRolesEstado;
 
+    @MockBean
+    private ElegirFaccionEstado elegirFaccionEstado;
+    
 	@BeforeEach
 	void setup() {
 		Achievement logro = new Achievement();
-		logro.setName("Viciado");
+		logro.setId(ID_ACHIEVEMENT);
+		logro.setName("Abel");
 		logro.setBadgeImage("https://bit.ly/certifiedGamer");
 		logro.setDescription("ya estás enganchado");
 		logro.setThreshold(10.0);
 		achievementService.save(logro);
-		given(achievementService.getAchievements()).willReturn(Lists.newArrayList(logro));
+		given(achievementService.getById(ID_ACHIEVEMENT)).willReturn(logro);
 	}
 
 	@WithMockUser
@@ -83,6 +92,7 @@ public class StatisticsControllerTest {
 	    mockMvc.perform(get("/statistics/achievements/")).
 	   		andExpect(status().isOk());
 	}
+	
 	@WithMockUser
 	@Test
 	public void testShowAchievements() throws Exception {
@@ -90,31 +100,38 @@ public class StatisticsControllerTest {
 	   		andExpect(status().isOk());
 	}
 	
-	//crear
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Crear logro form")
-	void testInitCreationForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/statistics/achievements/new"))
-		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.view().name("/achievements/createOrUpdateAchievementForm"))
-		.andExpect(MockMvcResultMatchers.model().attributeExists("achievement"));
+	@DisplayName("Deleting the logro")
+	void testProcessDeleteLogroForm() throws Exception {
+		mockMvc.perform(get("/statistics/achievements/"+ ID_ACHIEVEMENT +"/delete"))
+		.andExpect(view().name("/achievements/AchievementListing"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Edit the logro")
+	void testEditRondaForm() throws Exception {
+		mockMvc.perform(get("/statistics/achievements/"+ID_ACHIEVEMENT+"/edit"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("/achievements/createOrUpdateAchievementForm"));
 	}
 
-	//save
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Create Logro")
-	void processCreationLogroSuccess() throws Exception {
+	@DisplayName("Save Logro")
+	void processSaveLogroSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/statistics/achievements/"+ID_ACHIEVEMENT+"/edit")
-				.with(SecurityMockMvcRequestPostProcessors.csrf())
+				.with(csrf())
 				.param("name", "willy")
 				.param("badge_image", "https://bit.ly/certifiedGame")
+				.param("description", "Si juegas")
 				.param("threshold", "3.0")
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(view().name("/achievements/createOrUpdateAchievementForm"));
+				.with(csrf()))
+				.andExpect(view().name("/achievements/AchievementListing"));
 	}
-//
+	
+	
 	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("Cannot create Logro")
@@ -128,70 +145,40 @@ public class StatisticsControllerTest {
 		.andExpect(view().name("/achievements/createOrUpdateAchievementForm"));
 	}
 
-	//saveNewRonda
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Crear logro form")
+	void testInitCreationForm() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/statistics/achievements/new"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.model().attributeExists("achievement"))
+		.andExpect(MockMvcResultMatchers.view().name("/achievements/createOrUpdateAchievementForm"));
+	}
 	
 	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("Create new Logro")
 	void processCreationLogroNewSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/statistics/achievements/new")
-				.with(SecurityMockMvcRequestPostProcessors.csrf())
+				.with(csrf())
 				.param("name", "willy")
 				.param("description", "Si juegas")
 				.param("threshold", "3.0")
-				.param("badge_image", "https://bit.ly/certifiedGamer")
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(view().name("/achievements/AchievementListing"));
-	}
-//
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Cannot create new Logro")
-	void processCreationLogroNewHasErrors() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/statistics/achievements/new")
-				.param("name", "willy")
-				.param("description", "Si juegas")
-				.param("threshold", "3.0")
-				.param("badge_image", "https://bit.ly/certifiedGamer")
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(status().isOk())
-		.andExpect(view().name("/achievements/AchievementListing"));
+				.param("badge_image", "https://bit.ly/certifiedMatch")
+				.with(csrf()))
+				.andExpect(view().name("/achievements/AchievementListing"));
 	}
 	
-//editar
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Updating the Logro")
-	void testProcessUpdateLogroFormSuccess() throws Exception {
-		mockMvc.perform(get("/statistics/achievements/"+ ID_ACHIEVEMENT +"/edit")
-				.param("name", "1")
-				.param("description", "Si juegas")
-				.param("threshold", "3.0")
-				.param("badge_image", "https://bit.ly/certifiedGamer"))
-		.andExpect(view().name("/achievements/createOrUpdateAchievementForm"));
-	}
-
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Cannot updating the Logro")
-	void testProcessUpdateLogroHasErrors() throws Exception {
-		mockMvc.perform(get("/statistics/achievements/"+ 2 +"/edit")
-				.param("name", "1")
-				.param("description", "Si juegas")
-				.param("threshold", "3.0")
-				.param("badge_image", "https://bit.ly/certifiedGamer"))
-		.andExpect(view().name("/achievements/createOrUpdateAchievementForm"));
+	@DisplayName("Logros jugador")
+	void testAschievementsPlayerForm() throws Exception {
+		mockMvc.perform(get("/statistics/achievements/jugador/"+ ID_JUGADOR))
+			.andExpect(status().isOk())
+			.andExpect(view().name("/achievements/AchievementsJugador"));
 	}
 
 	
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Deleting the logro")
-	void testProcessDeleteLogroFormSuccess() throws Exception {
-		mockMvc.perform(get("/statistics/achievements/"+ ID_ACHIEVEMENT +"/delete"))
-		.andExpect(view().name("/achievements/AchievementListing"));
-	}
-
-
-
 }
+
+

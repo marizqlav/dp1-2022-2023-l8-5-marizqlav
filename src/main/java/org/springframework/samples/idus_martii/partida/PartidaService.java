@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.faccion.Faccion;
@@ -35,6 +37,7 @@ import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverte
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoEnum;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PartidaService {
@@ -69,7 +72,7 @@ public class PartidaService {
         return partidaRepo.findJugadores(partidaId);
     }
     
-    List<Partida> getPartidas() {
+    public List<Partida> getPartidas() {
         return partidaRepo.findAll();
     }
     
@@ -152,8 +155,8 @@ public class PartidaService {
 
     public Turno getTurnoActual(Integer partidaId) {
     	Partida p = partidaRepo.findById(partidaId).get();
-    	Ronda r = p.getRondas().get(p.getRondas().size()-1);
-    	Turno t = r.getTurnos().get(r.getTurnos().size()-1);
+    	Ronda r = p.getRondas().get(p.getRondas().size() - 1);
+    	Turno t = r.getTurnos().get(r.getTurnos().size() - 1);
     	return t;
     }
     
@@ -299,7 +302,17 @@ public class PartidaService {
         partidaRepo.save(partida);
     }
 
+	private boolean guard = true; //Bug fix, aunque a veces no funciona
+	//TODO arreglarlo con transacciones o algo
+	//TODO debería devolver un estado default con pantalla default en lugar de dar error
+
+	@Transactional
     public void handleTurn(Integer partidaId) throws NotFoundException {
+		if (!guard) {
+			return;
+		}
+		guard = false;
+
         Partida partida = findPartida(partidaId);
 
         if (partida == null || !partida.iniciada()) {
@@ -310,10 +323,12 @@ public class PartidaService {
 
         EstadoTurno estado = estadoTurnoConverter.convert(turno.getEstadoTurno());
 
-        estado.takeAction(turno);
+		estado.takeAction(turno);
 
         turno.setEstadoTurno(estado.getNextState(turno));
         turnoService.save(turno);
+
+		guard = true;
     }
     
     public GameScreen getCurrentGameScreen(Integer partidaId) {
@@ -356,10 +371,99 @@ public class PartidaService {
 			}
 		}		
 	}
+	
+	public int ganadasSabotajeJugador(Jugador j){
+		int cont = 0;
+		for(Partida p : partidaRepo.findPartidasGanadas(j.getId())) {
+			if(java.lang.Math.max(p.getVotosLeales(), p.getVotosTraidores())>= p.getLimite()){
+				cont = cont +1;
+			}
+		}
+		return cont;
+	}
 
 
 	public void save(Partida partida) {
 		partidaRepo.save(partida);
 		
 	}
+	
+	public long[] promedioPartida(){
+		long sum = 0;
+		for(Partida p : partidaRepo.findAll()) {
+			sum = sum +  Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+		}
+		sum = sum/partidaRepo.findAll().size();
+		return new long[]{ sum/3600, (sum%3600)/60, ((sum%3600)%60)};
+	}
+	
+	public Partida partidaMasLarga(){
+		long sum = -1;
+		Partida partida = new Partida();
+		for(Partida p : partidaRepo.findAll()) {
+			if(Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds()>=sum) {
+				partida = p;
+				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+			}
+		}
+		return partida;
+	}
+	
+	public Partida partidaMasCorta(){
+		long sum = -1;
+		Partida partida = new Partida();
+		for(Partida p : partidaRepo.findAll()) {
+			if(sum == -1) {
+				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+				partida = p;
+			}
+			else if(Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds()<=sum) {
+				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
+				partida = p;
+			}
+		}
+		return partida;
+	}
+	
+	
+	public List<Partida> ultimas6partidas(){
+		List<Partida> res = new ArrayList<Partida>();
+		List<Partida> sorted = partidaRepo.findAll().stream().sorted((o1, o2)-> o1.getFechaFin().compareTo(o2.getFechaFin())).collect(Collectors.toList());
+		for(int i = 0; i<6; i++) {
+			if(i> sorted.size()-1) {
+				break;
+			}
+			res.add(sorted.get(i));
+		}
+		return res;
+	}
+	
+	
+	public FaccionesEnumerado faccionMasGanadora(){
+		int leal = 0;
+		int traidor = 0;
+		int mercader=0;
+		for(Partida p: partidaRepo.findAll()){
+			if(p.faccionGanadora == FaccionesEnumerado.Leal) {
+				leal = leal+1;
+			}
+			else if(p.faccionGanadora == FaccionesEnumerado.Traidor) {
+				traidor=traidor+1;
+			}
+			else {
+				mercader = mercader+1;
+			}
+		}
+		if(leal >= traidor && leal >= mercader){
+			 return FaccionesEnumerado.Leal;
+		 }
+		 else if(traidor >= leal && traidor >= mercader){
+			 return FaccionesEnumerado.Traidor;
+		 }
+		 else {
+			 return FaccionesEnumerado.Mercader;
+		 }
+		
+	}
+	
 }

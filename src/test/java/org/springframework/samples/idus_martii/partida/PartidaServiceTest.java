@@ -40,6 +40,7 @@ import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
+import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverter;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
@@ -57,10 +58,12 @@ public class PartidaServiceTest {
     RondaService rondaService;
     @Mock
     FaccionService faccionService;
+    @Mock
+    EstadoTurnoConverter estadoTurnoConverter;
 
     @BeforeEach
     void setUp() {
-        this.partidaService = new PartidaService(partidaRepo, turnoService, rondaService, faccionService);
+        this.partidaService = new PartidaService(partidaRepo, turnoService, rondaService, faccionService, estadoTurnoConverter);
     }
 
     @Test

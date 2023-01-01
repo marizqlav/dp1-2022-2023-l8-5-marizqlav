@@ -1,6 +1,5 @@
 package org.springframework.samples.idus_martii.jugador;
 
-import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +9,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.idus_martii.faccion.Faccion;
-import org.springframework.samples.idus_martii.mensaje.Mensaje;
-import org.springframework.samples.idus_martii.partida.Partida;
-import org.springframework.samples.idus_martii.ronda.Ronda;
-import org.springframework.samples.idus_martii.turno.Turno;
-import org.springframework.samples.idus_martii.turno.VotosTurno;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -27,19 +20,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class JugadorController {
 	
 	private static final String VIEWS_JUGADOR_CREATE_FORM = "jugadores/createOrUpdateJugadorForm";
-	private final String  JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
-	private final String  JUGADORES_AMIGOS_VIEW="/jugadores/jugadoresAmigosList";
-	private final String  JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
+	private final String JUGADORES_LISTING_VIEW="/jugadores/jugadoresList";
+	private final String JUGADORES_AMIGOS_VIEW="/jugadores/jugadoresAmigosList";
+	private final String JUGADOR_PROFILE_VIEW="/jugadores/jugadorProfile";
 	private static final String VIEWS_USUARIO_LISTING = "jugadores/userByPlayer";
-	private final String  PETICIONES_AMISTAD_VIEW="/jugadores/peticionesAmistadList";
+	private final String PETICIONES_AMISTAD_VIEW="/jugadores/peticionesAmistadList";
+	
+	
 	private final JugadorService jugadorService;
 	
 	@Autowired
@@ -52,14 +45,14 @@ public class JugadorController {
 		dataBinder.setDisallowedFields("id");
 	}
 	
-	   @Transactional(readOnly = true)
-	   @GetMapping("/{jugadorId}/user")
-	    public ModelAndView showJugador(@PathVariable("jugadorId") int jugadorId){
-	        ModelAndView result=new ModelAndView(VIEWS_USUARIO_LISTING);
-	        Jugador j = jugadorService.getJugadorById(jugadorId);
-	        result.addObject("users", jugadorService.getUserByJugador(j));
-	        return result;
-	    }
+	@Transactional(readOnly = true)
+	@GetMapping("/{jugadorId}/user")
+	public ModelAndView showJugador(@PathVariable("jugadorId") int jugadorId){
+	    ModelAndView result=new ModelAndView(VIEWS_USUARIO_LISTING);
+	    Jugador j = jugadorService.getJugadorById(jugadorId);
+	    result.addObject("users", jugadorService.getUserByJugador(j));
+	    return result;
+	}
 	   /*
 	    @GetMapping("/{jugadorId}/user")
 	    public String show(@PathVariable("jugadorId") int jugadorId, ModelMap model){
@@ -70,15 +63,15 @@ public class JugadorController {
 	   
 	
 	 
-	 @Transactional(readOnly = true)
-	 @GetMapping("/jugadores/profile/{id}")
-	 public ModelAndView showPerfilJugador(@PathVariable int id){
-		 Jugador jugador=jugadorService.getJugadorById(id);
-		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		 ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
-	     result.addObject("jugador", jugador);
-	        if(authentication!=null) {
-	        	if(authentication.isAuthenticated()) {
+	@Transactional(readOnly = true)
+	@GetMapping("/jugadores/profile/{id}")
+	public ModelAndView showPerfilJugador(@PathVariable int id){
+		Jugador jugador=jugadorService.getJugadorById(id);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		ModelAndView result=new ModelAndView(JUGADOR_PROFILE_VIEW);
+	    result.addObject("jugador", jugador);
+	    	if(authentication!=null) {
+	    		if(authentication.isAuthenticated()) {
 	        		User currentUser = (User) authentication.getPrincipal();
 	        		System.out.println(currentUser.getUsername());
 	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
@@ -99,6 +92,7 @@ public class JugadorController {
 	        	System.out.println("El usuario no está autentificado");
 	        return result;
 	    }
+	 
 	 
 	 @Transactional(readOnly = true)
 	    @GetMapping("/jugadores/profile/nombre/{nombre}")
@@ -150,6 +144,8 @@ public class JugadorController {
 			// find jugadors by last name
 			Collection<Jugador> results = this.jugadorService.getJugadorByUsername(jugador.getUsername());
 			//Collection<Jugador> results = this.jugadorService.getAll();
+			
+			
 			if (results.isEmpty()) {
 				// no jugadores found
 				result.rejectValue("username", "notFound", "not found");
@@ -165,6 +161,42 @@ public class JugadorController {
 				model.put("selections", results);
 				return JUGADORES_LISTING_VIEW;
 			}
+		}
+		
+		@GetMapping(value = "/jugadores/{pagina}")
+		public ModelAndView processFindFormPaginated(Jugador jugador, BindingResult result, Map<String, Object> model, @PathVariable("pagina") Integer pagina) {
+			String url = "";
+			// allow parameterless GET request for /jugadores to return all records
+			if (jugador.getUsername() == null) {
+				jugador.setUsername(""); // empty string signifies broadest possible search
+			}
+
+			// find jugadors by last name
+			List<Jugador> results = jugadorService.getPlayersPaginated(this.jugadorService.getJugadorByUsername(jugador.getUsername())).get(pagina-1);
+			int max = jugadorService.getPlayersPaginated(this.jugadorService.getJugadorByUsername(jugador.getUsername())).size();
+			//Collection<Jugador> results = this.jugadorService.getAll();
+			
+			if (results.isEmpty()) {
+				// no jugadores found
+				result.rejectValue("username", "notFound", "not found");
+				url = "/jugadores/findJugadores";
+			}
+			else if (results.size() == 1) {
+				// 1 jugador found
+				jugador = results.iterator().next();
+				url = "redirect:/jugadores/profile/" + jugador.getId();
+			}
+			else {
+				// multiple jugadores found
+				model.put("selections", results);
+				model.put("busqueda", "?user.username="+ result.getFieldValue("username"));
+				model.put("ultima", max);
+				url = JUGADORES_LISTING_VIEW;
+			}
+			ModelAndView modeloView =new ModelAndView(url);
+			modeloView.addObject("pagina", pagina);
+			return modeloView;
+			
 		}
 		
 		@GetMapping(value = "/new")
@@ -277,13 +309,13 @@ public class JugadorController {
 	        return result; 
 	    }
 
-		   @Transactional()
-		    @GetMapping("/jugadores/eliminar/{jugadorId}")
-		    public ModelAndView deleteJugador(@PathVariable int jugadorId){
-		        jugadorService.deleteJugadorById(jugadorId);        
-		        ModelAndView result= new ModelAndView("welcome");
-		        result.addObject("message", "El jugador se ha eliminado correctamente");
-		        return result;
-		    }
+		@Transactional()
+		@GetMapping("/jugadores/eliminar/{jugadorId}")
+		public ModelAndView deleteJugador(@PathVariable int jugadorId){
+			jugadorService.deleteJugadorById(jugadorId);        
+		    ModelAndView result= new ModelAndView("welcome");
+		    result.addObject("message", "El jugador se ha eliminado correctamente");
+		    return result;
+		}
 
 }

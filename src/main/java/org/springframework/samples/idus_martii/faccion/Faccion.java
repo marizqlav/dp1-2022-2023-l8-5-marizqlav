@@ -28,10 +28,10 @@ public class Faccion extends BaseEntity{
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private FaccionesEnumerado faccionPosible2; //Facciones a elegir solo 2
+	private FaccionesEnumerado faccionPosible2;
 	
 	@Enumerated(EnumType.STRING)
-	private FaccionesEnumerado faccionSelecionada;
+	private FaccionesEnumerado faccionSelecionada = null;
 
 	@JoinColumn(name = "partida_id")
     @ManyToOne(cascade = CascadeType.PERSIST)

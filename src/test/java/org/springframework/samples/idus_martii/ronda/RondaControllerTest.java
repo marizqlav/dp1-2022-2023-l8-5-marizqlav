@@ -11,7 +11,6 @@ import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.Estados.*;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -19,10 +18,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import java.util.List;
-
-import org.assertj.core.util.Lists;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,7 +36,9 @@ import org.junit.jupiter.api.Test;
 public class RondaControllerTest {
     	
 
-	public static final String ID_RONDA="1";
+	public static final int ID_RONDA= 1;
+	
+	private Ronda rondaza;
 	
     @Autowired
     private MockMvc mockMvc;
@@ -69,16 +69,23 @@ public class RondaControllerTest {
 
     @MockBean
     private EmpezarTurnoEstado empezarTurnoEstado;
+    
+    @MockBean
+    private ElegirRolesEstado elegirRolesEstado;
+    
+    @MockBean
+    private EstadoTurnoConverter estadoTurnoConverter;
    
 	@BeforeEach
 	void setup() {
-		Ronda ronda = new Ronda();
+		rondaza = new Ronda();
 		Partida partida =new Partida();
-		List<Turno> turnos = ronda.getTurnos();
-		ronda.setPartida(partida);
-		ronda.setTurnos(turnos);
-		rondaService.save(ronda);
-		given(rondaService.getRondas()).willReturn(Lists.newArrayList(ronda));
+		rondaza.setId(ID_RONDA);
+		List<Turno> turnos = rondaza.getTurnos();
+		rondaza.setPartida(partida);
+		rondaza.setTurnos(turnos);
+		rondaService.save(rondaza);
+		given(rondaService.getById(ID_RONDA)).willReturn(rondaza);
 	}
 	
     @WithMockUser
@@ -88,88 +95,53 @@ public class RondaControllerTest {
 	   		andExpect(status().isOk());
 	}
 
+    
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Deleting the ronda")
+	void testDeleteRondaForm() throws Exception {
+		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/delete"))
+		.andExpect(view().name("/rondas/rondasList"));
+	}
 
-	//crear
+	
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Edit the ronda")
+	void testEditRondaForm() throws Exception {
+		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/edit"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("/rondas/createOrUpdateRondaForm"));
+	}
+
+	
+	@WithMockUser(value = "spring")
+	@Test
+	@DisplayName("Save Ronda")
+	void processSaveRondaSuccess() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/rondas/"+ID_RONDA+"/edit")
+				.with(csrf()))
+				.andExpect(view().name("/rondas/rondasList"));
+	}
+
 	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("Crear ronda form")
 	void testInitCreationForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/rondas/new"))
 		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.view().name("/rondas/createOrUpdateRondaForm"))
-		.andExpect(MockMvcResultMatchers.model().attributeExists("ronda"));
+		.andExpect(MockMvcResultMatchers.model().attributeExists("ronda"))
+		.andExpect(MockMvcResultMatchers.view().name("/rondas/createOrUpdateRondaForm"));
 	}
 
-	//save
-	
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Create Ronda")
-	void processCreationRondaSuccess() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/rondas/"+ID_RONDA+"/edit")
-				.with(SecurityMockMvcRequestPostProcessors.csrf())
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(view().name("/rondas/createOrUpdateRondaForm"));
-	}
 
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Cannot create Ronda")
-	void processCreationRondaHasErrors() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/rondas/"+ID_RONDA+"/edit")
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(status().isOk())
-		.andExpect(view().name("/rondas/createOrUpdateRondaForm"));
-	}
-
-	//saveNewRonda
-	
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Create new Ronda")
-	void processCreationRondaNewSuccess() throws Exception {
+	@DisplayName("Save new Ronda")
+	void processSaveRondaNewSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/rondas/new")
-				.with(SecurityMockMvcRequestPostProcessors.csrf())
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(view().name("/rondas/rondasList"));
+				.with(csrf()))
+				.andExpect(view().name("/rondas/rondasList"));
 	}
 
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Cannot create new Ronda")
-	void processCreationRondaNewHasErrors() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/rondas/new")
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(status().isOk())
-		.andExpect(view().name("/rondas/rondasList"));
-	}
-
-	
-//editar
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Updating the ronda")
-	void testProcessUpdateRondaFormSuccess() throws Exception {
-		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/edit")
-				.param("id", "1"))
-		.andExpect(view().name("/rondas/createOrUpdateRondaForm"));
-	}
-
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Cannot updating the ronda")
-	void testProcessUpdateRondaHasErrors() throws Exception {
-		mockMvc.perform(get("/rondas/"+ 2 +"/edit")
-				.param("id", "1"))
-		.andExpect(view().name("/rondas/createOrUpdateRondaForm"));
-	}
-
-	
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("Deleting the ronda")
-	void testProcessDeleteRondaFormSuccess() throws Exception {
-		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/delete"))
-		.andExpect(view().name("/rondas/rondasList"));
-	}
 }

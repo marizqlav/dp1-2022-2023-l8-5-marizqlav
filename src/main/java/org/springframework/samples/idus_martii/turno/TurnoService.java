@@ -9,11 +9,7 @@ import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.FaccionesConverter;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
-import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.partida.PartidaService;
-import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
-import org.springframework.samples.idus_martii.turno.VotosTurno;
-import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -87,7 +83,7 @@ public class TurnoService {
     }
     
     public VotosTurno findVoto(Integer turnoId, Integer jugadorId){
-    	return repo.findVotoByturnoAndPlayer(turnoId, jugadorId);
+    	return repoVotosTurno.findVotoByturnoAndPlayer(turnoId, jugadorId);
     }
     
     public void anadirVotoTurno(Turno turno, Jugador jugador, FaccionesEnumerado voto) {
@@ -128,7 +124,7 @@ public class TurnoService {
 
     	Turno turno = getById(turnoId);
         
-        for (Jugador j : partidaService.findJugadores(turnoId)) {
+        for (Jugador j : partidaService.findJugadores(turno.getRonda().getPartida().getId())) {
             jugadoresValidos.add(j);
         }
         
@@ -137,7 +133,7 @@ public class TurnoService {
         if (turno.getEdil1() != null) { jugadoresValidos.remove(turno.getEdil1()); }
         if (turno.getEdil2() != null) { jugadoresValidos.remove(turno.getEdil2()); }
         
-        if (rol.equals("edil") && turno.getRonda().getPartida().getNumeroJugadores() == 5) {
+        if (rol.equals("edil") && turno.getRonda().getPartida().getNumeroJugadores() != 5) {
             
             Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
 

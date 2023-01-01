@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.partida;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -79,11 +80,10 @@ public class Partida extends BaseEntity {
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "partida")
 	private Lobby lobby;
     
-	public Duration getDuration() throws DatesException {
-    	if (this.fechaFin == null)
-    		throw new DatesException("Partida no terminada");
-    	else
-    		return Duration.between(fechaInicio, fechaFin);
+	public long[] getDuration(){
+    	long seconds = Duration.between(fechaInicio, fechaFin).getSeconds();
+    	return new long[]{ seconds/3600, (seconds%3600)/60, ((seconds%3600)%60)};
+    	
     }
     
 	public boolean iniciada() {
