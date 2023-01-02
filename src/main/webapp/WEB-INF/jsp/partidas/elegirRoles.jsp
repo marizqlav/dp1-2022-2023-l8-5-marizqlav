@@ -1,7 +1,10 @@
 <%@ page session="false" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="/resources/images/laurel.png" />
 <head>
@@ -43,7 +46,128 @@ table {
    width: 100%;
    border-collapse: collapse;
 }
+.mantener {
+	position: absolute;
+	top: 130px;
+	left: 30px;
 
+}
+.cambiar1 {
+	position: absolute;
+	top: 130px;
+	left: 280px;
+
+}
+.cambiar2 {
+	position: absolute;
+	top: 130px;
+	left: 530px;
+
+}
+.botona {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
+
+  	position: absolute;
+	top: 80px;
+	left: 270px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
+.botonb {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
+
+	position: absolute;
+	top: 80px;
+	left: 280px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
+.botonc {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
+
+	position: absolute;
+	top: 80px;
+	left: 3000px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
+.botona:hover {
+ text-decoration:none;
+ color:rgba(0,0,0,1);
+}
+.botona:focus {
+  text-decoration:none;
+ color:rgba(0,0,0,1);
+}
+
+.botonb:hover {
+ text-decoration:none;
+ color:rgba(0,0,0,1);
+}
+.botonb:focus {
+  text-decoration:none;
+ color:rgba(0,0,0,1);
+}
 .datosJugador{
    width: 20%;
    height: 148px;
@@ -151,7 +275,6 @@ width: 10 px;
 
 #imagenpuntos{
 display: block;
-
 margin-top:10px;
   width:40px;
   margin-left:2px;
@@ -227,8 +350,7 @@ font-size: 20px;
 width:60px;
 }
 #votacionnegativa{
- margin-left:100px;
- text-decoration:none;
+ margin-left:400px;
 }
 #votacionpositiva{
  margin-left:400px;
@@ -247,17 +369,36 @@ width:60px;
 }
 
 #textoenunciado{
-     font-size:70px;
-     right:554px;
-     bottom:650px;
+    font-size:70px;
+    left: 500px;
+    top: 0px;
+  	display: block;
+  	position: absolute;
+}
+
+#voto1{
+    font-size: 30px;
+    left: 680px;
+    top: 80px;
+  	display: block;
+  	position: absolute;
+}
+
+#voto2{
+     font-size:30px;
+     left:940px;
+     bottom:350px;
   display: block;
   position: absolute;
 }
+
 
 .button:hover {
     background-color: #3e8e41;
 }
 </style>
+
+
 <idus_martii:layout pageName="tablero">
     <table id="tableroTable">
         <tbody>
@@ -268,14 +409,18 @@ width:60px;
 			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
-	        	<span id="textoenunciado">Enviar voto</span>
-	        		<c:if test="${ronda.numRonda == 1 && (jugador.user.username == turno.edil1.user.username || jugador.user.username == turno.edil2.user.username)}">
-	        			<a href="/partida/juego/${partida.id}/votar?color=rojo" ><img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" /></a>
-	        			
-	        			<a href="/partida/juego/${partida.id}/votar?color=verde"><img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" /></a>
-	        		</c:if>
-	        	
-	        	
+	        	<span id="textoenunciado">${aviso}</span>
+
+				<form:form action="${partida.id}/elegirrol" method="POST">
+					<select name="jugador">
+						<c:forEach items="${jugadores}" var="jugador">
+							<option value="${jugador.getUsername()}">${jugador.getUsername()}</option>
+						</c:forEach>
+					</select>
+					<br/><br/>
+					<input type="submit" value="Submit"/>
+				</form:form>
+				
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>

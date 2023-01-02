@@ -53,10 +53,6 @@ public class RondaController {
     @Transactional
     @PostMapping("/{id}/edit")
     public ModelAndView saveRonda(@PathVariable int id,@Valid Ronda ronda,BindingResult br){
-        if(br.hasErrors()){
-            return new ModelAndView(RONDAS_FORM,br.getModel());            
-        }
-
         Ronda rondaToBeUpdated=service.getById(id);
         BeanUtils.copyProperties(ronda,rondaToBeUpdated,"id");
         service.save(rondaToBeUpdated);

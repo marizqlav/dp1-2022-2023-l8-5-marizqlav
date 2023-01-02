@@ -57,8 +57,11 @@ public class TerminarTurnoEstado implements EstadoTurno {
     public void iniciarTurno(Integer partidaId) {
         Turno turno = new Turno();
         turno.setRonda(partidaService.getRondaActual(partidaId));
+        Ronda ronda = partidaService.getRondaActual(partidaId);
+        ronda.getTurnos().add(turno);
 
         turnoService.save(turno);
+        rondaService.save(ronda);
     }
 
     private void iniciarRonda(Integer partidaId) { //Use instead of iniciarTurno for new Ronda

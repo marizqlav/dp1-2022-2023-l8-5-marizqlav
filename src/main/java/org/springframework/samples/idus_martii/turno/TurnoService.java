@@ -124,7 +124,7 @@ public class TurnoService {
 
     	Turno turno = getById(turnoId);
         
-        for (Jugador j : partidaService.findJugadores(turnoId)) {
+        for (Jugador j : partidaService.findJugadores(turno.getRonda().getPartida().getId())) {
             jugadoresValidos.add(j);
         }
         
@@ -133,7 +133,7 @@ public class TurnoService {
         if (turno.getEdil1() != null) { jugadoresValidos.remove(turno.getEdil1()); }
         if (turno.getEdil2() != null) { jugadoresValidos.remove(turno.getEdil2()); }
         
-        if (rol.equals("edil") && turno.getRonda().getPartida().getNumeroJugadores() == 5) {
+        if (rol.equals("edil") && turno.getRonda().getPartida().getNumeroJugadores() != 5) {
             
             Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
 

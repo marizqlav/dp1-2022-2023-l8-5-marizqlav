@@ -356,7 +356,8 @@ width:60px;
 			        	</tbody>
 			    	</table>
 			    	</div>
-			    	<form>
+			    
+			    	<form action="${partida.id}/mensaje">
 			        	<div class="botonmensaje">
 			            	<input type="text" label="Mensaje" placeholder="Escribe un mensaje" name="mensaje" required/>
 			            	<button class="button" type="submit">Enviar mensaje</button>

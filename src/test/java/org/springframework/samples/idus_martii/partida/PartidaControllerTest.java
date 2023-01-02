@@ -1,20 +1,26 @@
 package org.springframework.samples.idus_martii.partida;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
+import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.mensaje.MensajeService;
-import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.samples.idus_martii.turno.Estados.CambiarVotoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.DescubiertoAmarilloEstado;
+import org.springframework.samples.idus_martii.turno.Estados.ElegirFaccionEstado;
 import org.springframework.samples.idus_martii.turno.Estados.ElegirRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
@@ -22,20 +28,17 @@ import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEsta
 import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @WebMvcTest(controllers = PartidaController.class,
@@ -49,7 +52,7 @@ public class PartidaControllerTest {
 
     @MockBean
     private PartidaService partidaService;
-
+    
     @MockBean
     private JugadorService jugadorService;
     
@@ -92,30 +95,29 @@ public class PartidaControllerTest {
     @MockBean
     private ElegirRolesEstado elegirRolesEstado;
     
+    @MockBean
+    private ElegirFaccionEstado elegirFaccionEstado;
+    
 
 	private static final int PARTIDA_ID = 1;
 
+	private Partida partidaza;
+//	private Jugador jose;
 
 	@BeforeEach
 	void setup() {
-		Lobby lobby = new Lobby();
-		Partida partida = new Partida();
-		partida.setLobby(lobby);
-		partida.setFechaCreacion(LocalDateTime.now());
-		partida.setFechaInicio(LocalDateTime.now().minusMinutes(5));
-		partidaService.save(partida);
-		LocalDateTime fechaCreacion = LocalDateTime.of(2022,9,18,10,30,2);
-		LocalDateTime fechaInicio = LocalDateTime.of(2022,9,18,10,35,2);
-		LocalDateTime fechaFin = LocalDateTime.of(2022,9,18,10,45,2);
-		List<Ronda> rondas = partida.getRondas();
-		Integer numeroJugadores = partida.getNumeroJugadores();
-		partida.setFaccionGanadora(FaccionesEnumerado.Leal);
-		partida.setFechaCreacion(fechaCreacion);
-		partida.setFechaInicio(fechaInicio);
-		partida.setFechaFin(fechaFin);
-		partida.setRondas(rondas);
-		partida.setNumeroJugadores(numeroJugadores);
-		given(partidaService.getPartidas()).willReturn(Lists.newArrayList(partida));
+		partidaza = new Partida();
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		User currentUser = (User) authentication.getPrincipal();
+//		jose.setUsername(currentUser.getUsername());
+//		partidaza.setJugador(jose);
+		partidaza.setId(PARTIDA_ID);
+		partidaza.setFaccionGanadora(FaccionesEnumerado.Leal);
+		partidaza.setNumeroJugadores(5);
+		partidaza.setFechaCreacion(LocalDateTime.now());
+		partidaza.setFechaInicio(LocalDateTime.now().plusMinutes(5));
+		partidaza.setFechaFin(LocalDateTime.now().plusMinutes(15));
+		given(partidaService.findPartida(PARTIDA_ID)).willReturn(partidaza);
 	}
 
 	@WithMockUser
@@ -142,5 +144,98 @@ public class PartidaControllerTest {
         mockMvc.perform(get("/partida/enJuego")).
             andExpect(status().isOk());
     }	
+
+    
+    @WithMockUser
+	@Test
+	void testInitCreationForm() throws Exception {
+    	
+    	mockMvc.perform(get("/partida/new"))
+				.andExpect(status().isOk());
+	}
+    
+//    @WithMockUser(value = "spring")
+//	@Test
+//	void testProcessCreationFormSuccess() throws Exception {
+//		mockMvc.perform(post("/partida/new")
+//				.with(csrf())
+//    			.param("id", "1")
+//				.param("faccion_ganadora", "Traidor")
+//				.param("numero_jugadores", "6")
+//				.param("fecha_creacion", "2022-09-18 12:34:04")
+//				.param("fecha_inicio", "2022-09-18 12:35:02")
+//				.param("fecha_fin", "2022-09-18 12:49:31"))
+////				.andExpect(status().is3xxRedirection());
+//		.andExpect(view().name("partidas/createOrUpdatePartidaForm"));
+//	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	void testProcessCreationFormHasErrors() throws Exception {
+		mockMvc.perform(post("/partida/new")
+    			.param("id", "1")
+				.with(csrf())
+				.param("numero_jugadores", "6")
+				.param("faccion_ganadora", "Traidor")
+				.param("fecha_creacion", "2022-09-18 12:34:04")
+				.param("fecha_inicio", "2022-09-18 12:35:02")
+				.param("fecha_fin", "2022-09-18 12:49:31"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeHasErrors("partida"))
+				.andExpect(view().name("partidas/createOrUpdatePartidaForm"));
+	}
+	
+	 @WithMockUser
+	 @Test
+	 public void testPartidaCancelarForm() throws Exception{
+	     mockMvc.perform(get("/partida/"+PARTIDA_ID+"/cancelar")).
+	     	andExpect(status().isOk()).
+	        andExpect(view().name("welcome")).
+	        andExpect(model().attributeExists("message"));
+	 }
+	 
+	 @WithMockUser
+	 @Test
+	 public void testIniciarPartidaForm() throws Exception{
+	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/iniciar")).
+			andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/partida/juego/"+PARTIDA_ID));
+	 }
+
+	 @WithMockUser
+	 @Test
+	 public void testGetEspiarEdilForm() throws Exception{
+	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/espiar")).
+	     	andExpect(status().isOk());
+	 }
+
+	 @WithMockUser
+	 @Test
+	 public void testCambiarVotoForm() throws Exception{
+	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/cambiar")).
+	     	andExpect(status().isOk());
+	 }
+	 
+	 @WithMockUser
+	 @Test
+	 public void testVotacionForm() throws Exception{
+	     mockMvc.perform(get("/partida/juego/",PARTIDA_ID,"/votar")).
+	     	andExpect(status().isOk());
+	 }
+	 
+	 @WithMockUser
+	 @Test
+	 public void testElegirRolForm() throws Exception{
+	     mockMvc.perform(get("/partida/juego/",PARTIDA_ID,"/elegirrol")).
+	     	andExpect(status().isOk());
+	 }
+
+	 @WithMockUser
+	 @Test
+	 public void testElegirFaccionForm() throws Exception{
+	     mockMvc.perform(get("/partida/juego/",PARTIDA_ID,"/elegirfaccion")).
+	     	andExpect(status().isOk());
+	 }
+
 
 }
