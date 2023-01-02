@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/partida")
@@ -247,14 +248,14 @@ public class PartidaController {
     @GetMapping(value = "/juego/{partidaId}")
     public ModelAndView GetPartidaGeneral(@PathVariable("partidaId") Integer partidaId, HttpServletResponse response) {
     	response.addHeader("Refresh", GAME_REFRESH_TIME);
-
+    	Partida partida = partidaService.findPartida(partidaId);
         Jugador jugador = getJugadorConectado();
-
-        //List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
+        
+        List<Mensaje> mensajes = mensajeService.getMensajesByPartidaId(partidaId);
         
     	Turno turno = partidaService.getTurnoActual(partidaId);
     	Ronda ronda = partidaService.getRondaActual(partidaId);
-    	Partida partida = partidaService.findPartida(partidaId);
+    	
 
         try {
             partidaService.handleTurn(partidaId);
@@ -271,6 +272,7 @@ public class PartidaController {
         Integer votosFavor = partida.getVotosLeales();
         Integer votosContra = partida.getVotosTraidores();
         Faccion faccion = faccionService.getFaccionJugadorPartida(jugador.getId(), partidaId);
+       
         
         result.addObject("partida", partidaService.findPartida(partidaId));
         result.addObject("jugador", jugador);
@@ -279,13 +281,32 @@ public class PartidaController {
         result.addObject("faccion", faccion);
         result.addObject("votosleales", votosFavor);
         result.addObject("votostraidores", votosContra);
-        //result.addObject("mensajes", mensajes);
+        result.addObject("mensajes", mensajes);
         result.addObject("aviso", aviso);
         result.addObject("temporizador", LocalTime.of(LocalTime.now().minusHours(partida.getFechaInicio().toLocalTime().getHour()).getHour(), LocalTime.now().minusMinutes(partida.getFechaInicio().toLocalTime().getMinute()).getMinute(),  LocalTime.now().minusSeconds(partida.getFechaInicio().toLocalTime().getSecond()).getSecond()));
         
         return result;
     }
 
+    @RequestMapping("/juego/{partidaId}/mensaje")
+    public ModelAndView enviarMensaje(@PathVariable("partidaId") Integer partidaId,@RequestParam(value="mensaje",required = false) String cuerpomensaje,HttpServletResponse response) {
+    	response.addHeader("Refresh", GAME_REFRESH_TIME);
+    	Partida partida = partidaService.findPartida(partidaId);
+        Jugador jugador = getJugadorConectado();
+    	if(cuerpomensaje!=null) {
+    		Mensaje nmensaje = new Mensaje();
+            //nmensaje.setHora(LocalTime.now());
+            nmensaje.setJugador(jugador);
+            nmensaje.setPartida(partida);
+            nmensaje.setTexto(cuerpomensaje);
+            mensajeService.save(nmensaje);
+        }
+    	
+        RedirectView redirectView = new RedirectView("/partida/juego/" + partidaId.toString());
+        redirectView.setExposePathVariables(false);
+        return new ModelAndView(redirectView);
+    }
+    
     @GetMapping(value = "/juego/{partidaId}/espiar")
     public ModelAndView GetEspiarEdil(@PathVariable("partidaId") Integer partidaId, @RequestParam String voto) {
         
