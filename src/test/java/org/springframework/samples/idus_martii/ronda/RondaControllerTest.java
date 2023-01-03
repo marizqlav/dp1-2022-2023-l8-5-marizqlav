@@ -101,7 +101,7 @@ public class RondaControllerTest {
 	@DisplayName("Deleting the ronda")
 	void testDeleteRondaForm() throws Exception {
 		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/delete"))
-		.andExpect(view().name("/rondas/rondasList"));
+			.andExpect(view().name("/rondas/rondasList"));
 	}
 
 	

@@ -52,10 +52,7 @@ public class TurnoController {
     
     @Transactional
     @PostMapping("/{id}/edit")
-    public ModelAndView saveTurno(@PathVariable int id,Turno turno, BindingResult br){
-        if(br.hasErrors()){
-            return new ModelAndView(TURNOS_FORM,br.getModel());            
-        }
+    public ModelAndView saveTurno(@PathVariable int id,Turno turno){
         Turno turnoToBeUpdated=service.getById(id);
         BeanUtils.copyProperties(turno,turnoToBeUpdated,"id");
         service.save(turnoToBeUpdated);
