@@ -77,6 +77,9 @@ public class JugadorServiceTest {
 		assertThat(paginacion.get(2).get(0).getId()).isEqualTo(5);
 	}
 	
-	
+	@Test
+	void  anadirAmigoTest() {
+		
+	}
 
 }
