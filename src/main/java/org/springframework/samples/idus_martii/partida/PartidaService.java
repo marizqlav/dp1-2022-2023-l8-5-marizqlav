@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Function;
@@ -167,6 +168,10 @@ public class PartidaService {
     
     public int getVictoriasJugador(Jugador jugador) {
 		return partidaRepo.findPartidasGanadas(jugador.getId()).size();
+	}
+    
+    public List<Partida> getGanadasJugador(Jugador jugador) {
+		return partidaRepo.findPartidasGanadas(jugador.getId());
 	}
     
     public Map<FaccionesEnumerado, List<Integer>> getStats(Jugador jugador){
@@ -464,6 +469,23 @@ public class PartidaService {
 			 return FaccionesEnumerado.Mercader;
 		 }
 		
+	}
+	
+	public List<List<Partida>> getPartidasJugadorPaginated(int jugadorId){
+		List<List<Partida>> jugadores = new ArrayList<List<Partida>>();
+		int maxPartida = 0;
+		int cont = 0;
+		jugadores.add(new ArrayList<Partida>());
+		for(Partida p : partidaRepo.findAllFinalizadasJugador(jugadorId)) {
+			if(maxPartida >1){
+				maxPartida = 0;
+				cont = cont +1;
+				jugadores.add(new ArrayList<Partida>());
+			}
+			jugadores.get(cont).add(p);
+			maxPartida = maxPartida +1;
+		}
+		return jugadores;
 	}
 	
 }
