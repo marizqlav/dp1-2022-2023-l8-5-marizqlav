@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.user.Authorities;
 import org.springframework.samples.idus_martii.user.AuthoritiesService;
@@ -64,7 +65,7 @@ public class JugadorService {
 		
         return jugadorRepo.sonAmigos(idjugador, idamigo) ;
     }
-
+	@Transactional
 	public Jugador getJugadorById(int id) {
 		return this.jugadorRepo.findById(id).get();
 	}
