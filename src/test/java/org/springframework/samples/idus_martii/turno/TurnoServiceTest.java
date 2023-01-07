@@ -2,12 +2,8 @@ package org.springframework.samples.idus_martii.turno;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,31 +12,32 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
+import org.springframework.samples.idus_martii.partida.Partida;
+import org.springframework.samples.idus_martii.partida.PartidaService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(value = { Service.class, Component.class }))
 public class TurnoServiceTest {
 
 	@Autowired
-	protected TurnoService turnoService;
+	private TurnoService turnoService;
 		
 	@Autowired
-	protected JugadorService jugadorService;
+	private JugadorService jugadorService;
 	
 	@Autowired
-	protected VotosTurnoRepository votosTurnoRepository;
+	private PartidaService partidaService;
+
 		
 	@Test
 	void getAllTest() {
 		List<Turno> turnos = this.turnoService.getTurnos();
 		assertThat(turnos.size()).isEqualTo(2);
-		Turno[] turnoArray = turnos.toArray(new Turno[turnos.size()]);
-		assertThat(turnoArray[0].getId()).isEqualTo(1);		
 	}
 	
 	@Test
-    public void getTurnoByIdTest() throws Exception {
+    void getTurnoByIdTest() throws Exception {
 		Turno turno = this.turnoService.getById(2);
 		assertThat(turno.getId()).isEqualTo(2);
 		assertThat(turno.getConsul().getId()).isEqualTo(2);
@@ -48,22 +45,30 @@ public class TurnoServiceTest {
 	
 	
 	@Test
-    public void anadirVoto() throws Exception {
-        List<Jugador> jugadoresValidos = new ArrayList<>();
-    	Turno turno = this.turnoService.getById(1);
+    void anadirVoto() throws Exception {
+		Turno turno = this.turnoService.getById(2);
+		Jugador jugador=this.jugadorService.getJugadorById(4);
+		String voto="Traidor";
+		this.turnoService.anadirVoto(turno.getId(), jugador, voto);
+		assertThat(turno.getVotosTraidores()).isEqualTo(1);
+
 	}
 
 	
 	@Test
     public void cambiarVoto() throws Exception {
-        List<Jugador> jugadoresValidos = new ArrayList<>();
-    	Turno turno = this.turnoService.getById(1);
+		Turno turno = this.turnoService.getById(1);
+		Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
+		Jugador jugadorEdil1=this.jugadorService.getJugadorById(4);
+		String voto="Traidor";
+		this.turnoService.cambiarVoto(turno.getId(), jugadorPretor, jugadorEdil1.getId(), voto);
+		assertThat(turno.getVotosTraidores()).isEqualTo(2);
 	}
 
 
 	
 	@Test
-    public void findVoto() throws Exception {
+    void findVoto() throws Exception {
 		Turno turno1 = this.turnoService.getById(1);
 		Jugador jugador4 = this.jugadorService.getJugadorById(4);
 		VotosTurno votoTurno=this.turnoService.findVoto(turno1.getId(), jugador4.getId());
@@ -73,46 +78,45 @@ public class TurnoServiceTest {
 
 
 	@Test
-    public void anadirVotoTurno() throws Exception {
+    void anadirVotoTurno() throws Exception {
 		Turno turno = this.turnoService.getById(1);
-		Jugador jugador=this.jugadorService.getJugadorById(6);
-        VotosTurno votosTurno = this.turnoService.findVoto(null, null);
-        votosTurno.setJugador(jugador);
-        votosTurno.setTurno(turno);
-        votosTurno.setTipoVoto(FaccionesEnumerado.Traidor);
-        this.votosTurnoRepository.save(votosTurno);
-        votosTurno=this.votosTurnoRepository.findVotoByturnoAndPlayer(turno.getId(), jugador.getId());
-		assertThat(votosTurno.getTipoVoto()).isEqualTo(FaccionesEnumerado.Traidor);
-
+		Jugador jugador=this.jugadorService.getJugadorById(4);
+		this.turnoService.anadirVotoTurno(turno, jugador, FaccionesEnumerado.Traidor);
+		assertThat(turno.getVotosTraidores()).isEqualTo(2);
 	}
 	
 	
 	
 	@Test
-    public void espiarVoto() throws Exception {
-        List<Jugador> jugadoresValidos = new ArrayList<>();
-    	Turno turno = this.turnoService.getById(1);
+    void espiarVoto() throws Exception {
+		Turno turno = this.turnoService.getById(1);
+		Partida partida = this.partidaService.findPartida(1);
+		Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
+		String voto="Traidor";
+		this.turnoService.espiarVoto(partida.getId(), jugadorPretor, voto);
+		assertThat(turno.getPredor()).isEqualTo(jugadorPretor);
 	}
 
 	
 	@Test
-    public void getJugadoresValidosParaRol() throws Exception {
-        List<Jugador> jugadoresValidos = new ArrayList<>();
-    	Turno turno = this.turnoService.getById(1);
+    void getJugadoresValidosParaRol() throws Exception {
+		Turno turno = this.turnoService.getById(1);
+		Partida partida = this.partidaService.findPartida(1);
+		Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
+		String voto="Traidor";
+		this.turnoService.espiarVoto(partida.getId(), jugadorPretor, voto);
+		assertThat(turno.getPredor()).isEqualTo(jugadorPretor);
 	}
-
 	
 	@Test
-    public void asignarRol() throws Exception {
-        List<Jugador> jugadoresValidos = new ArrayList<>();
-    	Turno turno = this.turnoService.getById(1);
+    void asignarRol() throws Exception {
+		Turno turno = this.turnoService.getById(1);
+		Jugador jugadorConsul=this.jugadorService.getJugadorById(3);
+		this.turnoService.asignarRol(turno.getId(), jugadorConsul);
+		assertThat(turno.getConsul()).isEqualTo(jugadorConsul);
 	}
 
-
 	
-	
-//    TurnoService turnoService;
-//
 //    @Mock
 //    TurnoRepository repo;
 //

@@ -97,7 +97,6 @@ public class PartidaControllerTest {
     @MockBean
     private ElegirFaccionEstado elegirFaccionEstado;
     
-
 	private static final int PARTIDA_ID = 1;
 
 	private Partida partidaza;
