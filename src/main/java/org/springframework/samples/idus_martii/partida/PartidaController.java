@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.partida;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,8 @@ public class PartidaController {
 
     private final String MENU_REFRESH_TIME="5";
     private final String GAME_REFRESH_TIME="3";
+    
+    private final String PLAYER_GAMES = "/partidas/partidasJugador";
 
     PartidaService partidaService;
     JugadorService jugadorService;
@@ -374,6 +377,28 @@ public class PartidaController {
         } catch (AccessException e) { }
 
         return new ModelAndView("redirect:/partida/juego/" + partidaId.toString());
+    }
+    
+    @GetMapping(value="/partidas/jugador/{jugadorId}/{pagina}")
+    public ModelAndView historialPartidas(@PathVariable("jugadorId") Integer jugadorId, @PathVariable("pagina") Integer pagina){
+        ModelAndView modelo = new ModelAndView(PLAYER_GAMES);
+        Jugador j = jugadorService.getJugadorById(jugadorId);
+        Map<Partida, String> partidas = new HashMap<Partida, String>();
+    	for( Partida p :partidaService.getPartidasJugadorPaginated(jugadorId).get(pagina-1)) {
+    		if(partidaService.getGanadasJugador(j).contains(p)) {
+    			partidas.put(p, "victoria");
+    		}else {
+    			partidas.put(p, "derrota");
+    		}
+    	}
+    	
+    	
+    	modelo.addObject("partidas", partidas);
+    	modelo.addObject("max", partidas.size());
+    	modelo.addObject("jugador", jugadorId);
+    	modelo.addObject("pagina", pagina);
+
+        return modelo;
     }
 
 }

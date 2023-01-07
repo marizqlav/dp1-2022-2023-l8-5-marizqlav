@@ -27,6 +27,7 @@ public class Mensaje extends BaseEntity{
 	@Column(name = "hora")
 	@DateTimeFormat(pattern = "hh:mm")
 	private LocalTime hora;
+	
 	@NotBlank
 	@Column(name = "texto")
 	private String texto;
