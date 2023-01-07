@@ -75,7 +75,6 @@ public class PartidaRepositoryTest {
 		assertNotNull(partidaRepository.getLobby(1).getId());
 	}	
 
-
 	@Test
 	public void testAddJugadorLobby() {
         Partida partida = new Partida();
