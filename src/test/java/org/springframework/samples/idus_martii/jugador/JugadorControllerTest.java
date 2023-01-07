@@ -3,6 +3,7 @@ package org.springframework.samples.idus_martii.jugador;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
 import org.springframework.samples.idus_martii.turno.Estados.CambiarVotoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.DescubiertoAmarilloEstado;
+import org.springframework.samples.idus_martii.turno.Estados.ElegirFaccionEstado;
 import org.springframework.samples.idus_martii.turno.Estados.ElegirRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
@@ -11,16 +12,17 @@ import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
 import org.springframework.samples.idus_martii.user.AuthoritiesService;
-import org.springframework.samples.idus_martii.user.User;
 import org.springframework.samples.idus_martii.user.UserService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,10 +33,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 
@@ -45,6 +45,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class JugadorControllerTest {
     
 	public static final int ID_JUGADOR=1;
+	public static final int ID_JUGADOR_AMIGO=3;
+	public static final int NUMERO_PAGINA=3;
 	
     @Autowired
     private MockMvc mockMvc;
@@ -85,16 +87,18 @@ public class JugadorControllerTest {
     @MockBean
     private ElegirRolesEstado elegirRolesEstado;
 
+    @MockBean
+    private ElegirFaccionEstado elegirFaccionEstado;
 
+    private Jugador carlos;
+    
 	@BeforeEach
 	void setup() {
-		Jugador jugador = new Jugador();
-		User user= jugador.getUser();
-		jugador.setId(ID_JUGADOR);
-		jugador.setUser(user);
-		given(jugadorService.getAll()).willReturn(Lists.newArrayList(jugador));
-		given(jugadorService.getJugadorById(jugador.getId())).willReturn(jugador);
-		given(jugadorService.getUserByJugador(jugador)).willReturn(jugador.getUser());
+		carlos = new Jugador();
+		carlos.setId(ID_JUGADOR);
+		jugadorService.save(carlos);
+		given(jugadorService.getJugadorById(ID_JUGADOR)).willReturn(carlos);
+		given(jugadorService.getUserByJugador(carlos)).willReturn(carlos.getUser());
 	}
 
 	@WithMockUser
@@ -110,88 +114,134 @@ public class JugadorControllerTest {
 	   		andExpect(status().isOk());
 	}
 	
+	
+	 @WithMockUser
+	 @Test
+	 @DisplayName("Ir Perfil Jugador")
+	 public void testIrPerfilJugador() throws Exception{
+	     mockMvc.perform(get("/jugadores/profile/nombre/"+jugadorService.getJugadorById(ID_JUGADOR))).
+	     	andExpect(status().isOk());
+	 }
+	 
+	 @WithMockUser
+	 @Test
+	 @DisplayName("Peticion Amistad")
+	 public void testPeticionAmistad() throws Exception{
+	     mockMvc.perform(get("/jugadores/amigos/"+ ID_JUGADOR+ "/"+ID_JUGADOR_AMIGO)).
+	     	andExpect(status().isOk());
+	 }	
 	@WithMockUser
     @Test
-    @DisplayName("InitFindForm the jugador")
+    @DisplayName("InitFindForm")
 	void testInitFindForm() throws Exception {
 		mockMvc.perform(get("/jugadores/find"))
 				.andExpect(status().isOk());
 	}
-////Da error
-////	@WithMockUser
-////    @Test
-////    @DisplayName("processFindForm the jugador")
-////	void testProcessFindFormSuccess() throws Exception {
-////		given(this.jugadorService.getJugadorByUsername("")).willReturn(Lists.newArrayList(Jose, new Jugador()));
-////		mockMvc.perform(get("/jugadores").param("user", "Alex"))
-////				.andExpect(status().isOk())
-////				.andExpect(view().name("/jugadores/jugadoresList"));
-////	}
-//	
+	@WithMockUser
+    @Test
+    @DisplayName("ProcessFindForm")
+	void testProcessFindForm() throws Exception {
+		mockMvc.perform(get("/jugadores"))
+				.andExpect(status().isOk());
+	}
+	
+	@WithMockUser
+    @Test
+    @DisplayName("ProcessFindFormPaginated")
+	void testProcessFindFormPaginated() throws Exception {
+		mockMvc.perform(get("/jugadores/"+NUMERO_PAGINA))
+				.andExpect(status().isOk());
+	}
+
+
 	@WithMockUser
 	@Test
 	@DisplayName("Crear Jugador form")
 	void testInitCreationForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/new"))
-		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.view().name("jugadores/createOrUpdateJugadorForm"))
-		.andExpect(MockMvcResultMatchers.model().attributeExists("jugador"));
+		.andExpect(status().isOk())
+		.andExpect(model().attributeExists("jugador"))
+		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
 	}
 	
-//	saveJugador
 	@WithMockUser
 	@Test
-	@DisplayName("Create new Jugador")
-	void testProcessCreationJugadorSuccess() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/jugadores/profile/"+ID_JUGADOR+"/edit")
-				.with(SecurityMockMvcRequestPostProcessors.csrf())
-//				.param("user", "Alex")
-				.with(SecurityMockMvcRequestPostProcessors.csrf()))
-		.andExpect(status().is3xxRedirection())
-		.andExpect(view().name("redirect:/jugadores/profile/"+ID_JUGADOR));
-
+	@DisplayName("ProcessCreationForm")
+	void testProcessCreationFormSuccess() throws Exception {
+		mockMvc.perform(post("/new")
+			.with(csrf()))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/"));
 	}
-//
-//	
-//	@WithMockUser
-//	@Test
-//	@DisplayName("Cannot create new Jugador")
-//	void testProcessCreationJugadorHasErrors() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.post("/jugadores/profile/"+ID_JUGADOR+"/edit")
-//				.with(SecurityMockMvcRequestPostProcessors.csrf())
-//				.param("user", "null"))
-//		.andExpect(status().isOk())
-//		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
-//	}
-//	
-//	@WithMockUser
-//	@Test
-//	@DisplayName("Updating the jugador")
-//	void testProcessUpdateRoundFormSuccess() throws Exception {
-//		mockMvc.perform(get("/jugadores/profile/" + ID_JUGADOR+"/edit")
-//				.param("user", "Ale"))
-//		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
-//	}
-//
-//	@WithMockUser
-//	@Test
-//	@DisplayName("Cannot updating the jugador")
-//	void testProcessUpdateRoundHasErrors() throws Exception {
-//		mockMvc.perform(get("/jugadores/profile/" + 2+"/edit")
-//				.param("user", "Ale"))
-//		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
-//	}
-//
-//	
-//	@WithMockUser
-//	@Test
-//	@DisplayName("Deleting the jugador")
-//	void testProcessDeleteTurnoFormSuccess() throws Exception {
-//		mockMvc.perform(get("/jugadores/eliminar/" + ID_JUGADOR))
-//		.andExpect(view().name("welcome"));
-//	}
 
+	@WithMockUser
+	@Test
+	@DisplayName("ProcessCreationForm Error")
+	void testProcessCreationFormHasErrors() throws Exception {
+		mockMvc.perform(get("/new")
+			.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(model().attributeHasNoErrors("jugador"))
+			.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
+	}
+	
+	@WithMockUser
+    @Test
+    @DisplayName("Peticiones")
+	void testPeticiones() throws Exception {
+		mockMvc.perform(get("/jugadores/"+NUMERO_PAGINA))
+				.andExpect(status().isOk());
+	}
 
+	@WithMockUser
+    @Test
+    @DisplayName("Rechazar")
+	void testRechazar() throws Exception {
+		mockMvc.perform(get("/jugadores/peticiones/rechazar/"+ID_JUGADOR_AMIGO))
+				.andExpect(status().isOk());
+	}
+	
+	@WithMockUser
+    @Test
+    @DisplayName("Amigos")
+	void testAmigos() throws Exception {
+		mockMvc.perform(get("/jugadores/amigos"))
+				.andExpect(status().isOk());
+	}
 
+	
+	@WithMockUser
+    @Test
+    @DisplayName("Delete Amigo")
+	void testDeleteAmigo() throws Exception {
+		mockMvc.perform(get("/jugadores/amigos/eliminar/"+ID_JUGADOR))
+				.andExpect(status().isOk());
+	}
 
+	
+	@WithMockUser
+	@Test
+	@DisplayName("Edit jugador")
+	void testEditJugadorForm() throws Exception {
+		mockMvc.perform(get("/jugadores/profile/"+ID_JUGADOR+"/edit"))
+				.andExpect(status().isOk());
+	}	
+	
+	@WithMockUser
+	@Test
+	@DisplayName("Save Jugador")
+	void testProcessCreationJugadorSuccess() throws Exception {
+		mockMvc.perform(post("/jugadores/profile/"+5+"/edit")
+				.with(csrf())
+				)
+				.andExpect(status().isOk());
+	}
+
+	@WithMockUser
+	@Test
+	@DisplayName("Deleting the jugador")
+	void testProcessDeleteTurnoFormSuccess() throws Exception {
+		mockMvc.perform(get("/jugadores/eliminar/" + ID_JUGADOR))
+				.andExpect(view().name("welcome"));
+	}
 }

@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.samples.idus_martii.configuration.SecurityConfiguration;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
-import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.mensaje.MensajeService;
 import org.springframework.samples.idus_martii.ronda.RondaService;
@@ -149,25 +148,10 @@ public class PartidaControllerTest {
     @WithMockUser
 	@Test
 	void testInitCreationForm() throws Exception {
-    	
     	mockMvc.perform(get("/partida/new"))
 				.andExpect(status().isOk());
 	}
     
-//    @WithMockUser(value = "spring")
-//	@Test
-//	void testProcessCreationFormSuccess() throws Exception {
-//		mockMvc.perform(post("/partida/new")
-//				.with(csrf())
-//    			.param("id", "1")
-//				.param("faccion_ganadora", "Traidor")
-//				.param("numero_jugadores", "6")
-//				.param("fecha_creacion", "2022-09-18 12:34:04")
-//				.param("fecha_inicio", "2022-09-18 12:35:02")
-//				.param("fecha_fin", "2022-09-18 12:49:31"))
-////				.andExpect(status().is3xxRedirection());
-//		.andExpect(view().name("partidas/createOrUpdatePartidaForm"));
-//	}
 
 	@WithMockUser(value = "spring")
 	@Test
@@ -189,9 +173,9 @@ public class PartidaControllerTest {
 	 @Test
 	 public void testPartidaCancelarForm() throws Exception{
 	     mockMvc.perform(get("/partida/"+PARTIDA_ID+"/cancelar")).
-	     	andExpect(status().isOk()).
-	        andExpect(view().name("welcome")).
-	        andExpect(model().attributeExists("message"));
+	     	andExpect(status().isOk())
+	        .andExpect(model().attributeExists("message"))
+	        .andExpect(view().name("welcome"));
 	 }
 	 
 	 @WithMockUser
