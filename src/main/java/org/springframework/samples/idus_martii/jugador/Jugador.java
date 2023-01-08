@@ -61,7 +61,7 @@ public class Jugador extends BaseEntity{
 	@ManyToMany(cascade= CascadeType.REMOVE)
 	@JoinTable(name = "amigos", joinColumns = @JoinColumn(name="jugador_id"),
 	inverseJoinColumns = @JoinColumn(name = "jugador"))
-	private Set<Jugador> setAmigos;
+	public Set<Jugador> setAmigos;
 	
 	@ManyToMany(mappedBy="jugadores",cascade= CascadeType.REMOVE)
 	private Set<Lobby> lobbys;
