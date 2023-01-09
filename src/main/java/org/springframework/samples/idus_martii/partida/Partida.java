@@ -49,7 +49,7 @@ public class Partida extends BaseEntity {
     private Integer numeroJugadores;
 
 	@Enumerated(EnumType.STRING)
-    FaccionesEnumerado faccionGanadora;
+    public FaccionesEnumerado faccionGanadora;
 
     private LocalDateTime fechaCreacion;
 
