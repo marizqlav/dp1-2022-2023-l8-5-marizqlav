@@ -1,28 +1,23 @@
 package org.springframework.samples.idus_martii.turno;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
-import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.partida.PartidaService;
-import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +30,8 @@ public class TurnoServiceTest {
 	@Autowired
 	private JugadorService jugadorService;
 	
+	@Autowired
+	private PartidaService partidaService;
 	
 	@Test
 	void getAllTest() {
@@ -47,6 +44,11 @@ public class TurnoServiceTest {
 		Turno turno = this.turnoService.getById(2);
 		assertThat(turno.getId()).isEqualTo(2);
 		assertThat(turno.getConsul().getId()).isEqualTo(2);
+	}
+	
+	@Test
+    void getTurnoByIdTestFail() throws Exception {
+		assertThrows(NoSuchElementException.class, ()->this.turnoService.getById(10));
 	}
 	
 	
@@ -135,35 +137,36 @@ public class TurnoServiceTest {
 	}
 
 	
-//	@Test
-//    void espiarVoto() throws Exception {
-//		Partida partida = this.partidaService.findPartida(1);
-//		Turno turno=this.partidaService.getTurnoActual(1);//2
-//		Jugador jugadorConsul=this.jugadorService.getJugadorById(2);
-//		Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
-//		Jugador jugadorEdil1=this.jugadorService.getJugadorById(4);
-//		Jugador jugadorEdil2=this.jugadorService.getJugadorById(5);
-//		String voto=FaccionesEnumerado.Traidor.toString();
-//		this.turnoService.anadirVoto(turno.getId(), jugadorEdil1, voto);
-//		this.turnoService.espiarVoto(partida.getId(), jugadorPretor, voto);
-//		VotosTurno votoTurno=this.turnoService.findVoto(turno.getId(), jugadorConsul.getId());
-//		votoTurno.setEspiado(true);
-//		assertThat(turno.getPredor()).isEqualTo(jugadorPretor);
-//	}
+	@Test
+    void espiarVoto() throws Exception {
+		Turno turno=this.partidaService.getTurnoActual(1);//2
+		Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
+		Jugador jugadorEdil1=this.jugadorService.getJugadorById(4);
+		Jugador jugadorEdil2=this.jugadorService.getJugadorById(5);
+		String voto1=FaccionesEnumerado.Traidor.toString();
+		String votoNuevo="1";
+		this.turnoService.anadirVoto(turno.getId(), jugadorEdil1, voto1);
+		this.turnoService.anadirVoto(turno.getId(), jugadorEdil2, voto1);
+		VotosTurno vT1=this.turnoService.findVoto(turno.getId(), jugadorEdil1.getId());
+		this.turnoService.espiarVoto(1, jugadorPretor, votoNuevo);
+		assertTrue(vT1.getEspiado());
+	}
 	
-//	@Test
-//    void espiarVotoFail() throws Exception {
-	//	Partida partida = this.partidaService.findPartida(1);
-	//	Turno turno=this.partidaService.getTurnoActual(1);
-	//	Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
-	//	Jugador jugadorEdil1=this.jugadorService.getJugadorById(4);
-	//	String voto=FaccionesEnumerado.Traidor.toString();
-	//	this.turnoService.anadirVoto(turno.getId(), jugadorEdil1, voto);
-	//	this.turnoService.espiarVoto(partida.getId(), jugadorPretor, voto);
-	//	VotosTurno votoTurno=this.turnoService.findVoto(turno.getId(), 2);
-	//	votoTurno.setEspiado(false);
-	//	assertThat(turno.getPredor()).isEqualTo(jugadorPretor);
-//	}
+	//Fallo porque el voto en el que se referencia a que edil hace referencia no es igual al número de ningún edil
+	@Test
+    void espiarVotoFail() throws Exception {
+		Turno turno=this.partidaService.getTurnoActual(1);//2
+		Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
+		Jugador jugadorEdil1=this.jugadorService.getJugadorById(4);
+		Jugador jugadorEdil2=this.jugadorService.getJugadorById(5);
+		String voto1=FaccionesEnumerado.Traidor.toString();
+		String votoNuevo="3";
+		this.turnoService.anadirVoto(turno.getId(), jugadorEdil1, voto1);
+		this.turnoService.anadirVoto(turno.getId(), jugadorEdil2, voto1);
+		VotosTurno vT1=this.turnoService.findVoto(turno.getId(), jugadorEdil1.getId());
+		this.turnoService.espiarVoto(1, jugadorPretor, votoNuevo);
+		assertFalse(vT1.getEspiado());
+	}
 
 	
 	@Test
