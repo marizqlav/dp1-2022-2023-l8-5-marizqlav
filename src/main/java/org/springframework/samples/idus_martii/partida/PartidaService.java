@@ -64,7 +64,7 @@ public class PartidaService {
         this.estadoTurnoConverter = estadoTurnoConverter;
     }
 
-    
+    @Transactional
     public Partida findPartida(Integer id) {
         return partidaRepo.findById(id).get();
     }
