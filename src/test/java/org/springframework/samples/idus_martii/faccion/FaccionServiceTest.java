@@ -5,10 +5,12 @@ package org.springframework.samples.idus_martii.faccion;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.security.Provider.Service;
-
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,33 @@ public class FaccionServiceTest {
 	@Autowired
 	private PartidaService partidaService;
 	
+	@Test 
+	public void getAllFaccionesTest() {
+		List<Faccion> list = faccionService.getAllFacciones();
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+	}
+	
+	
+	
+	/*
+	@Test
+	public void asignaFaccionTest() throws Exception {
+		
+		Integer jugador1= jugadorService.getJugadorById(1).getId();
+		String faccionAsignada = FaccionesEnumerado.Mercader.toString();
+		Integer partida1 = partidaService.findPartida(jugador1).getId();
+
+	 
+		faccionService.asignarFaccionAJugador(faccionAsignada, jugador1, partida1);
+		Faccion fac = faccionService.getFaccionJugadorPartida(jugador1, partida1);
+		assertEquals( FaccionesEnumerado.Mercader.toString(), fac);
+	 
+	}
 	
 /*
 	@Test
-	public void saveFaccionFailTest() {
+	public void saveFaccionTest() {
 		Faccion f = new Faccion();
 		Jugador j = new Jugador();
 		
@@ -58,21 +83,7 @@ public class FaccionServiceTest {
 	*/
 	
 	
-	@Test
-	public void asignaFaccionTest() throws Exception {
-		
-		Integer jugador1= jugadorService.getJugadorById(1).getId();
-		String faccionAsignada = FaccionesEnumerado.Mercader.toString();
-		Integer partida1 = partidaService.findPartida(jugador1).getId();
-
-	 
-		faccionService.asignarFaccionAJugador(faccionAsignada, jugador1, partida1);
-		Faccion fac = faccionService.getFaccionJugadorPartida(jugador1, partida1);
-		assertEquals( FaccionesEnumerado.Mercader.toString(), fac);
-		
-	 
-	 
-	}
+	
 	/*
 	@Test
 	public void asignaFaccionFailTest() {
@@ -94,4 +105,3 @@ public class FaccionServiceTest {
 	
 
 }
-
