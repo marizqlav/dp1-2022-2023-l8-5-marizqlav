@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FaccionService {
@@ -34,7 +35,7 @@ public class FaccionService {
 	public Faccion save(Faccion f) {
 		return repo.save(f);
 	}
-	
+	@Transactional
 	public Faccion getFaccionJugadorPartida(Integer idjugador, Integer idpartida) {
 		return repo.getFaccionJugadorPartida(idjugador,idpartida);
 	}
@@ -42,7 +43,8 @@ public class FaccionService {
 	public List<Faccion> getFaccionesPartida(Integer id){
 		return repo.getFaccionesPartida(id);
 	}
-
+	
+	@Transactional
 	public void asignarFaccionAJugador(String faccion, Integer jugadorId, Integer partidaId) throws AccessException {
 		FaccionesEnumerado f = converter.convert(faccion);
 		Faccion faccionJugador = getFaccionJugadorPartida(jugadorId, partidaId);
