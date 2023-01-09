@@ -166,6 +166,15 @@ table {
   text-decoration:none;
  color:rgba(0,0,0,1);
 }
+
+.botonc:hover {
+ text-decoration:none;
+ color:rgba(0,0,0,1);
+}
+.botonc:focus {
+  text-decoration:none;
+ color:rgba(0,0,0,1);
+}
 .datosJugador{
    width: 20%;
    height: 148px;
@@ -353,6 +362,9 @@ width:60px;
 #votacionpositiva{
  margin-left:400px;
 }
+#votacionneutral{
+ margin-left:400px;
+}
 .button {
     background-color: #4CAF50;
     border: 1px solid green;
@@ -412,7 +424,7 @@ width:60px;
 
 				<div class="mantener">
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
-						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionpositiva" />
 						<a href="/partida/juego/${partida.id}/cambiar?voto=traidor" class="botona">Mantener</a>
 					</c:if>
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Leal'}">
@@ -428,7 +440,7 @@ width:60px;
 					</c:if>
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Traidor'}">
 						<a href="/partida/juego/${partida.id}/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
-						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionnegativa" />
 					</c:if>
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
 						<a href="/partida/juego/${partida.id}/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
@@ -447,7 +459,7 @@ width:60px;
 						</c:if>
 						<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
 							<a href="/partida/juego/${partida.id}/cambiar?voto=traidor" class="botonc">Cambiar a traidor</a>
-							<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
+							<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionneutral" />
 						</c:if>	
 					</div>
 				</c:if>
