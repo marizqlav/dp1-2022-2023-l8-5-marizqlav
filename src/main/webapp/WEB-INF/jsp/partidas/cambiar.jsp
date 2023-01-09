@@ -126,7 +126,7 @@ table {
 
 	position: absolute;
 	top: 80px;
-	left: 3000px;
+	left: 300px;
     background-color: rgba(50,205,50,1);
     font-family: 'Yanone Kaffeesatz';
     font-weight: 700;
@@ -407,7 +407,7 @@ width:60px;
 			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
-	        	<span id="textoenunciado">Este es el voto espiado</span>
+	        	<span id="textoenunciado">Este es el voto descubierto</span>
 				<span id="voto1">Voto de <c:out value="${votoEdil.jugador.user.username}"/></span>
 
 				<div class="mantener">
@@ -432,7 +432,7 @@ width:60px;
 					</c:if>
 					<c:if test="${votoEdil.tipoVoto.toString() == 'Mercader'}">
 						<a href="/partida/juego/${partida.id}/cambiar?voto=leal" class="botonb">Cambiar a leal</a>
-						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
+						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionnegativa" />
 					</c:if>
 				</div>
 				<c:if test="${segundaRonda == 'true'}">
