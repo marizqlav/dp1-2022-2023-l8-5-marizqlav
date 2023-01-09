@@ -174,15 +174,15 @@ public class PartidaService {
 		return partidaRepo.findPartidasGanadas(jugador.getId());
 	}
     
+    //NO HACER TEST EN PartidaServiceTest, ES DE ESTADISTICAS
     public Map<FaccionesEnumerado, List<Integer>> getStats(Jugador jugador){
-    	System.out.println(partidaRepo == null);
     	List<Partida> jugadas =  partidaRepo.findAllFinalizadasJugador(jugador.getId());
     	List<Partida> victorias =  partidaRepo.findPartidasGanadas(jugador.getId());
     	Map<FaccionesEnumerado, List<Integer>> stats = new HashMap<FaccionesEnumerado, List<Integer>>();
     	List<Integer> ls = new ArrayList<Integer>();
-    	ls.add(0);
-    	ls.add(0);
-    	ls.add(0);
+    	ls.add(0);//cantidad de partidas ganadas esa faccion
+    	ls.add(0);//cantidad de partidas perdidas esa faccion
+    	ls.add(0);//total de partidas
     	for(FaccionesEnumerado faccion : FaccionesEnumerado.values()) {
     		stats.put(faccion, ls);
     	}
@@ -202,7 +202,7 @@ public class PartidaService {
     	}
     	return stats;
     }
-   
+    //NO HACER TEST EN PartidaServiceTest ES DE ESTADISTICAS
     public FaccionesEnumerado faccionMasJugadaugador(Jugador jugador){
     	Map<FaccionesEnumerado, List<Integer>> stats = this.getStats(jugador);
 		 int leal = stats.get(FaccionesEnumerado.Leal).get(2);
