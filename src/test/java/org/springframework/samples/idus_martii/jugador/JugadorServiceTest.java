@@ -12,9 +12,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.idus_martii.user.AuthoritiesService;
 import org.springframework.samples.idus_martii.user.User;
 import org.springframework.samples.idus_martii.user.UserService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(value = { Service.class, Component.class }))
 public class JugadorServiceTest {
 	
 	@Autowired
@@ -122,16 +123,16 @@ public class JugadorServiceTest {
 	}
 	
 	
-//	@Test
-//	void getpeticionesAmistadJugadorTest() {
-//		List<Jugador> petAmistad = this.jugadorService.getpeticionesAmistadJugador(3);
-//		
-//	}
-//	
-//	@Test
-//	void rechazarPeticionTest() {
-//		
-//	}
+	@Test
+	void getpeticionesAmistadJugadorTest() {
+		List<Jugador> petAmistad = this.jugadorService.getpeticionesAmistadJugador(3);
+		
+	}
+	
+	@Test
+	void rechazarPeticionTest() {
+		
+	}
 	
 	
 

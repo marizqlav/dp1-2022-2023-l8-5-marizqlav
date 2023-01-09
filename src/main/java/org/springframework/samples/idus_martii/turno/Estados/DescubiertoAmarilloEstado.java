@@ -2,6 +2,7 @@ package org.springframework.samples.idus_martii.turno.Estados;
 
 import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.partida.GameScreens.DescubiertoAmarilloScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.turno.Turno;
@@ -17,7 +18,8 @@ public class DescubiertoAmarilloEstado implements EstadoTurno {
     private TurnoService turnoService;
 
     @Autowired
-    DescubiertoAmarilloEstado(DescubiertoAmarilloScreen screen) {
+    DescubiertoAmarilloEstado(@Lazy TurnoService turnoService,DescubiertoAmarilloScreen screen) {
+    	this.turnoService = turnoService;
         this.screen = screen;
     }
 
@@ -28,11 +30,14 @@ public class DescubiertoAmarilloEstado implements EstadoTurno {
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
-
+System.out.println("======================================================================================================================================================================");
+    	System.out.println("El voto del edil 1 es "+turnoService.findVoto(context.getId(), context.getEdil1().getId()).getVotoOriginal()+"=========================================================================================================================================================================");
+    	System.out.println("El voto del edil 2 es "+turnoService.findVoto(context.getId(), context.getEdil2().getId()).getVotoOriginal());
         if (turnoService.findVoto(context.getId(), context.getEdil1().getId()).getVotoOriginal() != null ||
             turnoService.findVoto(context.getId(), context.getEdil2().getId()).getVotoOriginal() != null) {
             return EstadoTurnoEnum.Recuento;
         }
+        
         return EstadoTurnoEnum.DescubiertoAmarillo;
     }
 
