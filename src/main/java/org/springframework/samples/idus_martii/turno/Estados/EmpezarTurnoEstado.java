@@ -2,9 +2,11 @@ package org.springframework.samples.idus_martii.turno.Estados;
 
 import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.partida.GameScreens.DefaultScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.turno.Turno;
+import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,15 +14,27 @@ import org.springframework.stereotype.Component;
 public class EmpezarTurnoEstado implements EstadoTurno {
 
     private DefaultScreen defaultScreen;
+    private TurnoService turnoService;
 
     @Autowired
-    EmpezarTurnoEstado(DefaultScreen defaultScreen) {
+    EmpezarTurnoEstado(DefaultScreen defaultScreen, @Lazy TurnoService turnoService) {
         this.defaultScreen = defaultScreen;
+        this.turnoService = turnoService;
     }
 
     @Override
     public void takeAction(Turno context) {
 
+        for (Turno t : context.getRonda().getTurnos()) { //Bug fix
+            System.err.println("----------------");
+            if (!(t.equals(context)) && t.getConsul() == null) {
+                System.out.println("0000000000000000");
+                System.out.println(t.getId());
+                System.out.println(turnoService.getById(t.getId()));
+                System.out.println(turnoService.getById(t.getId()).getId());
+                turnoService.deleteTurnoById(t.getId());
+            }
+        }
     }
 
     @Override

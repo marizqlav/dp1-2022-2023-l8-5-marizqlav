@@ -1,38 +1,34 @@
 package org.springframework.samples.idus_martii.partida.GameScreens;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
-import org.springframework.samples.idus_martii.turno.Turno;
-
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class EspiarScreen implements GameScreen {
+public class FinalScreen implements GameScreen {
 
-    private PartidaService partidaService;
+    PartidaService partidaService;
 
     @Autowired
-    EspiarScreen(@Lazy PartidaService partidaService) {
+    FinalScreen(PartidaService partidaService) {
         this.partidaService = partidaService;
     }
 
     @Override
     public String getAviso(Integer partidaId) {
-        return "Esperando al Predor";
+        return "";
     }
 
     @Override
     public ModelAndView getView(Integer partidaId, Jugador jugadorConectado) {
-        Turno turno = partidaService.getTurnoActual(partidaId);
 
-        if (jugadorConectado.equals(turno.getPredor())) {
-
-            return new ModelAndView("/partidas/espiar");
-        }
-        return new ModelAndView("/partidas/tablero");
+        ModelAndView result = new ModelAndView("partidas/final");
+        result.addObject("faccionGanadora", partidaService.getFaccionGanadora(partidaService.findPartida(partidaId)));
+        result.addObject("jugadoresGanadores", partidaService.getJugadoresFromFaccionEnum(partidaService.findPartida(partidaId), 
+            partidaService.getFaccionGanadora(partidaService.findPartida(partidaId))));
+        return result;
     }
+    
 }
