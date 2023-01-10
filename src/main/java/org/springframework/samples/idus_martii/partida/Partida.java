@@ -87,6 +87,10 @@ public class Partida extends BaseEntity {
 	public boolean iniciada() {
 		return fechaInicio != null;
 	}
+
+	public boolean finalizada() {
+		return fechaFin != null;
+	}
 	
 	  public String getFechaInicioParseada() {
 	    	if(this.fechaInicio==null)

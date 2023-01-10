@@ -38,7 +38,12 @@ public class EstablecerRolesEstado implements EstadoTurno {
             Integer random = (int) Math.floor((Math.random() * (partidaService.findPartida(partidaId).getNumeroJugadores())));
             setRolesConsecutivos(partidaId, random);
         } else {
-        	Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
+            Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
+
+            if (turnoAnterior.getConsul() == null) { //Bug fix
+                turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 3);
+            }
+    
             setRolesConsecutivos(partidaId, partidaService.findJugadores(partidaId).indexOf(turnoAnterior.getConsul()));
            
         }

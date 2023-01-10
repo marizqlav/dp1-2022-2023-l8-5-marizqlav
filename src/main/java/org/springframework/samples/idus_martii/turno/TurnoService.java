@@ -36,8 +36,9 @@ public class TurnoService {
     public Turno getById(int id){
         return repo.findById(id).get();
     }
+
     @Transactional
-    public void deleteTurnoById(int id){
+    public void deleteTurnoById(Integer id){
         repo.deleteById(id);
     }
     @Transactional

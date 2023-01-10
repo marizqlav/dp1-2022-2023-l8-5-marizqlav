@@ -32,7 +32,7 @@ public class TerminarTurnoEstado implements EstadoTurno {
     }
 
     @Override
-    public void takeAction(Turno context) { //TODO comprobar final del juego
+    public void takeAction(Turno context) {
         siguienteTurno(context.getRonda().getPartida().getId());
     }
 
@@ -49,8 +49,6 @@ public class TerminarTurnoEstado implements EstadoTurno {
         Ronda ronda = partidaService.getRondaActual(partidaId);
     	if (ronda.getNumRonda() == 1) {
     		iniciarRonda(ronda.getPartida().getId());
-    	} else {
-    		partidaService.terminarPartida(ronda.getPartida());
     	}
     }
 

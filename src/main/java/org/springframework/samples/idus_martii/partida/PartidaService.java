@@ -307,8 +307,6 @@ public class PartidaService {
     }
 
 	private boolean guard = true; //Bug fix, aunque a veces no funciona
-	//TODO arreglarlo con transacciones o algo
-	//TODO debería devolver un estado default con pantalla default en lugar de dar error
 
 	  @Transactional(rollbackFor= {NotFoundException.class})
     public void handleTurn(Integer partidaId) throws NotFoundException {
@@ -339,42 +337,41 @@ public class PartidaService {
         Turno turno = getTurnoActual(partidaId);
         return estadoTurnoConverter.convert(turno.getEstadoTurno()).getGameScreen();
     }
-	 @Transactional         
-	public void terminarPartida(Partida partida) {
-		partida.setFechaFin(LocalDateTime.now());
-		int votosTotalesLeal = partida.getVotosLeales();
-		int votosTotalesTraidor =  partida.getVotosTraidores();
+             
+	public FaccionesEnumerado getFaccionGanadora(Partida partida) {
+
+        if (partida.getVotosLeales() > partida.getLimite()) {
+			return FaccionesEnumerado.Traidor;
+		}
+
+		if (partida.getVotosTraidores() > partida.getLimite()) {
+			return FaccionesEnumerado.Leal;
+		}
 		
-		if (Math.max(votosTotalesLeal, votosTotalesTraidor) > partida.getLimite() ) {
-			int contadorLeales = 0;
-			int contadorTraidores = 0;
+		Turno turno = getTurnoActual(partida.getId());
+		if (turno.getRonda().getNumRonda() >= 2 && turno.getNumTurno() >= partida.getNumeroJugadores()) {
+            
+			if (partida.getVotosLeales() - partida.getVotosTraidores() >= 2) {
+				return FaccionesEnumerado.Leal;
+			}
+			else if (-partida.getVotosLeales() + partida.getVotosTraidores() >= 2) {
+				return FaccionesEnumerado.Traidor;
+			}
 			
-			for (Faccion f: faccionService.getFaccionesPartida(partida.getId())) {
-				if (f.getFaccionSelecionada() == FaccionesEnumerado.Leal) {
-					contadorLeales= contadorLeales + 1;
-				} else if (f.getFaccionSelecionada() == FaccionesEnumerado.Traidor){
-					contadorTraidores = contadorTraidores + 1;
-				}
-			}
-			if(contadorLeales == 0 || contadorTraidores == 0) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-			} else if (votosTotalesLeal > votosTotalesTraidor) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
-			} else if (votosTotalesLeal < votosTotalesTraidor){
-				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
-			} else {
-				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-			}
-		} else {
-			if (Math.abs(votosTotalesLeal - votosTotalesTraidor) <= 1) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Mercader);
-			} else if (votosTotalesLeal > votosTotalesTraidor) {
-				partida.setFaccionGanadora(FaccionesEnumerado.Leal);
-			} else {
-				partida.setFaccionGanadora(FaccionesEnumerado.Traidor);
-			}
-		}		
+			return FaccionesEnumerado.Mercader;
+        }
+
+        return null;
+
+    }
+
+	public List<Jugador> getJugadoresFromFaccionEnum(Partida partida, FaccionesEnumerado faccionEnum) {
+		return partida.getFaccionesJugadoras().stream()
+			.filter(x -> x.getFaccionSelecionada().equals(faccionEnum))
+			.map(x -> x.getJugador())
+			.collect(Collectors.toList());
 	}
+
 	
 	public int ganadasSabotajeJugador(Jugador j){
 		int cont = 0;

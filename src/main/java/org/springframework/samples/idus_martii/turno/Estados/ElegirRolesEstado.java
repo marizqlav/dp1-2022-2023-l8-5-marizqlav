@@ -50,9 +50,18 @@ public class ElegirRolesEstado implements EstadoTurno {
         if (turno.getNumTurno() == 1) {
             turnoAnterior = turno.getRonda().getPartida().getRondas().get(0).getTurnos().get(
                 turno.getRonda().getPartida().getRondas().get(0).getTurnos().size() - 1);
-        
+
+            if (turnoAnterior.getConsul() == null) { //Bug fix
+                turnoAnterior = turno.getRonda().getPartida().getRondas().get(0).getTurnos().get(
+                    turno.getRonda().getPartida().getRondas().get(0).getTurnos().size() - 2);
+            }
+    
         } else {
             turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
+
+            if (turnoAnterior.getConsul() == null) { //Bug fix
+                turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 3);
+            }
         }
 
         Integer n =  partidaService.findJugadores(partidaId).indexOf(turnoAnterior.getConsul());
