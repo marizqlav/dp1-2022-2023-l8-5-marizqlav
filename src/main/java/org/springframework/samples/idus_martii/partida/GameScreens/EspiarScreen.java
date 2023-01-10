@@ -2,11 +2,11 @@ package org.springframework.samples.idus_martii.partida.GameScreens;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
+
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.samples.idus_martii.turno.Turno;
-import org.springframework.samples.idus_martii.turno.TurnoService;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 

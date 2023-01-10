@@ -3,23 +3,21 @@ package org.springframework.samples.idus_martii.partida;
 import java.util.List;
 
 import java.util.Map;
-import java.awt.Paint;
-import java.lang.reflect.Array;
-import java.sql.Time;
+
+
 import java.time.Duration;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.time.Period;
+
 import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.function.Function;
+
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.expression.AccessException;
+
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
@@ -33,10 +31,10 @@ import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
-import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
+
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverter;
-import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoEnum;
+
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
