@@ -19,19 +19,19 @@ public class FaccionService {
 		this.repo = repo;
 		this.converter = converter;
 	}
-	
+	@Transactional
 	public List<Faccion> getAllFacciones(){
 		return repo.findAll();
 	}
-	
+	@Transactional
 	public Faccion findFaccionById(int id) {
 		return repo.findById(id);
 	}
-	
+	@Transactional
 	public List<Jugador> getJugadoresPartida(Integer id) {
 		return repo.getJugadoresPartida(id);
 	}
-	
+	@Transactional
 	public Faccion save(Faccion f) {
 		return repo.save(f);
 	}
@@ -39,12 +39,12 @@ public class FaccionService {
 	public Faccion getFaccionJugadorPartida(Integer idjugador, Integer idpartida) {
 		return repo.getFaccionJugadorPartida(idjugador,idpartida);
 	}
-	
+	@Transactional
 	public List<Faccion> getFaccionesPartida(Integer id){
 		return repo.getFaccionesPartida(id);
 	}
 	
-	@Transactional
+	@Transactional(rollbackFor= {AccessException.class})
 	public void asignarFaccionAJugador(String faccion, Integer jugadorId, Integer partidaId) throws AccessException {
 		FaccionesEnumerado f = converter.convert(faccion);
 		Faccion faccionJugador = getFaccionJugadorPartida(jugadorId, partidaId);
@@ -59,8 +59,5 @@ public class FaccionService {
 		repo.save(faccionJugador);
 	}
 	
-	//TODO esto no sé que hace aquí, que el que lo ha hecho haga algo con ello o lo borro la proxima vez que lo vea
-	// public int getVictoriasJugador(Jugador jugador) {
-	// 	return 0;
-	// }
+	
 }

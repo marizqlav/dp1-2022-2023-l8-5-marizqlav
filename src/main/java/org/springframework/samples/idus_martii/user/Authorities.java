@@ -3,7 +3,7 @@ package org.springframework.samples.idus_martii.user;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+
 import javax.validation.constraints.Size;
 
 import org.springframework.samples.idus_martii.model.BaseEntity;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "authorities")
+
 public class Authorities extends BaseEntity{
 	
 	@ManyToOne

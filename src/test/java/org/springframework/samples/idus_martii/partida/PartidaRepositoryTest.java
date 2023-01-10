@@ -125,13 +125,16 @@ public class PartidaRepositoryTest {
 		partidaRepository.addJugadorLobby(jug1.getId(), 2);
 		assertNotNull(partidaRepository.findJugadorInLobby(jug1.getId(), 2));
 	}	
-	    
+	
+	@Test
 	public void testFindJugadorInLobby() {
+		partidaRepository.createLobby(1, 1);
+		partidaRepository.addJugadorLobby(1, 1);
 		Jugador jugadorInLobby=partidaRepository.findJugadorInLobby(1, 1);
 		assertNotNull(jugadorInLobby);
 		assertFalse(jugadorInLobby.isNew());
 	}
-
+	
 	@Test
 	public void testFindPartidasGanadas() {
 		List<Partida> listaPartidasGanadas=partidaRepository.findPartidasGanadas(1);

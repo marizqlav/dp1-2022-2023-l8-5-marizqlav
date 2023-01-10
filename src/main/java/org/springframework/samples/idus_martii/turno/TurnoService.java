@@ -28,11 +28,11 @@ public class TurnoService {
         this.faccionesConverter = faccionesConverter;
         this.repoVotosTurno = repoVotosTurno;
     }
-
+    @Transactional
     List<Turno> getTurnos(){
         return repo.findAll();
     }
-    
+    @Transactional
     public Turno getById(int id){
         return repo.findById(id).get();
     }
@@ -41,12 +41,13 @@ public class TurnoService {
     public void deleteTurnoById(Integer id){
         repo.deleteById(id);
     }
-
+    @Transactional
     public void save(Turno turno){
         repo.save(turno);
     }
 
     //TODO restriccion un jugador solo puede votar una vez
+    @Transactional(rollbackFor= {AccessException.class})
     public void anadirVoto(Integer turnoId, Jugador jugador, String strVoto) throws AccessException {
         Turno turno = repo.findById(turnoId).get();
         
@@ -58,7 +59,7 @@ public class TurnoService {
 
         save(turno);
     }
-
+    @Transactional(rollbackFor= {AccessException.class})
     public void cambiarVoto(Integer turnoId, Jugador jugador, Integer edilId, String voto) throws AccessException {
         Turno turno = repo.findById(turnoId).get();
         VotosTurno v = findVoto(turnoId, edilId);
@@ -83,11 +84,11 @@ public class TurnoService {
 
         repoVotosTurno.save(v);
     }
-    
+    @Transactional 
     public VotosTurno findVoto(Integer turnoId, Integer jugadorId){
     	return repoVotosTurno.findVotoByturnoAndPlayer(turnoId, jugadorId);
     }
-    
+    @Transactional
     public void anadirVotoTurno(Turno turno, Jugador jugador, FaccionesEnumerado voto) {
         VotosTurno votosTurno = new VotosTurno();
         votosTurno.turno = turno;
@@ -95,7 +96,7 @@ public class TurnoService {
         votosTurno.tipoVoto = voto;
     	repoVotosTurno.save(votosTurno);
     }
-
+    @Transactional(rollbackFor= {AccessException.class})
     public void espiarVoto(Integer partidaId, Jugador jugador, String voto) throws AccessException {
         Turno turno = partidaService.getTurnoActual(partidaId);
 
@@ -119,7 +120,7 @@ public class TurnoService {
             repoVotosTurno.save(votoEdil2);
         }
     }
-
+    @Transactional
     public List<Jugador> getJugadoresValidosParaRol(Integer turnoId, String rol) {
 
         List<Jugador> jugadoresValidos = new ArrayList<>();
@@ -145,7 +146,7 @@ public class TurnoService {
 
         return jugadoresValidos;
     }
-    
+    @Transactional(rollbackFor= {InvalidPlayerException.class})
     public void asignarRol(Integer turnoId, Jugador jugador) throws InvalidPlayerException {
     	
         Turno turno = getById(turnoId);
