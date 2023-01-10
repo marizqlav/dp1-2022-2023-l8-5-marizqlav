@@ -69,6 +69,9 @@
 							<li>
 								<a href="<c:url value="/statistics/global" />">Estadísiticas globales</a>		
 							</li>
+							<li>
+								<a href="<c:url value="/statistics/global/ranking" />">Ranking de jugadores</a>		
+							</li>
 						</ul>					
 				</idus_martii:menuItem>		
 				
