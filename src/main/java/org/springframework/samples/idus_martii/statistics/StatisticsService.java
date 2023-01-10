@@ -40,7 +40,6 @@ public class StatisticsService {
 	}
   
 	public Map<String, Duration> duracionPartidas(Jugador jugador){
-		System.out.println("partidaRepo" + partidaRepo==null); 
 		Map<String, Duration> stats = new HashMap<String, Duration>();
     	 Duration min = null;
     	 Duration max = null;

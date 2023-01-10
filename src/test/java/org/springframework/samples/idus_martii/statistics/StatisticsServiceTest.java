@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +18,10 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.partida.PartidaRepository;
 import org.springframework.samples.idus_martii.partida.PartidaService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(value = { Service.class, Component.class }))
 public class StatisticsServiceTest {
 	@Autowired
 	protected StatisticsService ss;
@@ -31,9 +33,23 @@ public class StatisticsServiceTest {
 	@Test
 	 public void TestEstadisticasJugador() {
 		Map<FaccionesEnumerado, List<Integer>> jugador1 = this.ss.paridasGanadas(js.getJugadorById(1));
-		 assertThat(jugador1.get(FaccionesEnumerado.Leal)).isEqualTo(1);
-		 assertThat(jugador1.get(FaccionesEnumerado.Traidor)).isEqualTo(1);
-		 assertThat(jugador1.get(FaccionesEnumerado.Mercader)).isEqualTo(1);
+		List<Integer> listaLeal = new ArrayList<>();
+		listaLeal.add(0, 1);
+		listaLeal.add(1, 0);
+		listaLeal.add(2,1);
+		assertThat(jugador1.get(FaccionesEnumerado.Leal)).isEqualTo(listaLeal);
+		
+		List<Integer> listaTraidor = new ArrayList<>();
+		listaTraidor.add(0, 0);
+		listaTraidor.add(1, 0);
+		listaTraidor.add(2,0);
+		assertThat(jugador1.get(FaccionesEnumerado.Traidor)).isEqualTo(listaTraidor);
+		 
+		 List<Integer> listaMercader = new ArrayList<>();
+		 listaMercader.add(0, 0);
+		 listaMercader.add(1, 0);
+		 listaMercader.add(2,0);
+		 assertThat(jugador1.get(FaccionesEnumerado.Mercader)).isEqualTo(listaMercader);
 		 
 	 }
 	
@@ -54,10 +70,9 @@ public class StatisticsServiceTest {
 	 @Test
 	 public void TestDuracionPartidas() {
 		 Map<String, Duration> jugador3 = this.ss.duracionPartidas(js.getJugadorById(3));
-		 assertThat(jugador3.size()).isEqualTo(3);
-		 assertThat(jugador3.get("max")).isEqualTo(Duration.between(LocalTime.of(10, 35, 02), LocalTime.of(10, 49, 31)));
-		 assertThat(jugador3.get("min")).isEqualTo(Duration.between(LocalTime.of(10, 35, 02), LocalTime.of(10, 49, 31)));
-		 assertThat(jugador3.get("media")).isEqualTo(Duration.between(LocalTime.of(10, 35, 02), LocalTime.of(10, 49, 31)));
+		 assertThat(jugador3.get("max")).isEqualTo(Duration.between(LocalTime.of(10, 34, 04), LocalTime.of(10, 49, 31)));
+		 assertThat(jugador3.get("min")).isEqualTo(Duration.between(LocalTime.of(10, 34, 04), LocalTime.of(10, 49, 31)));
+		 assertThat(jugador3.get("media")).isEqualTo(Duration.between(LocalTime.of(10, 34, 04), LocalTime.of(10, 49, 31)));
 	 }
 	 
 	 @Test

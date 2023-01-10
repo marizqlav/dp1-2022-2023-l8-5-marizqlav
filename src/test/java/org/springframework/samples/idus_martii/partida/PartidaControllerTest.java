@@ -98,17 +98,14 @@ public class PartidaControllerTest {
     private ElegirFaccionEstado elegirFaccionEstado;
     
 	private static final int PARTIDA_ID = 1;
+	private static final int JUGADOR_ID = 1;
+	private static final int PAGINA = 2;
 
 	private Partida partidaza;
-//	private Jugador jose;
 
 	@BeforeEach
 	void setup() {
 		partidaza = new Partida();
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//		User currentUser = (User) authentication.getPrincipal();
-//		jose.setUsername(currentUser.getUsername());
-//		partidaza.setJugador(jose);
 		partidaza.setId(PARTIDA_ID);
 		partidaza.setFaccionGanadora(FaccionesEnumerado.Leal);
 		partidaza.setNumeroJugadores(5);
@@ -118,25 +115,35 @@ public class PartidaControllerTest {
 		given(partidaService.findPartida(PARTIDA_ID)).willReturn(partidaza);
 	}
 
-	@WithMockUser
-    @Test
-    public void testShowPartidasFinalizadas() throws Exception {
-        mockMvc.perform(get("/partida/finalizadas")).
-            andExpect(status().isOk());
-    }
-    @WithMockUser
+    @WithMockUser(value = "spring")
     @Test
     public void testShowDetallesPartida() throws Exception {
         mockMvc.perform(get("/partida/"+PARTIDA_ID+"/detalles")).
             andExpect(status().isOk());
     }	
-    @WithMockUser
+
+    @WithMockUser(value = "spring")
     @Test
     public void testShowPartidasDisponibles() throws Exception {
         mockMvc.perform(get("/partida/disponibles")).
             andExpect(status().isOk());
     }
-    @WithMockUser
+    
+    @WithMockUser(value = "spring")
+    @Test
+    public void testShowPartidasCreadas() throws Exception {
+        mockMvc.perform(get("/partida/creadas")).
+            andExpect(status().isOk());
+    }
+    
+	@WithMockUser(value = "spring")
+    @Test
+    public void testShowPartidasFinalizadas() throws Exception {
+        mockMvc.perform(get("/partida/finalizadas")).
+            andExpect(status().isOk());
+    }
+	
+    @WithMockUser(value = "spring")
     @Test
     public void testShowPartidasEnJuegos() throws Exception {
         mockMvc.perform(get("/partida/enJuego")).
@@ -144,7 +151,7 @@ public class PartidaControllerTest {
     }	
 
     
-    @WithMockUser
+    @WithMockUser(value = "spring")
 	@Test
 	void testInitCreationForm() throws Exception {
     	mockMvc.perform(get("/partida/new"))
@@ -168,57 +175,76 @@ public class PartidaControllerTest {
 				.andExpect(view().name("partidas/createOrUpdatePartidaForm"));
 	}
 	
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
-	 public void testPartidaCancelarForm() throws Exception{
+	 public void testCancelarPartidaForm() throws Exception{
 	     mockMvc.perform(get("/partida/"+PARTIDA_ID+"/cancelar")).
 	     	andExpect(status().isOk())
 	        .andExpect(model().attributeExists("message"))
 	        .andExpect(view().name("welcome"));
 	 }
 	 
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
+	 @Test
+	 public void testLobby() throws Exception{
+	     mockMvc.perform(get("/partida/"+PARTIDA_ID)).
+	     	andExpect(status().isOk());
+	 }
+	 
+	 @WithMockUser(value = "spring")
 	 @Test
 	 public void testIniciarPartidaForm() throws Exception{
 	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/iniciar")).
 			andExpect(status().is3xxRedirection())
 			.andExpect(view().name("redirect:/partida/juego/"+PARTIDA_ID));
 	 }
+	 
+	 @WithMockUser(value = "spring")
+	 @Test
+	 public void testGetPartidaGeneral() throws Exception{
+	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID)).
+	     	andExpect(status().isOk());
+	 }
 
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
 	 public void testGetEspiarEdilForm() throws Exception{
 	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/espiar")).
 	     	andExpect(status().isOk());
 	 }
 
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
 	 public void testCambiarVotoForm() throws Exception{
 	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/cambiar")).
 	     	andExpect(status().isOk());
 	 }
 	 
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
 	 public void testVotacionForm() throws Exception{
-	     mockMvc.perform(get("/partida/juego/",PARTIDA_ID,"/votar")).
+	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/votar")).
 	     	andExpect(status().isOk());
 	 }
 	 
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
 	 public void testElegirRolForm() throws Exception{
-	     mockMvc.perform(get("/partida/juego/",PARTIDA_ID,"/elegirrol")).
+	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/elegirrol")).
 	     	andExpect(status().isOk());
 	 }
 
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
 	 public void testElegirFaccionForm() throws Exception{
-	     mockMvc.perform(get("/partida/juego/",PARTIDA_ID,"/elegirfaccion")).
+	     mockMvc.perform(get("/partida/juego/"+PARTIDA_ID+"/elegirfaccion")).
 	     	andExpect(status().isOk());
 	 }
-
-
+	 
+	 @WithMockUser(value = "spring")
+	 @Test
+	 public void testHistorialPartidas() throws Exception{
+	     mockMvc.perform(get("/partida/partidas/jugador/"+JUGADOR_ID+"/"+PAGINA)).
+	     	andExpect(status().isOk());
+	 }
 }
