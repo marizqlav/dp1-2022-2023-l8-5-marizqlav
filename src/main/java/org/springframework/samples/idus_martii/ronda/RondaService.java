@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RondaService {
@@ -14,19 +15,19 @@ public class RondaService {
     public RondaService(RondaRepository repo){
         this.repo=repo;
     }
-
+    @Transactional
     List<Ronda> getRondas(){
         return repo.findAll();
     }
-    
+    @Transactional
     public Ronda getById(int id){
         return repo.findById(id).get();
     }
-
+    @Transactional
     public void deleteRondaById(int id){
         repo.deleteById(id);
     }
-
+    @Transactional
     public void save(Ronda ronda){
         repo.save(ronda);
     }

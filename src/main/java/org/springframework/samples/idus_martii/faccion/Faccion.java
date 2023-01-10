@@ -6,7 +6,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.idus_martii.jugador.Jugador;
@@ -19,7 +18,6 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "faccion")
 public class Faccion extends BaseEntity{
 	
 	@NotNull

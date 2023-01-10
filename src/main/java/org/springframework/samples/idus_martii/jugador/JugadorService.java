@@ -2,15 +2,14 @@ package org.springframework.samples.idus_martii.jugador;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.samples.idus_martii.faccion.Faccion;
-import org.springframework.samples.idus_martii.user.Authorities;
+
 import org.springframework.samples.idus_martii.user.AuthoritiesService;
 import org.springframework.samples.idus_martii.user.User;
 import org.springframework.samples.idus_martii.user.UserService;
@@ -30,11 +29,11 @@ public class JugadorService {
 		this.userService = userService;
 		this.authoritiesService = authoritiesService;
 	}
-	
+	@Transactional
 	public List<Jugador> getAll(){
 		return jugadorRepo.findAll();
 	}
-	
+	@Transactional
 	public List<List<Jugador>> getPlayersPaginated(Collection<Jugador> listaJugadores){
 		List<List<Jugador>> jugadores = new ArrayList<List<Jugador>>();
 		int maxJugadores = 0;
@@ -52,15 +51,15 @@ public class JugadorService {
 		return jugadores;
 	}
 
-	
+	@Transactional
 	public Jugador getByName(String name){
         return jugadorRepo.findByName(name);
     }
-	
+	@Transactional
 	public Integer anadirAmigo(int idjugador, int idamigo){
         return jugadorRepo.anadirAmigo(idjugador, idamigo) ;
     }
-	
+	@Transactional
 	public Integer sonAmigos(int idjugador, int idamigo){
 		
         return jugadorRepo.sonAmigos(idjugador, idamigo) ;
@@ -69,15 +68,15 @@ public class JugadorService {
 	public Jugador getJugadorById(int id) {
 		return this.jugadorRepo.findById(id).get();
 	}
-	
+	@Transactional
 	public User getUserByJugador(Jugador j) {
 		return this.jugadorRepo.findUserByJugador(j.getUser().getUsername());
 	}
-	
+	@Transactional
 	public List<Jugador> getJugadorByUsername(String username) {
 		return this.jugadorRepo.findJugadorByUsername(username);
 	}
-	
+	@Transactional
 	public List<Jugador> getpeticionesAmistadJugador(Integer idjugador) {
 		List<Integer> jugadoresId = this.jugadorRepo.findPeticionesAmistadJugador(idjugador);
 		List<Jugador> salida = new ArrayList<>();
@@ -89,7 +88,7 @@ public class JugadorService {
 		}
 		return salida;
 	}
-	
+	@Transactional
 	public List<Jugador> getAmigos(Integer idjugador) {
 		List<Integer> jugadoresId = this.jugadorRepo.findPeticionesAmistadJugador(idjugador);
 		List<Jugador> salida = new ArrayList<>();
@@ -102,7 +101,7 @@ public class JugadorService {
 		}
 		return salida;
 	}
-	
+	@Transactional
 	public void save(Jugador j) {
 		this.jugadorRepo.save(j);
 		this.userService.saveUser(j.getUser());
@@ -110,7 +109,7 @@ public class JugadorService {
 		
 		
 	}
-	
+	@Transactional
 	public Boolean noSonAmigos(int jugadorId, int amigo) {
 		if( !(jugadorRepo.noSonAmigos(jugadorId, amigo) !=null || jugadorRepo.noSonAmigos(amigo, jugadorId) !=null) ) {
 			return true;
@@ -119,16 +118,17 @@ public class JugadorService {
 		}
 		
 	}
-	
+	@Transactional
 	public void rechazarPeticion(int jugadorId, int rechazadoId) {
 		 this.jugadorRepo.rechazarPeticion(jugadorId, rechazadoId);
 	}
-	
+	@Transactional
 	public void deleteAmigo(int idjugador, int idamigo){
         this.jugadorRepo.rechazarPeticion(idjugador,idamigo);
         this.jugadorRepo.rechazarPeticion(idamigo,idjugador);
     }
-
+	
+	@Transactional
     public void deleteJugadorById(int id){
         this.jugadorRepo.deleteById(id);
     }
