@@ -25,9 +25,9 @@ public class FinalScreen implements GameScreen {
     public ModelAndView getView(Integer partidaId, Jugador jugadorConectado) {
 
         ModelAndView result = new ModelAndView("partidas/final");
-        result.addObject("faccionGanadora", partidaService.getFaccionGanadora(partidaService.findPartida(partidaId)));
-        result.addObject("jugadoresGanadores", partidaService.getJugadoresFromFaccionEnum(partidaService.findPartida(partidaId), 
-            partidaService.getFaccionGanadora(partidaService.findPartida(partidaId))));
+        result.addObject("faccionGanadora", partidaService.getFaccionGanadora(partidaService.findPartida(partidaId).getId()));
+        result.addObject("jugadoresGanadores", partidaService.getJugadoresFromFaccionEnum(partidaService.findPartida(partidaId).getId(), 
+            partidaService.getFaccionGanadora(partidaService.findPartida(partidaId).getId())));
         return result;
     }
     
