@@ -10,5 +10,6 @@ public enum EstadoTurnoEnum {
     DescubiertoAmarillo,
     Recuento,
     ElegirFaccion,
-    TerminarTurno;
+    TerminarTurno,
+    FinalPartida;
 }
