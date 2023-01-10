@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -38,7 +40,6 @@ public class JugadorServiceTest {
 		assertThat(jugadores.getId()).isEqualTo(5);
 		assertThat(jugadores.getUsername()).isEqualTo("albdomrui");
 	}
-	
 	
 	@Test
 	void getJugadorByIdTest() {

@@ -11,6 +11,7 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 
 @DataJpaTest
 public class VotosTurnoRepositoryTest {
+	
 	@Autowired
 	VotosTurnoRepository votosTurnoRepository;
 		
