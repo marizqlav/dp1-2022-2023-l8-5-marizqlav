@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
@@ -68,35 +69,35 @@ public class PartidaService {
     public Partida findPartida(Integer id) {
         return partidaRepo.findById(id).get();
     }
-    
+    @Transactional
     public List<Jugador> findJugadores(Integer partidaId) {
         return partidaRepo.findJugadores(partidaId);
     }
-    
+    @Transactional
     public List<Partida> getPartidas() {
         return partidaRepo.findAll();
     }
-    
+    @Transactional
     List<Partida> getPartidasEnJuego() {
         return partidaRepo.findAllEnJuego();
     }
-
+    @Transactional
     public List<Partida> getPartidasFinalizadasJugador(Integer idJugador) {
         return partidaRepo.findAllFinalizadasJugador(idJugador);
     }
-    
+    @Transactional
     List<Partida> getPartidasCreadasJugador(Integer idJugador) {
         return partidaRepo.findAllCreadasJugador(idJugador);
     }
-    
+    @Transactional
     List<Partida> getAllPartidasFinalizadas() {
         return partidaRepo.findAllFinalizadas();
     }
-
+    @Transactional
     public List<Faccion> getFaccionesPartida(Integer id) {
   		return this.partidaRepo.findFaccionesPartida(id);
   	}
-    
+    @Transactional(rollbackFor= {CreationException.class})
     public void crearPartida(Partida partida, Jugador jugador) throws CreationException {
         if (jugadorPartidaEnCurso(jugador.getId()) != null) {
             throw new CreationException("No se puede crear una partida si el jugador tiene una partida sin terminar");
@@ -108,7 +109,7 @@ public class PartidaService {
 
        
     }
-    
+    @Transactional(rollbackFor= {CancelException.class})
     public void cancelarPartida(Integer id) throws CancelException {
         if (findPartida(id).iniciada()) {
             throw new CancelException("No se puede cancelar una partida iniciada");
@@ -116,15 +117,15 @@ public class PartidaService {
         }
         partidaRepo.deleteById(id);
     }
-
+    @Transactional
     Lobby getLobby(Integer idpartida) {
 		return partidaRepo.getLobby(idpartida);
 	}
-    
+    @Transactional
     Integer createLobby(Integer idpartida) {
 		return partidaRepo.createLobby(idpartida, idpartida);
 	}
-    
+    @Transactional(rollbackFor= {LobbyException.class})
     Integer addJugadorLobby(Integer idjugador, Integer idlobby) throws LobbyException {
         if (findJugadorInLobby(idjugador, idlobby) == null) {
             return partidaRepo.addJugadorLobby(idjugador, idlobby);
@@ -132,11 +133,11 @@ public class PartidaService {
             throw new LobbyException("El jugador ya está en el lobby");
         }
 	}
-    
+    @Transactional
     Jugador findJugadorInLobby(Integer idjugador, Integer idlobby) {
 		return partidaRepo.findJugadorInLobby(idjugador, idlobby);
 	}
-
+    @Transactional(rollbackFor= {LobbyException.class})
     boolean checkLobbyFull(Integer partidaId) throws LobbyException {
         Partida partida = findPartida(partidaId);
         if (partida == null) {
@@ -149,27 +150,27 @@ public class PartidaService {
             return false;
         }
     }
-    
+    @Transactional
     Partida jugadorPartidaEnCurso(Integer idjugador) {
 		return partidaRepo.jugadorPartidaEnCurso(idjugador);
 	}
-
+    @Transactional
     public Turno getTurnoActual(Integer partidaId) {
     	Partida p = partidaRepo.findById(partidaId).get();
     	Ronda r = p.getRondas().get(p.getRondas().size() - 1);
     	Turno t = r.getTurnos().get(r.getTurnos().size() - 1);
     	return t;
     }
-    
+    @Transactional
     public Ronda getRondaActual(Integer partidaId) {
     	return partidaRepo.findById(partidaId).get().getRondas()
             .get(partidaRepo.findById(partidaId).get().getRondas().size()-1);
     }
-    
+    @Transactional
     public int getVictoriasJugador(Jugador jugador) {
 		return partidaRepo.findPartidasGanadas(jugador.getId()).size();
 	}
-    
+    @Transactional
     public List<Partida> getGanadasJugador(Jugador jugador) {
 		return partidaRepo.findPartidasGanadas(jugador.getId());
 	}
@@ -248,7 +249,7 @@ public class PartidaService {
    	 stats.put("media", sum/partidaRepo.findAllFinalizadasJugador(jugador.getId()).size());
    	 return stats;
    }
-
+    @Transactional(rollbackFor= {InitiationException.class})
     public void iniciarPartida(Integer partidaId, Integer lobbyId) throws InitiationException {
 
         Partida partida = findPartida(partidaId);
@@ -311,7 +312,7 @@ public class PartidaService {
 	//TODO arreglarlo con transacciones o algo
 	//TODO debería devolver un estado default con pantalla default en lugar de dar error
 
-	@Transactional
+	  @Transactional(rollbackFor= {NotFoundException.class})
     public void handleTurn(Integer partidaId) throws NotFoundException {
 		if (!guard) {
 			return;
@@ -335,12 +336,12 @@ public class PartidaService {
 
 		guard = true;
     }
-    
+	 @Transactional
     public GameScreen getCurrentGameScreen(Integer partidaId) {
         Turno turno = getTurnoActual(partidaId);
         return estadoTurnoConverter.convert(turno.getEstadoTurno()).getGameScreen();
     }
-             
+	 @Transactional         
 	public void terminarPartida(Partida partida) {
 		partida.setFechaFin(LocalDateTime.now());
 		int votosTotalesLeal = partida.getVotosLeales();
@@ -387,7 +388,7 @@ public class PartidaService {
 		return cont;
 	}
 
-
+	  @Transactional
 	public void save(Partida partida) {
 		partidaRepo.save(partida);
 		
