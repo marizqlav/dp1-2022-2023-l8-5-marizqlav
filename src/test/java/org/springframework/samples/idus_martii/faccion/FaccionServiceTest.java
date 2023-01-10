@@ -20,8 +20,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.jugador.Jugador;
-import org.springframework.samples.idus_martii.jugador.JugadorService;
-import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
