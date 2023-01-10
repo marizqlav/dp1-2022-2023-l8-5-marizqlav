@@ -79,8 +79,14 @@ public class Partida extends BaseEntity {
 	private Lobby lobby;
     
 	public long[] getDuration(){
+		if(fechaInicio!=null && fechaFin!=null) {
     	long seconds = Duration.between(fechaInicio, fechaFin).getSeconds();
     	return new long[]{ seconds/3600, (seconds%3600)/60, ((seconds%3600)%60)};
+    	}
+		else {
+			return null;
+		}
+			
     	
     }
     
