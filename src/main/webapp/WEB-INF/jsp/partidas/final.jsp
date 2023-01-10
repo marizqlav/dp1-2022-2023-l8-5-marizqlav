@@ -468,7 +468,7 @@ width:60px;
 		        				<img src="/resources/images/redknife.png" class="row2 column3" id="imagenpuntos"/>
 		        			</c:if>
 							<c:if test="${votosleales == 7}">
-		        				<img src="/resources/images/laurel.png" class="row2 column3 id="imagenpuntos2"/>
+		        				<img src="/resources/images/laurel.png" class="row2 column3" id="imagenpuntos2"/>
 		        			</c:if>
 							</td>
 							<td class="tablapuntostd">
