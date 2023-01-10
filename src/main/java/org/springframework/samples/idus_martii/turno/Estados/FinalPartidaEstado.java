@@ -33,14 +33,24 @@ public class FinalPartidaEstado implements EstadoTurno {
         System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
         Partida partida = context.getRonda().getPartida();
 
+        if (partida.finalizada()) {
+            return;
+        }
+
+        System.out.println("bbbbbbbbbbbbbbb");
+
         partida.setFechaFin(LocalDateTime.now());
+        System.out.println("cccccccccccccccc");
+
         partida.setFaccionGanadora(partidaService.getFaccionGanadora(partida));
+        System.out.println("ddddddddddddddd");
+
         partidaService.save(partida);
     }
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
-        return null;
+        return EstadoTurnoEnum.FinalPartida;
     }
 
     @Override
