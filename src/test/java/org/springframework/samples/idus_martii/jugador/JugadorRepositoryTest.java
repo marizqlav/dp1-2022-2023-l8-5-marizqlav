@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.samples.idus_martii.user.User;
@@ -24,6 +26,14 @@ public class JugadorRepositoryTest {
 		assertNotNull(jugadorPorNombre);
 		assertFalse(jugadorPorNombre.isNew());
 	}
+	
+	@ParameterizedTest
+	@CsvSource({
+		"username, Ale"
+	})
+	public void testFindByNameParametrizada(String jugadorPorNombre) {
+		assertNotNull(jugadorPorNombre);
+	}
 
 	@Test
 	public void testFindAllJugadores() {
@@ -37,6 +47,14 @@ public class JugadorRepositoryTest {
 		User userPorJugador=jugadorRepository.findUserByJugador("ismherram");
 		assertNotNull(userPorJugador);
 		assertTrue(userPorJugador.isEnabled());
+	}
+	
+	@ParameterizedTest
+	@CsvSource({
+		"username, ismherram"
+	})
+	public void testFindUserByJugadorParametrizada(String userPorJugador) {
+		assertNotNull(userPorJugador);
 	}
 	
 	@Test
