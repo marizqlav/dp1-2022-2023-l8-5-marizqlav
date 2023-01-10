@@ -34,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.BDDMockito.given;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
@@ -112,24 +111,22 @@ public class TurnoControllerTest {
 		given(turnoService.getById(ID_TURNO)).willReturn(turnazo);
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
 	public void testShowTurnos() throws Exception {
 	    mockMvc.perform(get("/turnos/")).
 	   		andExpect(status().isOk());
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Deleting turno")
 	void testProcessDeleteTurno() throws Exception {
 		mockMvc.perform(get("/turnos/"+ ID_TURNO +"/delete"))
 		.andExpect(view().name("/turnos/turnosList"));
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Edit turno")
 	void testEditTurno() throws Exception {
 		mockMvc.perform(get("/turnos/"+ ID_TURNO +"/edit")
 				.param("consul_id", "1")
@@ -144,10 +141,9 @@ public class TurnoControllerTest {
 		.andExpect(view().name("/turnos/createOrUpdateTurnoForm"));
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Save Turno")
-	void processSaveTurno() throws Exception {
+	void testProcessSaveTurno() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/turnos/"+ID_TURNO+"/edit")
 				.with(csrf())
 				.param("consul_id", "1")
@@ -164,9 +160,8 @@ public class TurnoControllerTest {
 	}
 	
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Crear turno")
 	void testInitCreation() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/turnos/new"))
 		.andExpect(status().isOk())
@@ -174,10 +169,9 @@ public class TurnoControllerTest {
 		.andExpect(view().name("/turnos/createOrUpdateTurnoForm"));
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Save new Turno")
-	void processSaveNewTurno() throws Exception {
+	void testProcessSaveNewTurno() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/turnos/new")
 				.with(csrf())
 				.param("consul_id", "1")

@@ -101,13 +101,14 @@ public class JugadorControllerTest {
 		given(jugadorService.getUserByJugador(carlos)).willReturn(carlos.getUser());
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
 	public void testShowJugador() throws Exception {
 	    mockMvc.perform(get("/"+ID_JUGADOR+"/user")).
 	   		andExpect(status().isOk());
 	}
-	@WithMockUser
+	
+	@WithMockUser(value = "spring")
 	@Test
 	public void testShowPerfilJugador() throws Exception {
 	    mockMvc.perform(get("/jugadores/profile/"+ID_JUGADOR)).
@@ -115,29 +116,28 @@ public class JugadorControllerTest {
 	}
 	
 	
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
-	 @DisplayName("Ir Perfil Jugador")
 	 public void testIrPerfilJugador() throws Exception{
 	     mockMvc.perform(get("/jugadores/profile/nombre/"+jugadorService.getJugadorById(ID_JUGADOR))).
 	     	andExpect(status().isOk());
 	 }
 	 
-	 @WithMockUser
+	 @WithMockUser(value = "spring")
 	 @Test
-	 @DisplayName("Peticion Amistad")
 	 public void testPeticionAmistad() throws Exception{
 	     mockMvc.perform(get("/jugadores/amigos/"+ ID_JUGADOR+ "/"+ID_JUGADOR_AMIGO)).
 	     	andExpect(status().isOk());
 	 }	
-	@WithMockUser
+	 
+	@WithMockUser(value = "spring")
     @Test
-    @DisplayName("InitFindForm")
 	void testInitFindForm() throws Exception {
 		mockMvc.perform(get("/jugadores/find"))
 				.andExpect(status().isOk());
 	}
-	@WithMockUser
+	
+	@WithMockUser(value = "spring")
     @Test
     @DisplayName("ProcessFindForm")
 	void testProcessFindForm() throws Exception {
@@ -145,18 +145,16 @@ public class JugadorControllerTest {
 				.andExpect(status().isOk());
 	}
 	
-	@WithMockUser
+	@WithMockUser(value = "spring")
     @Test
-    @DisplayName("ProcessFindFormPaginated")
 	void testProcessFindFormPaginated() throws Exception {
 		mockMvc.perform(get("/jugadores/"+NUMERO_PAGINA))
 				.andExpect(status().isOk());
 	}
 
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Crear Jugador form")
 	void testInitCreationForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/new"))
 		.andExpect(status().isOk())
@@ -164,9 +162,8 @@ public class JugadorControllerTest {
 		.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
 	}
 	
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("ProcessCreationForm")
 	void testProcessCreationFormSuccess() throws Exception {
 		mockMvc.perform(post("/new")
 			.with(csrf()))
@@ -174,7 +171,7 @@ public class JugadorControllerTest {
 			.andExpect(view().name("redirect:/"));
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
 	@DisplayName("ProcessCreationForm Error")
 	void testProcessCreationFormHasErrors() throws Exception {
@@ -185,51 +182,44 @@ public class JugadorControllerTest {
 			.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
 	}
 	
-	@WithMockUser
+	@WithMockUser(value = "spring")
     @Test
-    @DisplayName("Peticiones")
 	void testPeticiones() throws Exception {
 		mockMvc.perform(get("/jugadores/"+NUMERO_PAGINA))
 				.andExpect(status().isOk());
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
     @Test
-    @DisplayName("Rechazar")
 	void testRechazar() throws Exception {
 		mockMvc.perform(get("/jugadores/peticiones/rechazar/"+ID_JUGADOR_AMIGO))
 				.andExpect(status().isOk());
 	}
 	
-	@WithMockUser
+	@WithMockUser(value = "spring")
     @Test
-    @DisplayName("Amigos")
 	void testAmigos() throws Exception {
 		mockMvc.perform(get("/jugadores/amigos"))
 				.andExpect(status().isOk());
 	}
 
-	
-	@WithMockUser
+	@WithMockUser(value = "spring")
     @Test
-    @DisplayName("Delete Amigo")
 	void testDeleteAmigo() throws Exception {
 		mockMvc.perform(get("/jugadores/amigos/eliminar/"+ID_JUGADOR))
 				.andExpect(status().isOk());
 	}
 
 	
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Edit jugador")
 	void testEditJugadorForm() throws Exception {
 		mockMvc.perform(get("/jugadores/profile/"+ID_JUGADOR+"/edit"))
 				.andExpect(status().isOk());
 	}	
 	
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Save Jugador")
 	void testProcessCreationJugadorSuccess() throws Exception {
 		mockMvc.perform(post("/jugadores/profile/"+5+"/edit")
 				.with(csrf())
@@ -237,9 +227,8 @@ public class JugadorControllerTest {
 				.andExpect(status().isOk());
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Deleting the jugador")
 	void testProcessDeleteTurnoFormSuccess() throws Exception {
 		mockMvc.perform(get("/jugadores/eliminar/" + ID_JUGADOR))
 				.andExpect(view().name("welcome"));
