@@ -37,16 +37,26 @@
                       <c:out value="${partida.numeroJugadores}"/>                                        
                 </td>
                 <td>                    
-                      <c:out value="${partida.fechaCreacion}"/>                                        
+                      <fmt:parseDate value="${ partida.fechaCreacion }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
+					<fmt:formatDate pattern="dd/MM/yyyy HH:mm:ss" value="${ parsedDateTime }" />                                        
                 </td>
-                 <td>                    
-                      <c:out value="${partida.fechaInicio}"/>                                        
+                 <td>          
+                	<fmt:parseDate value="${ partida.fechaInicio }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
+					<fmt:formatDate pattern="dd/MM/yyyy HH:mm:ss" value="${ parsedDateTime }" />           
                 </td>
                 <td>                    
-                      <c:out value="${partida.fechaFin}"/>                                        
+                      <fmt:parseDate value="${ partida.fechaFin }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
+					<fmt:formatDate pattern="dd/MM/yyyy HH:mm:ss" value="${ parsedDateTime }" />                                        
                 </td>
                 <td>                    
-                      <c:out value="${partida.duration}"/>                                        
+                     <c:if test="${partida.duration!=null}">
+	        			<c:out value="${partida.duration[0]}"/> horas 
+                      	<c:out value="${partida.duration[1]}"/> minutos
+                      	<c:out value="${partida.duration[2]}"/> segundos 
+	        		</c:if>
+	        		<c:if test="${partida.duration==null}">
+	        			La partida no ha terminado
+	        		</c:if>                               
                 </td>
 
             </tr>
