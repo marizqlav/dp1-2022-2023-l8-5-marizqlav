@@ -26,7 +26,12 @@ public class EmpezarTurnoEstado implements EstadoTurno {
     public void takeAction(Turno context) {
 
         for (Turno t : context.getRonda().getTurnos()) { //Bug fix
-            if (!t.equals(context) && t.getConsul() == null) {
+            System.err.println("----------------");
+            if (!(t.equals(context)) && t.getConsul() == null) {
+                System.out.println("0000000000000000");
+                System.out.println(t.getId());
+                System.out.println(turnoService.getById(t.getId()));
+                System.out.println(turnoService.getById(t.getId()).getId());
                 turnoService.deleteTurnoById(t.getId());
             }
         }

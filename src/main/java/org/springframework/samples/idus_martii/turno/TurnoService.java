@@ -11,6 +11,7 @@ import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TurnoService {
@@ -36,7 +37,8 @@ public class TurnoService {
         return repo.findById(id).get();
     }
 
-    public void deleteTurnoById(int id){
+    @Transactional
+    public void deleteTurnoById(Integer id){
         repo.deleteById(id);
     }
 

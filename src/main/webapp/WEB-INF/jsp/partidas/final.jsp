@@ -2,6 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="/resources/images/laurel.png" />
 <head>
@@ -135,6 +136,35 @@ width: 10 px;
   position: absolute;
   top: 436px;
 }
+.botona {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
+
+  	position: absolute;
+	top: 200px;
+	left: 270px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
 
 #tablapuntos{
 
@@ -239,6 +269,11 @@ margin-top:10px;
   position: absolute;
 }
 
+#textoenunciado2{
+     font-size:40px;
+  display: block;
+}
+
 #spanmarcador{
   display: block;
   position: absolute;
@@ -287,11 +322,14 @@ width:60px;
 		        </td>
 	        	<td class="juego" rowspan="2">
 	        	<span id="textoenunciado">Partida finalizada</span>
-	        	<span>Los ganadores son la faccion ${faccionGanadora}</span>
+				<br>
+	        	<span id="textoenunciado2">Los ganadores son la faccion ${faccionGanadora}:</span>
+				<br>
 				<c:forEach items="${jugadoresGanadores}" var="jugador">
-					<span>${jugador}</span>
+					<span id="textoenunciado2">${jugador.getUsername()}</span>
 				</c:forEach>
-				<a class="btn btn-default" href='<spring:url value="/" htmlEscape="true"/>' >Volver al menu</a>
+				<br>
+				<a href='/' class="botona" >Volver al menu</a>
 	        	
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
