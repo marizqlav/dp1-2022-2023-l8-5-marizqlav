@@ -1,7 +1,6 @@
 package org.springframework.samples.idus_martii.partida;
 
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.AccessException;
 import org.springframework.samples.idus_martii.faccion.Faccion;
 import org.springframework.samples.idus_martii.faccion.FaccionService;
-import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.mensaje.Mensaje;
@@ -23,15 +21,12 @@ import org.springframework.samples.idus_martii.partida.Exceptions.CancelExceptio
 import org.springframework.samples.idus_martii.partida.Exceptions.CreationException;
 import org.springframework.samples.idus_martii.partida.Exceptions.InitiationException;
 import org.springframework.samples.idus_martii.partida.Exceptions.LobbyException;
-import org.springframework.samples.idus_martii.partida.GameScreens.DefaultScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.ronda.Ronda;
 import org.springframework.samples.idus_martii.ronda.RondaService;
 import org.springframework.samples.idus_martii.turno.InvalidPlayerException;
 import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
-import org.springframework.samples.idus_martii.turno.VotosTurno;
-import org.springframework.samples.idus_martii.turno.Estados.EstadoTurno;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

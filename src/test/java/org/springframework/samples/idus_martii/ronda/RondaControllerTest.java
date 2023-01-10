@@ -25,7 +25,6 @@ import java.util.List;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
@@ -88,7 +87,7 @@ public class RondaControllerTest {
 		given(rondaService.getById(ID_RONDA)).willReturn(rondaza);
 	}
 	
-    @WithMockUser
+    @WithMockUser(value = "spring")
 	@Test
 	public void testShowRondas() throws Exception {
 	    mockMvc.perform(get("/rondas/")).
@@ -98,7 +97,6 @@ public class RondaControllerTest {
     
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Deleting the ronda")
 	void testDeleteRondaForm() throws Exception {
 		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/delete"))
 			.andExpect(view().name("/rondas/rondasList"));
@@ -107,7 +105,6 @@ public class RondaControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Edit the ronda")
 	void testEditRondaForm() throws Exception {
 		mockMvc.perform(get("/rondas/"+ ID_RONDA +"/edit"))
 			.andExpect(status().isOk())
@@ -117,8 +114,7 @@ public class RondaControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Save Ronda")
-	void processSaveRondaSuccess() throws Exception {
+	void testProcessSaveRondaSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/rondas/"+ID_RONDA+"/edit")
 				.with(csrf()))
 				.andExpect(view().name("/rondas/rondasList"));
@@ -126,7 +122,6 @@ public class RondaControllerTest {
 
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Crear ronda form")
 	void testInitCreationForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/rondas/new"))
 		.andExpect(MockMvcResultMatchers.status().isOk())
@@ -137,11 +132,9 @@ public class RondaControllerTest {
 
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Save new Ronda")
-	void processSaveRondaNewSuccess() throws Exception {
+	void testProcessSaveRondaNewSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/rondas/new")
 				.with(csrf()))
 				.andExpect(view().name("/rondas/rondasList"));
 	}
-
 }
