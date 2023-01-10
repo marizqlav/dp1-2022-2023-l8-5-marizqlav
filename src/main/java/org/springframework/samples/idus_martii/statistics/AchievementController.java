@@ -27,8 +27,8 @@ import javax.validation.Valid;
 @RequestMapping("/statistics/achievements")
 public class AchievementController {
 	
-	 private final String  MY_ACHIEVEMENTS_LISTING_VIEW="/achievements/MyAchievementListing";
-	 private final String  ACHIEVEMENTS_LISTING_VIEW="/achievements/AchievementListing";
+	 private final String MY_ACHIEVEMENTS_LISTING_VIEW="/achievements/MyAchievementListing";
+	 private final String ACHIEVEMENTS_LISTING_VIEW="/achievements/AchievementListing";
 	 private final String ACHIEVEMENTS_FORM="/achievements/createOrUpdateAchievementForm";
 	 private final String ACHIEVEMENTS_JUGADOR="/achievements/AchievementsJugador";
 	 

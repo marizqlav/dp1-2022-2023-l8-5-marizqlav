@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @WebMvcTest(controllers = AchievementController.class,
@@ -86,14 +85,14 @@ public class AchievementControllerTest {
 		given(achievementService.getById(ID_ACHIEVEMENT)).willReturn(logro);
 	}
 
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
 	public void testShowPlayerAchievements() throws Exception {
 	    mockMvc.perform(get("/statistics/achievements/")).
 	   		andExpect(status().isOk());
 	}
 	
-	@WithMockUser
+	@WithMockUser(value = "spring")
 	@Test
 	public void testShowAchievements() throws Exception {
 	    mockMvc.perform(get("/statistics/achievements/manageAchievements")).
@@ -102,7 +101,6 @@ public class AchievementControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Deleting the logro")
 	void testProcessDeleteLogroForm() throws Exception {
 		mockMvc.perform(get("/statistics/achievements/"+ ID_ACHIEVEMENT +"/delete"))
 		.andExpect(view().name("/achievements/AchievementListing"));
@@ -110,7 +108,6 @@ public class AchievementControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Edit the logro")
 	void testEditRondaForm() throws Exception {
 		mockMvc.perform(get("/statistics/achievements/"+ID_ACHIEVEMENT+"/edit"))
 			.andExpect(status().isOk())
@@ -119,8 +116,7 @@ public class AchievementControllerTest {
 
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Save Logro")
-	void processSaveLogroSuccess() throws Exception {
+	void testProcessSaveLogroSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/statistics/achievements/"+ID_ACHIEVEMENT+"/edit")
 				.with(csrf())
 				.param("name", "willy")
@@ -134,8 +130,7 @@ public class AchievementControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Cannot create Logro")
-	void processCreationLogroHasErrors() throws Exception {
+	void testProcessCreationLogroHasErrors() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/statistics/achievements/"+ID_ACHIEVEMENT+"/edit")
 				.param("name", "willy")
 				.param("threshold", "3.0")
@@ -147,7 +142,6 @@ public class AchievementControllerTest {
 
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Crear logro form")
 	void testInitCreationForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/statistics/achievements/new"))
 		.andExpect(MockMvcResultMatchers.status().isOk())
@@ -157,8 +151,7 @@ public class AchievementControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Create new Logro")
-	void processCreationLogroNewSuccess() throws Exception {
+	void testProcessCreationLogroNewSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/statistics/achievements/new")
 				.with(csrf())
 				.param("name", "willy")
@@ -171,14 +164,9 @@ public class AchievementControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	@DisplayName("Logros jugador")
 	void testAschievementsPlayerForm() throws Exception {
 		mockMvc.perform(get("/statistics/achievements/jugador/"+ ID_JUGADOR))
 			.andExpect(status().isOk())
 			.andExpect(view().name("/achievements/AchievementsJugador"));
-	}
-
-	
+	}	
 }
-
-

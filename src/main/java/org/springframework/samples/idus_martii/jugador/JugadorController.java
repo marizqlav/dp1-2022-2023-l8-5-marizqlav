@@ -53,13 +53,6 @@ public class JugadorController {
 	    result.addObject("users", jugadorService.getUserByJugador(j));
 	    return result;
 	}
-	   /*
-	    @GetMapping("/{jugadorId}/user")
-	    public String show(@PathVariable("jugadorId") int jugadorId, ModelMap model){
-	       Jugador j = jugadorService.getJugadorById(jugadorId); 
-	        model.addAttribute("User", jugadorService.getUserByJugador(j));
-	        return VIEWS_USUARIO_LISTING;
-	    }*/
 	   
 	@Transactional(readOnly = true)
 	@GetMapping("/jugadores/profile/{id}")

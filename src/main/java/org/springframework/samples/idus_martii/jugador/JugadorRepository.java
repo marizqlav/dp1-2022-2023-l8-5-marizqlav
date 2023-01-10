@@ -4,12 +4,12 @@ import java.util.List;
 
 
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.dao.DataAccessException;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.samples.idus_martii.user.User;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -27,9 +27,6 @@ public interface JugadorRepository extends JpaRepository<Jugador, Integer>{
 
 	@Query("SELECT j FROM Jugador j")
 	List<Jugador> findAllJugadores();
-	/*
-	@Query("SELECT j FROM Jugador j WHERE j.id = :id")
-	Jugador findJugadorById(int id);*/
 	
 	@Query("SELECT u FROM User u WHERE u.username = :username")
 	User findUserByJugador(@Param("username") String username);
