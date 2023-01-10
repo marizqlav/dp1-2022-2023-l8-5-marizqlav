@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
+import org.springframework.samples.idus_martii.jugador.Jugador;
 import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class StatisticsController {
 	
 	private final String STATISTICS_PLAYER_VIEW="/estadisticas/estadisticasJugador";
-	private final String STATISTICS_GLOBAL_VIEW="/estadisticas/estadisticasGlobales";
+	private final String STATISTICS_GLOBAL_VIEW="/estadisticas/estadisticasGlobales";	
+	private final String STATISTICS_RANKING_VIEW="/estadisticas/ranking";
+	
 	private final StatisticsService statService;
 	
 	JugadorService jService;
@@ -62,4 +65,20 @@ public class StatisticsController {
 		return result;
 	}
 
+	
+	@GetMapping("/global/ranking")
+	public ModelAndView showRanking() {
+		ModelAndView result=new ModelAndView(STATISTICS_RANKING_VIEW);
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		for(Jugador j : statService.getRanking().keySet()) {
+			System.out.println(j.getUsername()
+					+"Paridas" + statService.getRanking().get(j)[0]
+					+"%" + statService.getRanking().get(j)[1]
+							+"Score" + statService.getRanking().get(j)[2]);
+			
+		}
+		result.addObject("ranking",statService.getRanking());
+		result.addObject("players", statService.getRankingIndex());
+		return result;
+	}
 }

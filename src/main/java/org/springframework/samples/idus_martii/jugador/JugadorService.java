@@ -66,7 +66,13 @@ public class JugadorService {
     }
 	@Transactional
 	public Jugador getJugadorById(int id) {
-		return this.jugadorRepo.findById(id).get();
+		Jugador j=null;
+		try{
+			j= this.jugadorRepo.findById(id).get();
+		}catch(Exception e) {
+			System.out.println("No existe e jugador con Id: "+ id);
+		}
+		return j;
 	}
 	@Transactional
 	public User getUserByJugador(Jugador j) {

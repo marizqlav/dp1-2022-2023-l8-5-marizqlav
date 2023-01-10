@@ -484,4 +484,12 @@ public class PartidaService {
 		return jugadores;
 	}
 	
+	
+	public Double[] getScore(Jugador j){
+		Double partidas = (double) partidaRepo.findAllFinalizadasJugador(j.getId()).size();
+		Double percent = partidaRepo.findPartidasGanadas(j.getId()).size()/partidas;
+		Double[] score = {partidas, percent, partidas*percent};
+		return score;
+	}
+	
 }

@@ -3,17 +3,17 @@ package org.springframework.samples.idus_martii.jugador;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.samples.idus_martii.user.AuthoritiesService;
+
 import org.springframework.samples.idus_martii.user.User;
-import org.springframework.samples.idus_martii.user.UserService;
+
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +50,7 @@ public class JugadorServiceTest {
 	}
 	
 	
+	
 	void getUserByJugadorTest() {
 		Jugador jugador = this.jugadorService.getJugadorById(4);
 		User usuario = this.jugadorService.getUserByJugador(jugador);
@@ -81,11 +82,13 @@ public class JugadorServiceTest {
 	
 	@Test
 	void  anadirAmigoTest() {
-		Integer amigosAnadidos = this.jugadorService.anadirAmigo(4, 6);
+		this.jugadorService.anadirAmigo(4, 6);
+		this.jugadorService.anadirAmigo(6, 4);
 		Jugador jugador4 = this.jugadorService.getJugadorById(4);
 		Jugador jugador6 = this.jugadorService.getJugadorById(6);
 		assertThat(jugador4.setAmigos).contains(jugador6);
 		assertThat(jugador6.setAmigos).contains(jugador4);
+
 	}
 	
 	@Test
@@ -126,13 +129,22 @@ public class JugadorServiceTest {
 	
 	@Test
 	void getpeticionesAmistadJugadorTest() {
+		this.jugadorService.anadirAmigo(4, 3);
 		List<Jugador> petAmistad = this.jugadorService.getpeticionesAmistadJugador(3);
+		Jugador jugador4 = this.jugadorService.getJugadorById(4);
+		assertThat(petAmistad).contains(jugador4);
 		
 	}
 	
 	@Test
 	void rechazarPeticionTest() {
-		
+		this.jugadorService.anadirAmigo(4, 3);
+		List<Jugador> petAmistad = this.jugadorService.getpeticionesAmistadJugador(3);
+		Jugador jugador4 = this.jugadorService.getJugadorById(4);
+		Jugador jugador3 = this.jugadorService.getJugadorById(3);
+		assertThat(petAmistad).contains(jugador4); 
+		this.jugadorService.rechazarPeticion(3, 4);
+		assertThat(jugador3.setAmigos).doesNotContain(jugador3);
 	}
 	
 	
