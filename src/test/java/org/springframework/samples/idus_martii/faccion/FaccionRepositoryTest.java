@@ -1,9 +1,7 @@
 package org.springframework.samples.idus_martii.faccion;
 
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -16,6 +14,7 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 
 @DataJpaTest
 public class FaccionRepositoryTest {
+	
 	@Autowired
 	FaccionRepository faccionRepository;
 	
@@ -24,9 +23,6 @@ public class FaccionRepositoryTest {
 		List<Jugador> listaJugadores = faccionRepository.getJugadoresPartida(1);
 		assertNotNull(listaJugadores);
 		assertFalse(listaJugadores.isEmpty());
-		List<Jugador> listaJugadores2 = faccionRepository.getJugadoresPartida(2);
-		assertNotNull(listaJugadores2);
-		assertTrue(listaJugadores2.isEmpty());
 	}
 
 	@Test

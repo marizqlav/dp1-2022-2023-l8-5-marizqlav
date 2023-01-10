@@ -75,6 +75,9 @@ public class RondaControllerTest {
     @MockBean
     private EstadoTurnoConverter estadoTurnoConverter;
    
+    @MockBean
+    private FinalPartidaEstado finalPartidaEstado;
+
 	@BeforeEach
 	void setup() {
 		rondaza = new Ronda();

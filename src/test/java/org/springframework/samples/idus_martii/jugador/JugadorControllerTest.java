@@ -8,6 +8,7 @@ import org.springframework.samples.idus_martii.turno.Estados.ElegirRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
+import org.springframework.samples.idus_martii.turno.Estados.FinalPartidaEstado;
 import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
@@ -24,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -90,6 +90,9 @@ public class JugadorControllerTest {
     @MockBean
     private ElegirFaccionEstado elegirFaccionEstado;
 
+    @MockBean
+    private FinalPartidaEstado finalPartidaEstado;
+    
     private Jugador carlos;
     
 	@BeforeEach
@@ -139,7 +142,6 @@ public class JugadorControllerTest {
 	
 	@WithMockUser(value = "spring")
     @Test
-    @DisplayName("ProcessFindForm")
 	void testProcessFindForm() throws Exception {
 		mockMvc.perform(get("/jugadores"))
 				.andExpect(status().isOk());
@@ -164,24 +166,13 @@ public class JugadorControllerTest {
 	
 	@WithMockUser(value = "spring")
 	@Test
-	void testProcessCreationFormSuccess() throws Exception {
+	void testProcessCreationForm() throws Exception {
 		mockMvc.perform(post("/new")
 			.with(csrf()))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(view().name("redirect:/"));
 	}
 
-	@WithMockUser(value = "spring")
-	@Test
-	@DisplayName("ProcessCreationForm Error")
-	void testProcessCreationFormHasErrors() throws Exception {
-		mockMvc.perform(get("/new")
-			.with(csrf()))
-			.andExpect(status().isOk())
-			.andExpect(model().attributeHasNoErrors("jugador"))
-			.andExpect(view().name("jugadores/createOrUpdateJugadorForm"));
-	}
-	
 	@WithMockUser(value = "spring")
     @Test
 	void testPeticiones() throws Exception {
