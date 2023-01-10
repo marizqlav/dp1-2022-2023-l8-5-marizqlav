@@ -1,13 +1,16 @@
 package org.springframework.samples.idus_martii.statistics;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
 import org.springframework.samples.idus_martii.jugador.Jugador;
+import org.springframework.samples.idus_martii.jugador.JugadorService;
 import org.springframework.samples.idus_martii.partida.Partida;
 import org.springframework.samples.idus_martii.partida.PartidaRepository;
 import org.springframework.samples.idus_martii.partida.PartidaService;
@@ -17,12 +20,14 @@ import org.springframework.stereotype.Service;
 public class StatisticsService {
 	
 	private PartidaService partidaService;
+	private JugadorService jugadorService;
 	private PartidaRepository partidaRepo;
 	
 	@Autowired
-	public StatisticsService(PartidaService partidaService, PartidaRepository partidaRepo){
+	public StatisticsService(PartidaService partidaService, PartidaRepository partidaRepo, JugadorService jugadorService){
 		this.partidaRepo = partidaRepo;
 		this.partidaService = partidaService;
+		this.jugadorService = jugadorService;
 	}
 	
 	public Map<FaccionesEnumerado, List<Integer>> paridasGanadas(Jugador jugador) {
@@ -103,7 +108,36 @@ public class StatisticsService {
 	   	 return stats;
 	}
 	
-	
+	 public Map<Jugador, Double[]> getRanking(){
+    	 Map<Jugador, Double[]> ranking = new HashMap<Jugador, Double[]>();
+    	 List<Double[]> scoresAndPLayer = new ArrayList<Double[]>();
+    	 for(Jugador j : jugadorService.getAll()) {
+    		 Double[] scores = {partidaService.getScore(j)[0],partidaService.getScore(j)[1],partidaService.getScore(j)[2],(double) j.getId()};
+    		 scoresAndPLayer.add(scores);
+    	 }
+    	 for(Double[] d : scoresAndPLayer.stream().sorted((o1, o2) -> o1[2].compareTo(o2[2])).collect(Collectors.toList())) {
+    		 int id = (int) Math.round(d[3]);
+    		 Double[] stats = {d[0], d[1], d[2]};
+    		 ranking.put(jugadorService.getJugadorById(id), stats);
+    	 }
+    	 
+    	 return ranking;
+    }
+	 
+	 public List<Jugador> getRankingIndex(){
+		 List<Jugador> ranking = new ArrayList<Jugador>();
+    	 List<Double[]> scoresAndPLayer = new ArrayList<Double[]>();
+    	 for(Jugador j : jugadorService.getAll()) {
+    		 Double[] scores = {partidaService.getScore(j)[0],partidaService.getScore(j)[1],partidaService.getScore(j)[2],(double) j.getId()};
+    		 scoresAndPLayer.add(scores);
+    	 }
+    	 for(Double[] d : scoresAndPLayer.stream().sorted((o1, o2) -> o2[2].compareTo(o1[2])).collect(Collectors.toList())) {
+    		 int id = (int) Math.round(d[3]);
+    		 ranking.add(jugadorService.getJugadorById(id));
+    	 }
+    	 
+    	 return ranking;
+	 }
 	
 
 }
