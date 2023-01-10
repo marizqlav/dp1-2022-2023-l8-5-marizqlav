@@ -3,7 +3,8 @@ package org.springframework.samples.idus_martii.partida;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,10 +57,10 @@ public class Partida extends BaseEntity {
     private LocalDateTime fechaFin;
         
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
-    Set<Faccion> faccionesJugadoras;
+    Set<Faccion> faccionesJugadoras = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "partida")
-    List<Ronda> rondas;
+    List<Ronda> rondas = new ArrayList<>();
     
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "partida")
     List<Mensaje> mensajes;

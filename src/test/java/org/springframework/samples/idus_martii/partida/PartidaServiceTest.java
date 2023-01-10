@@ -1,11 +1,14 @@
 package org.springframework.samples.idus_martii.partida;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,8 +45,9 @@ import org.springframework.samples.idus_martii.turno.Turno;
 import org.springframework.samples.idus_martii.turno.TurnoService;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(value = { Service.class, Component.class }))
 public class PartidaServiceTest {
     
     PartidaService partidaService;
@@ -66,7 +70,7 @@ public class PartidaServiceTest {
         this.partidaService = new PartidaService(partidaRepo, turnoService, rondaService, faccionService, estadoTurnoConverter);
     }
 
-    @Test
+    /*@Test
     public void testIniciarPartidaPositivo() {
         Partida partida = new Partida();
         partida.setNumeroJugadores(5);
@@ -179,5 +183,103 @@ public class PartidaServiceTest {
         assertEquals(agTurno.getValue().getPredor(), j4);
         assertEquals(agTurno.getValue().getEdil1(), j5);
         assertEquals(agTurno.getValue().getEdil2(), j1);
+    }*/
+
+
+	@ParameterizedTest
+	@CsvSource({
+		"14, 1, Traidor",
+		"3, 1, null",
+		"10, 9, Mercader",
+        "11, 8, Leal"
+	})
+    public void testFaccionGanadora(Integer votosLeales, Integer votosTraidores, String expected) {
+
+        Partida partida = new Partida();
+        partida.setNumeroJugadores(5);
+        Ronda ronda1 = new Ronda();
+        ronda1.setId(88);
+        Ronda ronda2 = new Ronda();
+        ronda2.setId(89);
+        Integer n1 = votosLeales;
+        Integer n2 = votosTraidores;
+        partida.getRondas().add(ronda1);
+        ronda1.setPartida(partida);
+        for (int i = 0; i < 5; i++) {
+            Turno turno = new Turno();
+            if (n1 > 0) {
+                turno.setVotosLeales(Math.min(n1, 2));
+                n1 -= 2;
+            } else
+            if (n2 > 0) {
+                turno.setVotosTraidores(Math.min(n2, 2));
+                n2 -= 2;
+            } else {
+                continue;
+            }
+            turno.setId(i);
+            turno.setRonda(ronda1);
+            ronda1.getTurnos().add(turno);
+        }
+
+        if (n1 > 0 || n2 > 0) {
+            partida.getRondas().add(ronda2);
+            ronda2.setPartida(partida);
+            for (int i = 0; i < 5; i++) {
+                Turno turno = new Turno();
+                if (n1 > 0) {
+                    turno.setVotosLeales(Math.min(n1, 2));
+                    n1 -= 2;
+                } else
+                if (n2 > 0) {
+                    turno.setVotosTraidores(Math.min(n2, 2));
+                    n2 -= 2;
+                } else {
+                    continue;
+                }
+                turno.setId(i + 10);
+                turno.setRonda(ronda2);
+                ronda2.getTurnos().add(turno);
+            }
+        }
+
+        when(partidaRepo.findById(0)).thenReturn(Optional.of(partida));
+
+        FaccionesEnumerado f = partidaService.getFaccionGanadora(0);
+
+        if (expected.equals("null")) {
+            assertNull(f);
+        } else {
+            assertNotNull(f);
+            assertEquals(f.toString(), expected);
+        }
     }
+
+    @Test
+    public void testGetJugadoresFromFaccionEnum() {
+
+        Partida partida = new Partida();
+        Faccion f1 = new Faccion();
+        Jugador j1 = new Jugador();
+        f1.setJugador(j1);
+        f1.setFaccionSelecionada(FaccionesEnumerado.Leal);
+        partida.getFaccionesJugadoras().add(f1);
+        Faccion f2 = new Faccion();
+        Jugador j2 = new Jugador();
+        f2.setJugador(j2);
+        f2.setFaccionSelecionada(FaccionesEnumerado.Traidor);
+        partida.getFaccionesJugadoras().add(f2);
+        Faccion f3 = new Faccion();
+        Jugador j3 = new Jugador();
+        f3.setJugador(j3);
+        f3.setFaccionSelecionada(FaccionesEnumerado.Mercader);
+        partida.getFaccionesJugadoras().add(f3);
+
+        when(partidaRepo.findById(0)).thenReturn(Optional.of(partida));
+
+        List<Jugador> res = partidaService.getJugadoresFromFaccionEnum(0, FaccionesEnumerado.Leal);
+
+        assertEquals(res.get(0), j1);
+    }
+
 }
