@@ -42,7 +42,7 @@ public class FinalPartidaEstado implements EstadoTurno {
         partida.setFechaFin(LocalDateTime.now());
         System.out.println("cccccccccccccccc");
 
-        partida.setFaccionGanadora(partidaService.getFaccionGanadora(partida));
+        partida.setFaccionGanadora(partidaService.getFaccionGanadora(partida.getId()));
         System.out.println("ddddddddddddddd");
 
         partidaService.save(partida);

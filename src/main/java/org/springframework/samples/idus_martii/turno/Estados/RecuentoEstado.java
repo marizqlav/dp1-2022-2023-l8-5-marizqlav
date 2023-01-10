@@ -68,7 +68,7 @@ public class RecuentoEstado implements EstadoTurno {
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
-        if (partidaService.getFaccionGanadora(context.getRonda().getPartida()) != null) {
+        if (partidaService.getFaccionGanadora(context.getRonda().getPartida().getId()) != null) {
             return EstadoTurnoEnum.FinalPartida;
         }
 
