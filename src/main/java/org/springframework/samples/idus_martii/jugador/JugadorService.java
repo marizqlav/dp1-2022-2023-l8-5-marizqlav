@@ -17,6 +17,7 @@ import org.springframework.samples.idus_martii.user.UserService;
 
 @Service
 public class JugadorService {
+	
 	private JugadorRepository jugadorRepo;
 	
 	private UserService userService;
@@ -87,7 +88,7 @@ public class JugadorService {
 		List<Integer> jugadoresId = this.jugadorRepo.findPeticionesAmistadJugador(idjugador);
 		List<Jugador> salida = new ArrayList<>();
 		for(Integer jugador:jugadoresId) {
-			if(this.sonAmigos(jugador,idjugador )==null) {
+			if(this.sonAmigos(jugador,idjugador)==null) {
 				salida.add(this.getJugadorById(jugador));
 			}
 			

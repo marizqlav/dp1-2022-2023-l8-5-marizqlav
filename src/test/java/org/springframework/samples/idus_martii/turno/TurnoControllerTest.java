@@ -17,6 +17,7 @@ import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstadoTurnoConverter;
+import org.springframework.samples.idus_martii.turno.Estados.FinalPartidaEstado;
 import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
@@ -89,6 +90,9 @@ public class TurnoControllerTest {
     
     @MockBean
     private EstadoTurnoConverter estadoTurnoConverter;
+
+    @MockBean
+    private FinalPartidaEstado finalPartidaEstado;
 
 	@BeforeEach
 	void setup() {

@@ -73,6 +73,9 @@ public class AchievementControllerTest {
     @MockBean
     private ElegirFaccionEstado elegirFaccionEstado;
     
+    @MockBean
+    private FinalPartidaEstado finalPartidaEstado;
+
 	@BeforeEach
 	void setup() {
 		Achievement logro = new Achievement();
@@ -126,7 +129,6 @@ public class AchievementControllerTest {
 				.with(csrf()))
 				.andExpect(view().name("/achievements/AchievementListing"));
 	}
-	
 	
 	@WithMockUser(value = "spring")
 	@Test

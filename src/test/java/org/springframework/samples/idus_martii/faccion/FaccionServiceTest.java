@@ -1,9 +1,5 @@
 package org.springframework.samples.idus_martii.faccion;
 
-
-
-
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,21 +24,19 @@ import org.springframework.stereotype.Service;
 public class FaccionServiceTest {
 	
 	@Autowired
-	private FaccionService faccionService;
+	private FaccionService faccionService;	
 	
-	
-	
+	//Comprueba todas las facciones
 	@Test 
 	public void getAllFaccionesTest() {
-		//Comprueba todas las facciones
 		List<Faccion> list = faccionService.getAllFacciones();
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
 	}
 	
+	//Cogemos un jugador en una partida que todavia no ha escogido faccion
 	@Test
 	public void asignaFaccionTest() throws Exception {
-	//Cogemos un jugador en una partida que todavia no ha escogido faccion
 		Integer jugador1= 1;
 		
 		String faccionAsignada = FaccionesEnumerado.Traidor.toString();
@@ -53,10 +47,9 @@ public class FaccionServiceTest {
 	 
 	}
 	
-	
+	//Salta la excepcion al asignar una faccion a un jugador que ya tiene asignada una
 	@Test
 	public void asignaFaccionFailTest() throws AccessException {
-		//Salta la excepcion al asignar una faccion a un jugador que ya tiene asignada una
 		Integer jugador1= 1;
 		
 		String faccionAsignada = FaccionesEnumerado.Mercader.toString();
@@ -65,6 +58,7 @@ public class FaccionServiceTest {
 	 
 	}
 	
+	//Comrpueba que se guarda
 	@Test
 	public void saveFaccionTest() {
 		//Comrpueba que se guarda
@@ -86,9 +80,9 @@ public class FaccionServiceTest {
 		
 	}
 
+	//Comprueba que no se guarda
 	@Test
 	public void saveMensajeTestError() {
-		//Comprueba que no se guarda
 		Faccion f = null;
 		assertThrows(InvalidDataAccessApiUsageException.class, ()-> faccionService.save(f));
 	
