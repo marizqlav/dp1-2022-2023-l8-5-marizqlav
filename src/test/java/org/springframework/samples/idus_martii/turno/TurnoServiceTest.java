@@ -139,7 +139,7 @@ public class TurnoServiceTest {
 	
 	@Test
     void espiarVoto() throws Exception {
-		Turno turno=this.partidaService.getTurnoActual(1);//2
+		Turno turno=this.partidaService.getTurnoActual(1);
 		Jugador jugadorPretor=this.jugadorService.getJugadorById(3);
 		Jugador jugadorEdil1=this.jugadorService.getJugadorById(4);
 		Jugador jugadorEdil2=this.jugadorService.getJugadorById(5);

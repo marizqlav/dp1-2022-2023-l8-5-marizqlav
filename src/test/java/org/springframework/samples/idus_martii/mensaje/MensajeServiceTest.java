@@ -32,18 +32,20 @@ public class MensajeServiceTest {
 	
 	@Autowired
 	MensajeService mensajeService;
-	
 
+	@Mock
+	MensajeRepository mrepo;
+	
+	//Comprobamos si solo hay un elemento en la lista porque anteriormente habia dos
 	@Test
 	public void deleteMensajeTest() {
-		
-		//Comprobamos si solo hay un elemento en la lista porque anteriormente habia dos
 		this.mensajeService.deleteMensajeById(1);
 		List<Mensaje> mensajes = mensajeService.getMensajes();
 		assertTrue(mensajes.size()== 1);
 	
 	}
 	
+	//Se intentan borrar mensajes que no existen
 	@Test
 	public void deleteMensajeFailTest() {
 		//Se intentan borrar mensajes que no existen
@@ -51,14 +53,10 @@ public class MensajeServiceTest {
 		assertThrows(EmptyResultDataAccessException.class, ()-> mensajeService.deleteMensajeById(4));
 	
 	}
-	
-	
-	@Mock
-	MensajeRepository mrepo;
-	
+
+	//comprueba que se guarda el mensaje
 	@Test
 	public void saveMensajeTest() {
-		//comprueba que se guarda el mensaje
 		Mensaje m = new Mensaje();
 		Jugador jugador = new Jugador();
 		Partida partida = new Partida();
@@ -76,23 +74,22 @@ public class MensajeServiceTest {
 	}
 }
 	
+	//Comprueba que no se guarda
 	@Test
 	public void saveMensajeTestError() {
-		//Comprueba que no se guarda
 		Mensaje m = null;
 		assertThrows(InvalidDataAccessApiUsageException.class, ()-> mensajeService.save(m));
-	
 	}
 	
+	//Comprueba que el texto es igual que el seleccionado de ese id de mensaje
 	@Test
 	public void getMensajeByIdTest() {
-		//Comprueba que el texto es igual que el seleccionado de ese id de mensaje
 		assertEquals("Mensaje de prueba 1", mensajeService.getById(1).getTexto());
 	}
-	
+
+	//Comprueba que el texto NO es igual que el seleccionado de ese id de mensaje
 	@Test
 	public void getMensajeByIdFailTest() {
-		//Comprueba que el texto NO es igual que el seleccionado de ese id de mensaje
 		assertNotEquals("Hola", mensajeService.getById(1).getTexto());
 	}
 }

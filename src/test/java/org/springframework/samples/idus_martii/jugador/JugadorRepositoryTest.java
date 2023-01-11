@@ -17,6 +17,7 @@ import org.springframework.samples.idus_martii.user.User;
 
 @DataJpaTest
 public class JugadorRepositoryTest {
+	
 	@Autowired
 	JugadorRepository jugadorRepository;
 	

@@ -24,6 +24,7 @@ import org.springframework.samples.idus_martii.turno.Estados.ElegirRolesEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EmpezarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EspiarEstado;
 import org.springframework.samples.idus_martii.turno.Estados.EstablecerRolesEstado;
+import org.springframework.samples.idus_martii.turno.Estados.FinalPartidaEstado;
 import org.springframework.samples.idus_martii.turno.Estados.RecuentoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.TerminarTurnoEstado;
 import org.springframework.samples.idus_martii.turno.Estados.VotarEstado;
@@ -46,6 +47,10 @@ import java.time.LocalDateTime;
     excludeAutoConfiguration = SecurityConfiguration.class)
 public class PartidaControllerTest {
     
+	private static final int PARTIDA_ID = 1;
+	private static final int JUGADOR_ID = 1;
+	private static final int PAGINA = 2;
+	
     @Autowired
     private MockMvc mockMvc;
 
@@ -97,9 +102,8 @@ public class PartidaControllerTest {
     @MockBean
     private ElegirFaccionEstado elegirFaccionEstado;
     
-	private static final int PARTIDA_ID = 1;
-	private static final int JUGADOR_ID = 1;
-	private static final int PAGINA = 2;
+    @MockBean
+    private FinalPartidaEstado finalPartidaEstado;
 
 	private Partida partidaza;
 

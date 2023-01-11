@@ -338,7 +338,9 @@ public class PartidaService {
         return estadoTurnoConverter.convert(turno.getEstadoTurno()).getGameScreen();
     }
              
-	public FaccionesEnumerado getFaccionGanadora(Partida partida) {
+	public FaccionesEnumerado getFaccionGanadora(Integer partidaId) {
+
+		Partida partida = findPartida(partidaId);
 
         if (partida.getVotosLeales() > partida.getLimite()) {
 			return FaccionesEnumerado.Traidor;
@@ -348,7 +350,7 @@ public class PartidaService {
 			return FaccionesEnumerado.Leal;
 		}
 		
-		Turno turno = getTurnoActual(partida.getId());
+		Turno turno = getTurnoActual(partidaId);
 		if (turno.getRonda().getNumRonda() >= 2 && turno.getNumTurno() >= partida.getNumeroJugadores()) {
             
 			if (partida.getVotosLeales() - partida.getVotosTraidores() >= 2) {
@@ -365,8 +367,8 @@ public class PartidaService {
 
     }
 
-	public List<Jugador> getJugadoresFromFaccionEnum(Partida partida, FaccionesEnumerado faccionEnum) {
-		return partida.getFaccionesJugadoras().stream()
+	public List<Jugador> getJugadoresFromFaccionEnum(Integer partidaId, FaccionesEnumerado faccionEnum) {
+		return findPartida(partidaId).getFaccionesJugadoras().stream()
 			.filter(x -> x.getFaccionSelecionada().equals(faccionEnum))
 			.map(x -> x.getJugador())
 			.collect(Collectors.toList());
