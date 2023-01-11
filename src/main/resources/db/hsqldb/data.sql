@@ -30,7 +30,7 @@ INSERT INTO jugadores(id, user) VALUES
         
 INSERT INTO partida(id, faccion_ganadora, numero_jugadores, fecha_creacion, fecha_inicio, fecha_fin, jugador_id)
         VALUES (1, 'Leal', 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31', 1),
-		(2, 'Traidor', 5, '2023-01-01 11:05:04', '2023-01-01 11:06:02', null, 1);
+		(2, 'Traidor', 5, '2023-01-01 11:05:04', '2023-01-01 11:06:02', '2023-01-01 12:19:29', 1);
 
 
 
@@ -48,11 +48,11 @@ VALUES (1, 'Leal', 'Mercader', 'Leal', 1, 1),
         (4, 'Leal', 'Traidor', 'Leal', 1, 4),
         (5, 'Leal', 'Traidor', 'Leal', 1, 5),
         (6, 'Leal', 'Traidor', 'Leal', 1, 6),
-	  (7, 'Leal', 'Traidor', null, 2, 1),
-	  (8, 'Mercader', 'Traidor', null, 2, 2),
-	  (9, 'Leal', 'Traidor', null, 2, 3),
-	  (10, 'Traidor', 'Leal', null, 2, 4),
-	  (11, 'Leal', 'Traidor', null, 2, 5);
+	  	(7, 'Leal', 'Traidor', null, 2, 1),
+	  	(8, 'Mercader', 'Traidor', null, 2, 2),
+	  	(9, 'Leal', 'Traidor', null, 2, 3),
+	  	(10, 'Traidor', 'Leal', null, 2, 4),
+	  	(11, 'Leal', 'Traidor', null, 2, 5);
 						
  INSERT INTO mensaje(id,hora,jugador_id,texto) 
                  VALUES (1,'08:45:00',1,'Mensaje de prueba 1'),

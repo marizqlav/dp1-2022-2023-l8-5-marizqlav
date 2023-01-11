@@ -57,7 +57,7 @@ public class StatisticsController {
 		result.addObject("min",statService.numJugadoresPartida().get("min"));
 		result.addObject("media",statService.numJugadoresPartida().get("media"));
 		result.addObject("mediaDuracion", pService.promedioPartida());
-		result.addObject("totalPartidas",pService.getPartidas().size());
+		result.addObject("totalPartidas",pService.getAllFinalizadas().size());
 		result.addObject("partidas", pService.ultimas6partidas());
 		result.addObject("larga", pService.partidaMasLarga());
 		result.addObject("corta", pService.partidaMasCorta());
@@ -69,7 +69,6 @@ public class StatisticsController {
 	@GetMapping("/global/ranking")
 	public ModelAndView showRanking() {
 		ModelAndView result=new ModelAndView(STATISTICS_RANKING_VIEW);
-		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		for(Jugador j : statService.getRanking().keySet()) {
 			System.out.println(j.getUsername()
 					+"Paridas" + statService.getRanking().get(j)[0]
