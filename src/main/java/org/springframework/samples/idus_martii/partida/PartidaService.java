@@ -393,17 +393,17 @@ public class PartidaService {
 	
 	public long[] promedioPartida(){
 		long sum = 0;
-		for(Partida p : partidaRepo.findAll()) {
+		for(Partida p : partidaRepo.findAllFinalizadas()) {
 			sum = sum +  Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
 		}
-		sum = sum/partidaRepo.findAll().size();
+		sum = sum/partidaRepo.findAllFinalizadas().size();
 		return new long[]{ sum/3600, (sum%3600)/60, ((sum%3600)%60)};
 	}
 	
 	public Partida partidaMasLarga(){
 		long sum = -1;
 		Partida partida = new Partida();
-		for(Partida p : partidaRepo.findAll()) {
+		for(Partida p : partidaRepo.findAllFinalizadas()) {
 			if(Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds()>=sum) {
 				partida = p;
 				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
@@ -415,7 +415,7 @@ public class PartidaService {
 	public Partida partidaMasCorta(){
 		long sum = -1;
 		Partida partida = new Partida();
-		for(Partida p : partidaRepo.findAll()) {
+		for(Partida p : partidaRepo.findAllFinalizadas()) {
 			if(sum == -1) {
 				sum = Duration.between(p.getFechaInicio(), p.getFechaFin()).getSeconds();
 				partida = p;
@@ -431,7 +431,7 @@ public class PartidaService {
 	
 	public List<Partida> ultimas6partidas(){
 		List<Partida> res = new ArrayList<Partida>();
-		List<Partida> sorted = partidaRepo.findAll().stream().sorted((o1, o2)-> o1.getFechaFin().compareTo(o2.getFechaFin())).collect(Collectors.toList());
+		List<Partida> sorted = partidaRepo.findAllFinalizadas().stream().sorted((o1, o2)-> o1.getFechaFin().compareTo(o2.getFechaFin())).collect(Collectors.toList());
 		for(int i = 0; i<6; i++) {
 			if(i> sorted.size()-1) {
 				break;
@@ -446,7 +446,7 @@ public class PartidaService {
 		int leal = 0;
 		int traidor = 0;
 		int mercader=0;
-		for(Partida p: partidaRepo.findAll()){
+		for(Partida p: partidaRepo.findAllFinalizadas()){
 			if(p.faccionGanadora == FaccionesEnumerado.Leal) {
 				leal = leal+1;
 			}
@@ -492,6 +492,10 @@ public class PartidaService {
 		Double percent = partidaRepo.findPartidasGanadas(j.getId()).size()/partidas;
 		Double[] score = {partidas, percent, partidas*percent};
 		return score;
+	}
+	
+	public List<Partida> getAllFinalizadas(){
+		return partidaRepo.findAllFinalizadas();
 	}
 	
 }
