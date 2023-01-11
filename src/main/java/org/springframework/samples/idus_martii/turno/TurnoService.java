@@ -135,17 +135,26 @@ public class TurnoService {
         if (turno.getPredor() != null) { jugadoresValidos.remove(turno.getPredor()); }
         if (turno.getEdil1() != null) { jugadoresValidos.remove(turno.getEdil1()); }
         if (turno.getEdil2() != null) { jugadoresValidos.remove(turno.getEdil2()); }
-        
-        if (rol.equals("edil") && turno.getRonda().getPartida().getNumeroJugadores() != 5) {
-            
-            Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
 
-            if (jugadoresValidos.contains(turnoAnterior.getEdil1())) { jugadoresValidos.remove(turnoAnterior.getEdil1()); }
-            if (jugadoresValidos.contains(turnoAnterior.getEdil2())) { jugadoresValidos.remove(turnoAnterior.getEdil2()); }
+        if (turno.getRonda().getTurnos().size() > 1) {
+  
+            Turno turnoAnterior = turno.getRonda().getTurnos().get(turno.getRonda().getTurnos().size() - 2);
+            
+            if (rol.equals("edil") && turno.getRonda().getPartida().getNumeroJugadores() != 5) {
+                
+                if (jugadoresValidos.contains(turnoAnterior.getEdil1())) { jugadoresValidos.remove(turnoAnterior.getEdil1()); }
+                if (jugadoresValidos.contains(turnoAnterior.getEdil2())) { jugadoresValidos.remove(turnoAnterior.getEdil2()); }
+            }
+            
+            if (rol.equals("predor")) {
+                
+                if (jugadoresValidos.contains(turnoAnterior.getPredor())) { jugadoresValidos.remove(turnoAnterior.getPredor()); }
+            }
         }
 
         return jugadoresValidos;
     }
+
     @Transactional(rollbackFor= {InvalidPlayerException.class})
     public void asignarRol(Integer turnoId, Jugador jugador) throws InvalidPlayerException {
     	
