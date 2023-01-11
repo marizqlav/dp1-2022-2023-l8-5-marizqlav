@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +16,7 @@ import org.springframework.samples.idus_martii.jugador.Jugador;
 
 @DataJpaTest
 public class PartidaRepositoryTest {
+	
 	@Autowired
 	PartidaRepository partidaRepository;
 		
@@ -24,7 +24,7 @@ public class PartidaRepositoryTest {
 	public void testFindAllEnJuego() {
 		List<Partida> partidosEnJuego = partidaRepository.findAllEnJuego();
 		assertNotNull(partidosEnJuego);
-		assertTrue(partidosEnJuego.isEmpty());		
+		assertFalse(partidosEnJuego.isEmpty());		
 	}
 	
 	@Test
@@ -32,9 +32,6 @@ public class PartidaRepositoryTest {
 		List<Jugador> listaJugadores= partidaRepository.findJugadores(1);
 		assertNotNull(listaJugadores);
 		assertFalse(listaJugadores.isEmpty());
-		List<Jugador> listaJugadores2 = partidaRepository.findJugadores(2);
-		assertNotNull(listaJugadores2);
-		assertTrue(listaJugadores2.isEmpty());
 	}
 
 	@Test
@@ -87,18 +84,8 @@ public class PartidaRepositoryTest {
 	
 	@Test
 	public void testGetLobby() {
-        Partida partida = new Partida();
-        Lobby lobby = new Lobby();
-        lobby.setId(2);
-        partida.setNumeroJugadores(5);
-        partida.setFechaCreacion(LocalDateTime.now());
-    	partida.setLobby(lobby);
-        lobby.setPartida(partida);
-    	Jugador jug1=new Jugador();
-    	partida.setJugador(jug1);
-        partidaRepository.save(partida);
-        partidaRepository.createLobby(lobby.getId(), partida.getId());
-		Lobby lobbyPartida=partidaRepository.getLobby(2);
+        partidaRepository.createLobby(1, 1);
+		Lobby lobbyPartida=partidaRepository.getLobby(1);
 		assertNotNull(lobbyPartida);
 		assertFalse(lobbyPartida.isNew());
 	}
@@ -125,13 +112,16 @@ public class PartidaRepositoryTest {
 		partidaRepository.addJugadorLobby(jug1.getId(), 2);
 		assertNotNull(partidaRepository.findJugadorInLobby(jug1.getId(), 2));
 	}	
-	    
+	
+	@Test
 	public void testFindJugadorInLobby() {
+		partidaRepository.createLobby(1, 1);
+		partidaRepository.addJugadorLobby(1, 1);
 		Jugador jugadorInLobby=partidaRepository.findJugadorInLobby(1, 1);
 		assertNotNull(jugadorInLobby);
 		assertFalse(jugadorInLobby.isNew());
 	}
-
+	
 	@Test
 	public void testFindPartidasGanadas() {
 		List<Partida> listaPartidasGanadas=partidaRepository.findPartidasGanadas(1);

@@ -43,12 +43,14 @@
                       <c:out value="${partida.numeroJugadores}"/>                                        
                 </td>
                 <td>                   
-                      <c:out value="${partida.fechaCreacion}"/>                                        
+                    <fmt:parseDate value="${ partida.fechaCreacion }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
+					<fmt:formatDate pattern="dd/MM/yyyy HH:mm:ss" value="${ parsedDateTime }" />                                          
                 </td>
                  <td>
                  	<c:choose>
                  		<c:when test="${partida.fechaInicio!=null}">	               
-                     		<c:out value="${partida.fechaInicio}"/>        
+                     		<fmt:parseDate value="${ partida.fechaInicio }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
+					<fmt:formatDate pattern="dd/MM/yyyy HH:mm:ss" value="${ parsedDateTime }" />         
                    		</c:when>    
     					<c:otherwise>
     						No determinada
@@ -58,7 +60,8 @@
                 <td>
                 	<c:choose>
                  		<c:when test="${partida.fechaFin!=null}">	               
-                     		<c:out value="${partida.fechaFin}"/>        
+                     		<fmt:parseDate value="${ partida.fechaFin }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDateTime" type="both" />
+							<fmt:formatDate pattern="dd/MM/yyyy HH:mm:ss" value="${ parsedDateTime }" />         
                    		</c:when>    
     					<c:otherwise>
     						No determinada
@@ -68,7 +71,9 @@
 				<td>
                 	<c:choose>
                  		<c:when test="${partida.fechaFin!=null}">	               
-                     		<c:out value="${partida.duration}"/>        
+                     		<c:out value="${partida.duration[0]}"/> horas 
+                      		<c:out value="${partida.duration[1]}"/> minutos
+                      		<c:out value="${partida.duration[2]}"/> segundos        
                    		</c:when>    
     					<c:otherwise>
     						No determinada

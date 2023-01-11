@@ -4,6 +4,8 @@ import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.samples.idus_martii.faccion.FaccionesEnumerado;
+import org.springframework.samples.idus_martii.partida.Partida;
+import org.springframework.samples.idus_martii.partida.PartidaService;
 import org.springframework.samples.idus_martii.partida.GameScreens.GameScreen;
 import org.springframework.samples.idus_martii.partida.GameScreens.RecuentoScreen;
 import org.springframework.samples.idus_martii.turno.Turno;
@@ -18,13 +20,15 @@ public class RecuentoEstado implements EstadoTurno {
     private RecuentoScreen recuentoScreen;
 
     private TurnoService turnoService;
+    private PartidaService partidaService;
 
     private Integer counter = 0;
     private final Integer COUNT_LIMIT = 10;
 
     @Autowired
-    RecuentoEstado(@Lazy TurnoService turnoService, RecuentoScreen recuentoScreen) {
+    RecuentoEstado(@Lazy TurnoService turnoService, @Lazy PartidaService partidaService, RecuentoScreen recuentoScreen) {
         this.turnoService = turnoService;
+        this.partidaService = partidaService;
 
         this.recuentoScreen = recuentoScreen;
     }
@@ -64,9 +68,19 @@ public class RecuentoEstado implements EstadoTurno {
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
+        if (partidaService.getFaccionGanadora(context.getRonda().getPartida().getId()) != null) {
+            return EstadoTurnoEnum.FinalPartida;
+        }
+
         if (counter > COUNT_LIMIT) {
         	counter = 0;
-            return EstadoTurnoEnum.ElegirFaccion;
+
+            if ((context.getRonda().getNumRonda() == 1 && context.getNumTurno() != 1) || (context.getRonda().getNumRonda() == 2 && context.getNumTurno() == 1)) {
+                return EstadoTurnoEnum.ElegirFaccion;
+            }
+            
+            return EstadoTurnoEnum.TerminarTurno;
+
         }
         return EstadoTurnoEnum.Recuento;
     }
@@ -74,6 +88,5 @@ public class RecuentoEstado implements EstadoTurno {
     @Override
     public GameScreen getGameScreen() {
         return recuentoScreen;
-    }
-    
+    }    
 }

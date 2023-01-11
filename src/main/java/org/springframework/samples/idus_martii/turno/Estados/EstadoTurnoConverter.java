@@ -17,12 +17,13 @@ public class EstadoTurnoConverter implements Converter<EstadoTurnoEnum, EstadoTu
     DescubiertoAmarilloEstado descubiertoAmarilloEstado;
     RecuentoEstado recuentoEstado;
     ElegirFaccionEstado elegirFaccionEstado;
+    FinalPartidaEstado finalPartidaEstado;
     
     @Autowired
     EstadoTurnoConverter(EstablecerRolesEstado establecerRolesEstado, VotarEstado votarEstado, EspiarEstado espiarEstado,
         CambiarVotoEstado cambiarVotoEstado, ElegirRolesEstado elegirRolesEstado, TerminarTurnoEstado terminarTurnoEstado, 
         DescubiertoAmarilloEstado descubiertoAmarilloEstado, RecuentoEstado recuentoEstado, EmpezarTurnoEstado empezarTurnoEstado,
-        ElegirFaccionEstado elegirFaccionEstado) {
+        ElegirFaccionEstado elegirFaccionEstado, FinalPartidaEstado finalPartidaEstado) {
             
         this.empezarTurnoEstado = empezarTurnoEstado;
         this.establecerRolesEstado = establecerRolesEstado;
@@ -34,6 +35,7 @@ public class EstadoTurnoConverter implements Converter<EstadoTurnoEnum, EstadoTu
         this.recuentoEstado = recuentoEstado;
         this.elegirFaccionEstado = elegirFaccionEstado;
         this.terminarTurnoEstado = terminarTurnoEstado;
+        this.finalPartidaEstado = finalPartidaEstado;
     }
 
     @Override
@@ -68,6 +70,8 @@ public class EstadoTurnoConverter implements Converter<EstadoTurnoEnum, EstadoTu
             }
             case TerminarTurno: {
                 return terminarTurnoEstado;
+            } case FinalPartida: {
+                return finalPartidaEstado;
             }
         
             default: {

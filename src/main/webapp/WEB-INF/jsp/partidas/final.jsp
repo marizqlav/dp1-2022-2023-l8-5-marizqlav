@@ -38,89 +38,15 @@
 body{
 margin: 0 auto;
   padding: 0;
+  background-image: url("");
 }
+
 
 table {
    width: 100%;
    border-collapse: collapse;
 }
-.botona {
-	position: relative;
-    color: rgba(255,255,255,1);
-    text-decoration: none;
 
-  position: absolute;
-  top: 100px;
-  left:140px;
-    background-color: rgba(50,205,50,1);
-    font-family: 'Yanone Kaffeesatz';
-    font-weight: 700;
-    font-size: 2em;
-    display: block;
-    padding: 5px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
-    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
-    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
-    margin: 170px auto;
-	width: 200px;
-	text-align: center;
-	margin-left:18%;
-	-webkit-transition: all .1s ease;
-	-moz-transition: all .1s ease;
-	-ms-transition: all .1s ease;
-	-o-transition: all .1s ease;
-	transition: all .1s ease;
-}
-.botonb {
-	position: relative;
-    color: rgba(255,255,255,1);
-    text-decoration: none;
-
-  position: absolute;
-  right:340px;
-  top: 100px;
-    background-color: rgba(50,205,50,1);
-    font-family: 'Yanone Kaffeesatz';
-    font-weight: 700;
-    font-size: 2em;
-    display: block;
-    padding: 5px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
-    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
-    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
-    margin: 170px auto;
-	width: 200px;
-	text-align: center;
-	margin-left:18%;
-	-webkit-transition: all .1s ease;
-	-moz-transition: all .1s ease;
-	-ms-transition: all .1s ease;
-	-o-transition: all .1s ease;
-	transition: all .1s ease;
-}
-.botona:hover {
- text-decoration:none;
- color:rgba(0,0,0,1);
-}
-.botona:focus {
-  text-decoration:none;
- color:rgba(0,0,0,1);
-}
-
-.botonb:hover {
- text-decoration:none;
- color:rgba(0,0,0,1);
-}
-.botonb:focus {
-  text-decoration:none;
- color:rgba(0,0,0,1);
-}
 .datosJugador{
    width: 20%;
    height: 148px;
@@ -210,7 +136,35 @@ width: 10 px;
   position: absolute;
   top: 436px;
 }
+.botona {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
 
+  	position: absolute;
+	top: 200px;
+	left: 270px;
+    background-color: rgba(50,205,50,1);
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: 700;
+    font-size: 2em;
+    display: block;
+    padding: 5px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    -moz-box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    box-shadow: 0px 6px 0px rgba(0,0,0,1), 0px 9px 25px rgba(0,0,0,.7);
+    margin: 170px auto;
+	width: 200px;
+	text-align: center;
+	margin-left:18%;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
 
 #tablapuntos{
 
@@ -225,6 +179,7 @@ width: 10 px;
 .tablapuntostd{
   width:25%;
 }
+
 #imagenpuntos{
 display: block;
 position: absolute;
@@ -306,6 +261,18 @@ margin-top:10px;
   position: absolute;
 }
 
+#textoenunciado{
+     font-size:70px;
+     right:404px;
+     bottom:630px;
+  display: block;
+  position: absolute;
+}
+
+#textoenunciado2{
+     font-size:40px;
+  display: block;
+}
 
 #spanmarcador{
   display: block;
@@ -322,7 +289,7 @@ font-size: 20px;
 width:60px;
 }
 #votacionnegativa{
- margin-left:400px;
+ margin-left:100px;
 }
 #votacionpositiva{
  margin-left:400px;
@@ -340,37 +307,10 @@ width:60px;
     float: center;
 }
 
-#textoenunciado{
-     font-size:70px;
-     right:304px;
-     bottom:650px;
-  display: block;
-  position: absolute;
-}
-
-#voto1{
-	font-size:30px;
-	left:80px;
-	bottom:350px;
-	display: block;
-	position: absolute;
-}
-
-#voto2{
-	font-size:30px;
-	left:640px;
-	bottom:350px;
-	display: block;
-	position: absolute;
-}
-
-
 .button:hover {
     background-color: #3e8e41;
 }
 </style>
-
-
 <idus_martii:layout pageName="tablero">
     <table id="tableroTable">
         <tbody>
@@ -381,31 +321,16 @@ width:60px;
 			        <span id="espectadores">Espectadores: 0 </span><img src="/resources/images/ojo.png" width="15px" id="imgespectador" /><br>
 		        </td>
 	        	<td class="juego" rowspan="2">
-	        	<span id="textoenunciado">Votos de este turno (sin ordenar)</span>
-				<div id="voto1">
-					<c:if test="${votoEdil1.tipoVoto.toString() == 'Traidor'}">
-						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
-					</c:if>
-					<c:if test="${votoEdil1.tipoVoto.toString() == 'Leal'}">
-						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
-					</c:if>
-					<c:if test="${votoEdil1.tipoVoto.toString() == 'Mercader'}">
-						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
-					</c:if>
-				</div>
-				
-				<div id="voto2">
-					<c:if test="${votoEdil2.tipoVoto.toString() == 'Traidor'}">
-						<img src="/resources/images/votacion_negativa.jpg" width="150px" id="votacionnegativa" />
-					</c:if>
-					<c:if test="${votoEdil2.tipoVoto.toString() == 'Leal'}">
-						<img src="/resources/images/votacion_positiva.jpg" width="150px" id="votacionpositiva" />
-					</c:if>
-					<c:if test="${votoEdil2.tipoVoto.toString() == 'Mercader'}">
-						<img src="/resources/images/votacion_neutral.jpg" width="150px" id="votacionneutral" />
-					</c:if>
-				</div>
-                
+	        	<span id="textoenunciado">Partida finalizada</span>
+				<br>
+	        	<span id="textoenunciado2">Los ganadores son la faccion ${faccionGanadora}:</span>
+				<br>
+				<c:forEach items="${jugadoresGanadores}" var="jugador">
+					<span id="textoenunciado2">${jugador.getUsername()}</span>
+				</c:forEach>
+				<br>
+				<a href='/' class="botona" >Volver al menu</a>
+	        	
 	        	</td>
 	        	<td class="faccionactual" rowspan="2">
 	        		<br>
@@ -492,6 +417,7 @@ width:60px;
 			        	</tbody>
 			    	</table>
 			    	</div>
+			    
 			    	<form action="${partida.id}/mensaje">
 			        	<div class="botonmensaje">
 			            	<input type="text" label="Mensaje" placeholder="Escribe un mensaje" name="mensaje" required/>

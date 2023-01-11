@@ -2,8 +2,6 @@ package org.springframework.samples.idus_martii.ronda;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 
 import java.util.List;
 
@@ -22,8 +20,10 @@ public class RondaServiceTest {
 
 	@Autowired
 	private RondaService rondaService;
+	
 	@Autowired
 	private PartidaService partidaService;
+	
 	@Autowired
 	private JugadorService jugadorService;
 		

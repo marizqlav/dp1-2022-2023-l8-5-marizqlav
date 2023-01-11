@@ -17,6 +17,7 @@ import org.springframework.samples.idus_martii.user.UserService;
 
 @Service
 public class JugadorService {
+	
 	private JugadorRepository jugadorRepo;
 	
 	private UserService userService;
@@ -66,7 +67,13 @@ public class JugadorService {
     }
 	@Transactional
 	public Jugador getJugadorById(int id) {
-		return this.jugadorRepo.findById(id).get();
+		Jugador j=null;
+		try{
+			j= this.jugadorRepo.findById(id).get();
+		}catch(Exception e) {
+			System.out.println("No existe e jugador con Id: "+ id);
+		}
+		return j;
 	}
 	@Transactional
 	public User getUserByJugador(Jugador j) {
@@ -81,7 +88,7 @@ public class JugadorService {
 		List<Integer> jugadoresId = this.jugadorRepo.findPeticionesAmistadJugador(idjugador);
 		List<Jugador> salida = new ArrayList<>();
 		for(Integer jugador:jugadoresId) {
-			if(this.sonAmigos(jugador,idjugador )==null) {
+			if(this.sonAmigos(jugador,idjugador)==null) {
 				salida.add(this.getJugadorById(jugador));
 			}
 			
