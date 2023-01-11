@@ -46,7 +46,7 @@
 			<td><a class="btn btn-default" href="/partida/partidas/jugador/${jugador}/${pagina -1}"><</a></td>
 		</c:if>
 		<td><a class="btn btn-default">${pagina}</a></td>
-		<c:if test="${pagina < max}">
+		<c:if test="${pagina < max-1}">
 			<td><a class="btn btn-default" href="/partida/partidas/jugador/${jugador}/${pagina +1}">></a></td>
 			<td><a class="btn btn-default" href="/partida/partidas/jugador/${jugador}/${max}"> ${max} </a></td>
 		</c:if>

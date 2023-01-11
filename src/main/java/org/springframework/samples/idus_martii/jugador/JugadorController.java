@@ -64,12 +64,10 @@ public class JugadorController {
 	    	if(authentication!=null) {
 	    		if(authentication.isAuthenticated()) {
 	        		User currentUser = (User) authentication.getPrincipal();
-	        		System.out.println(currentUser.getUsername());
 	        		Jugador jugadoractual = jugadorService.getByName(currentUser.getUsername());
 	        		if(jugadoractual!=null) {
 	        			result.addObject("currentPlayer", jugadoractual);
 		        		Boolean noSonAmigos = jugadorService.noSonAmigos(jugadoractual.getId(), jugador.getId());
-		        		System.out.println(noSonAmigos);
 		        		result.addObject("noSonAmigos", noSonAmigos);
 		        		if(jugadoractual.getId() == jugador.getId()) {
 			        		Boolean esTuPerfil=true;
@@ -79,8 +77,6 @@ public class JugadorController {
 
 	        	}
 	        }
-	        else
-	        	System.out.println("El usuario no está autentificado");
 	        return result;
 	    }
 	 
@@ -103,16 +99,11 @@ public class JugadorController {
 	    if(authentication!=null)
 	      	if(authentication.isAuthenticated()) {
 	       		User currentUser = (User) authentication.getPrincipal();
-	       		System.out.println(currentUser.getUsername());
-	       		System.out.println(jugador.getUser().getUsername().toString());
 	       		if(currentUser.getUsername().toString().equals(jugador.getUser().getUsername().toString()) && idjugador!=idamigo) {
 	       			jugadorService.anadirAmigo(idjugador, idamigo);
 	       			result.addObject("message", "Se ha enviado la petición de amistad");
 	       		}else
 	       			result.addObject("message", "No se ha podido enviar la petición de amistad");
-	       	}
-	       	else {
-	       		System.out.println("El usuario no está autentificado");
 	       	}
 	    return result;
 	}	       

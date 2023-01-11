@@ -130,7 +130,6 @@ public class PartidaController {
         response.addHeader("Refresh", MENU_REFRESH_TIME);
 
         ModelAndView result = new ModelAndView(PARTIDAS_LISTING_VIEW_FINALIZADAS);
-        System.out.println(getUsuarioConectado().getAuthorities().toString());
         if(getUsuarioConectado().getAuthorities().toString().equals("[admin]")) {
         	result.addObject("partidas", partidaService.getAllPartidasFinalizadas());
         }else {

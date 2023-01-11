@@ -53,7 +53,7 @@ public class AchievementController {
 	    @GetMapping("/")
 	    public ModelAndView showPlayerAchievements(){
 	        ModelAndView result=new ModelAndView(MY_ACHIEVEMENTS_LISTING_VIEW);
-	        result.addObject("achievements", achievementService.getAchievements()); //TODO Crear meteodo para devover los logros de un jugador
+	        result.addObject("achievements", achievementService.getAchievements());
 	        return result;
 	    }
 	    
@@ -116,7 +116,6 @@ public class AchievementController {
 	    	List<Achievement> achievements = achievementService.achievementsJugador(jSrevice.getJugadorById(jugadorId));
 	        ModelAndView result=new ModelAndView(ACHIEVEMENTS_JUGADOR);
 	        result.addObject("achievements", achievements);
-	        System.out.println(jugadorId);
 	        result.addObject("jugador", jugadorId);
 	        return result;
 	    }

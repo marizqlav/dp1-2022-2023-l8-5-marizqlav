@@ -30,9 +30,6 @@ public class DescubiertoAmarilloEstado implements EstadoTurno {
 
     @Override
     public EstadoTurnoEnum getNextState(Turno context) {
-System.out.println("======================================================================================================================================================================");
-    	System.out.println("El voto del edil 1 es "+turnoService.findVoto(context.getId(), context.getEdil1().getId()).getVotoOriginal()+"=========================================================================================================================================================================");
-    	System.out.println("El voto del edil 2 es "+turnoService.findVoto(context.getId(), context.getEdil2().getId()).getVotoOriginal());
         if (turnoService.findVoto(context.getId(), context.getEdil1().getId()).getVotoOriginal() != null ||
             turnoService.findVoto(context.getId(), context.getEdil2().getId()).getVotoOriginal() != null) {
             return EstadoTurnoEnum.Recuento;
