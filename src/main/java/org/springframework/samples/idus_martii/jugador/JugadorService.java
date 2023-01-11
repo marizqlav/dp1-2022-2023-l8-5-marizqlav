@@ -137,6 +137,11 @@ public class JugadorService {
 	
 	@Transactional
     public void deleteJugadorById(int id){
+		Jugador jugadororiginal = getJugadorById(id);
+		for(Jugador j:jugadororiginal.getSetAmigos()) {
+			deleteAmigo(id,j.getId());
+		}
+		
         this.jugadorRepo.deleteById(id);
     }
 
