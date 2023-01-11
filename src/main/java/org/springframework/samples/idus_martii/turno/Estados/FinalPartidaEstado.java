@@ -30,21 +30,12 @@ public class FinalPartidaEstado implements EstadoTurno {
 
     @Override
     public void takeAction(Turno context) {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
         Partida partida = context.getRonda().getPartida();
-
         if (partida.finalizada()) {
             return;
         }
-
-        System.out.println("bbbbbbbbbbbbbbb");
-
         partida.setFechaFin(LocalDateTime.now());
-        System.out.println("cccccccccccccccc");
-
         partida.setFaccionGanadora(partidaService.getFaccionGanadora(partida.getId()));
-        System.out.println("ddddddddddddddd");
-
         partidaService.save(partida);
     }
 

@@ -71,7 +71,6 @@ public class JugadorService {
 		try{
 			j= this.jugadorRepo.findById(id).get();
 		}catch(Exception e) {
-			System.out.println("No existe e jugador con Id: "+ id);
 		}
 		return j;
 	}

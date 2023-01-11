@@ -69,13 +69,6 @@ public class StatisticsController {
 	@GetMapping("/global/ranking")
 	public ModelAndView showRanking() {
 		ModelAndView result=new ModelAndView(STATISTICS_RANKING_VIEW);
-		for(Jugador j : statService.getRanking().keySet()) {
-			System.out.println(j.getUsername()
-					+"Paridas" + statService.getRanking().get(j)[0]
-					+"%" + statService.getRanking().get(j)[1]
-							+"Score" + statService.getRanking().get(j)[2]);
-			
-		}
 		result.addObject("ranking",statService.getRanking());
 		result.addObject("players", statService.getRankingIndex());
 		return result;

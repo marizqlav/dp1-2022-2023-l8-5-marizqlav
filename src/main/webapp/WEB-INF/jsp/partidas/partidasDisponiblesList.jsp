@@ -67,6 +67,7 @@
         </thead>
         <tbody>
         <c:forEach items="${partidas}" var="partida">
+        <c:if test="${partida.id != 2}">
    			<tr>       
     			<td>
                     <a href="/partida/${partida.id}" class="botona">Unirme</a>
@@ -78,6 +79,7 @@
                       <c:out value="${partida.numeroJugadores}"/>                                        
                 </td>
             </tr>
+            </c:if>
         </c:forEach>
         </tbody>
     </table>

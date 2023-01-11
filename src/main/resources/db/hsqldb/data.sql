@@ -30,7 +30,7 @@ INSERT INTO jugadores(id, user) VALUES
         
 INSERT INTO partida(id, faccion_ganadora, numero_jugadores, fecha_creacion, fecha_inicio, fecha_fin, jugador_id)
         VALUES (1, 'Leal', 6, '2022-09-18 10:34:04', '2022-09-18 10:35:02', '2022-09-18 10:49:31', 1),
-		(2, 'Traidor', 5, '2023-01-01 11:05:04', '2023-01-01 11:06:02', '2023-01-01 12:19:29', 1);
+		(2, null, 5, '2023-01-01 11:05:04', '2023-01-01 11:06:02', null, 1);
 
 
 
