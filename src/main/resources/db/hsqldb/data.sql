@@ -1,8 +1,8 @@
 
-INSERT INTO users(username, name, surname, photo, password,enabled) VALUES ('Ale','Alejandro','Merino','https://i.imgur.com/61kGbK6.png','patata',TRUE);
+INSERT INTO users(username, name, surname, photo, password,enabled) VALUES ('Ale','Alejandro','Merino','https://i.imgur.com/61kGbK6.png','word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (1,'Ale','player');
 
-INSERT INTO users(username, name, surname, photo, password, enabled) VALUES ('ismherram','Ismael','Herrera Ramírez','https://i.imgur.com/wpbcwAh.jpeg','pass',TRUE);
+INSERT INTO users(username, name, surname, photo, password, enabled) VALUES ('ismherram','Ismael','Herrera Ramírez','https://i.imgur.com/wpbcwAh.jpeg','word',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (2,'ismherram','player');
 
 INSERT INTO users(username, name, surname, photo, password,enabled) VALUES ('marizqlav','Mario','Izquierdo Lavado','https://i.imgur.com/ij4XprK.jpeg','word',TRUE);
