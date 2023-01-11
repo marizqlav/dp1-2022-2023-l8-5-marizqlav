@@ -9,44 +9,5 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <idus_martii:layout pageName="jugadores">
-    <h2>Jugadores</h2>
-
-    <table id="jugadoresTable" class="table table-striped">
-        <thead>
-        <tr>
-        	<th></th>
-            <th>Nombre de usuario</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${selections}" var="jugador">
-            <tr>
-             	<td>                    
-                  <c:if test="${jugador.user.photo == ''}">Sin foto de perfil</c:if>
-                  <c:if test="${jugador.user.photo != ''}">
-                  	<a href="/jugadores/profile/${jugador.id}"><img src="${jugador.user.photo}" width="100px" height="100px"  /></a>  
-                  </c:if>
-                </td>
-                <td>                    
-                      <a href="/jugadores/profile/${jugador.id}"><c:out value="${jugador.user.username} "/> </a>                                       
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-      <sec:authorize access="hasAuthority('admin')">
-		<a class="btn btn-default" href='<spring:url value="/users/new" htmlEscape="true"/>'>Añadir Jugador</a>
-	</sec:authorize>
-	
-		<table>
-		<c:if test="${pagina > 1}">
-			<td><a class="btn btn-default" href='<spring:url value="/jugadores/1${busqueda}" htmlEscape="true"/>'> 1 </a></td>
-			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${pagina-1}${busqueda}" htmlEscape="true"/>'></a></td>
-		</c:if>
-		<td><p>${pagina}</p></td>
-		<c:if test="${pagina < ultima}">
-			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${pagina+1}${busqueda}" htmlEscape="true"/>'></a></td>
-			<td><a class="btn btn-default" href='<spring:url value="/jugadores/${ultima}${busqueda}" htmlEscape="true"/>'> ${ultima} </a></td>
-		</c:if>
-		</table>
+    <h2>Turno</h2>
 </idus_martii:layout>
