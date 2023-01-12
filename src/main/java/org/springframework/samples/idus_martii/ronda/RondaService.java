@@ -21,7 +21,12 @@ public class RondaService {
     }
     @Transactional
     public Ronda getById(int id){
-        return repo.findById(id).get();
+    	Ronda r=null;
+		try{
+			r= this.repo.findById(id).get();
+		}catch(Exception e) {
+		}
+		return r;
     }
     @Transactional
     public void deleteRondaById(int id){

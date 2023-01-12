@@ -51,6 +51,7 @@ public class RondaServiceTest {
 		Integer id = r.getId();
 		try {
 			this.rondaService.deleteRondaById(id);
+			assertThat(this.rondaService.getById(id)).isNull();
 		}catch(Exception e){
 			fail("Ha ocurrido un error: "+e);
 		}
