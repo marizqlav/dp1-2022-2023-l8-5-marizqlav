@@ -143,6 +143,5 @@ public class JugadorService {
 		
         this.jugadorRepo.deleteById(id);
     }
-
 	
 }

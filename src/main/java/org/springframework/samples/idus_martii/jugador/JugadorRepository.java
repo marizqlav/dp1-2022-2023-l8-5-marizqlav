@@ -24,7 +24,6 @@ public interface JugadorRepository extends JpaRepository<Jugador, Integer>{
 	@Query(value = "INSERT INTO amigos(jugador_id,jugador) VALUES (:idjugador,:idamigo)", nativeQuery = true)
 	Integer anadirAmigo(@Param("idjugador") int idjugador, @Param("idamigo") int idamigo);
 	
-
 	@Query("SELECT j FROM Jugador j")
 	List<Jugador> findAllJugadores();
 	

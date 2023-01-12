@@ -386,7 +386,6 @@ public class PartidaController {
     		}
     	}
     	
-    	
     	modelo.addObject("partidas", partidas);
     	modelo.addObject("max", partidas.size());
     	modelo.addObject("jugador", jugadorId);
